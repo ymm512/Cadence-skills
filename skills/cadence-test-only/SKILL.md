@@ -21,9 +21,15 @@ description: Use when user only wants to generate test cases and automation scri
 - "测试脚本"
 - "补充测试"
 
-### 显式调用
+### 通过自然语言激活
+
+直接描述你的需求：
+
 ```
-/cadence-test [需求或API文档路径]
+"生成测试用例"
+"为登录功能写测试"
+"创建自动化测试脚本"
+"补充业务测试"
 ```
 
 ## 输入

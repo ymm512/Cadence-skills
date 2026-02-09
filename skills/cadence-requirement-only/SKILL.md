@@ -21,9 +21,15 @@ description: Use when user only wants to analyze PRD and generate requirement do
 - "模块划分"
 - "只要需求文档"
 
-### 显式调用
+### 通过自然语言激活
+
+直接描述你的需求：
+
 ```
-/cadence-requirement docs/prd/xxx.md
+"分析这个 PRD，生成需求文档"
+"提取业务规则"
+"进行需求分析"
+"帮我理解这个 PRD"
 ```
 
 ## 输入

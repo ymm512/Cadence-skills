@@ -21,9 +21,15 @@ description: Use when user has design document and only wants code generation WI
 - "根据设计生成"
 - "代码生成"
 
-### 显式调用
+### 通过自然语言激活
+
+直接描述你的需求：
+
 ```
-/cadence-code [设计文档路径]
+"根据设计生成代码"
+"实现这个功能"
+"写后端代码"
+"生成前端组件"
 ```
 
 ## 输入

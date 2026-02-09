@@ -21,9 +21,15 @@ description: Use when user has requirement document and only wants technical des
 - "API 设计"
 - "设计数据模型"
 
-### 显式调用
+### 通过自然语言激活
+
+直接描述你的需求：
+
 ```
-/cadence-design [需求文档路径]
+"根据需求设计技术方案"
+"进行架构设计"
+"设计 API 接口"
+"为这个功能做技术设计"
 ```
 
 ## 输入

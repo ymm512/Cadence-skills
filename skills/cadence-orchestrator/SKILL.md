@@ -19,10 +19,22 @@ description: Use when user provides PRD documents or requests end-to-end softwar
 - 检测到触发词: "全流程开发", "从需求到测试", "自动化开发", "Cadence"
 - 用户上传 PRD 文件或指定 PRD 路径
 
-### 显式调用
+### 通过自然语言激活
+
+直接描述你的需求，Claude 会自动匹配并激活 Cadence：
+
 ```
-/cadence [PRD路径]
-/cadence-orchestrator
+"帮我用 Cadence 开发用户认证功能，PRD 在 docs/prd/auth.md"
+"全流程开发这个任务管理系统"
+"使用 Cadence 自动化开发"
+"从需求到测试完成这个功能"
+```
+
+### 查看已安装 Skills
+
+```
+"列出可用的 Cadence Skills"
+"显示已安装的插件"
 ```
 
 ## 核心职责
