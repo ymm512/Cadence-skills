@@ -377,12 +377,31 @@ design = read_memory(f"workflow/{workflow_id}/design")
 准备好了吗?
 ```
 
-#### 步骤 5.3: 触发 Skill
+#### 步骤 5.3: 调用业务测试 Subagent
 ```python
-Skill(skill="cadence-business-testing", args=workflow_id)
+Task(
+  subagent_type="cadence-business-testing",
+  prompt=f"""
+基于以下工作流上下文生成业务测试用例：
+
+**工作流 ID**: {workflow_id}
+
+请完成：
+1. 从 Memory 读取需求和设计文档
+2. 基于业务规则生成测试用例
+3. 基于工作流生成 Happy Path 和 Exception 用例
+4. 基于数据模型生成边界值测试用例
+5. 生成自动化测试脚本（Jest/Playwright）
+6. 生成测试文档
+
+返回 JSON 格式的测试摘要。
+  """,
+  description="业务测试用例生成",
+  model="sonnet"
+)
 ```
 
-**Skill 内部流程** (详见 cadence-business-testing/SKILL.md):
+**Subagent 内部流程** (详见 cadence-business-testing Subagent):
 - 基于业务规则生成用例
 - 基于工作流生成场景
 - 生成自动化脚本

@@ -17,11 +17,15 @@
       "skills": [
         "./skills/cadence-orchestrator",
         "./skills/cadence-code-generation",
-        "./skills/cadence-business-testing",
         "./skills/cadence-requirement-only",
         "./skills/cadence-design-only",
         "./skills/cadence-code-only",
         "./skills/cadence-test-only"
+      ],
+      "agents": [
+        "./agents/cadence-requirement-analyst.md",
+        "./agents/cadence-solution-architect.md",
+        "./agents/cadence-business-testing.md"
       ]
     },
     {

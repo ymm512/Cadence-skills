@@ -660,7 +660,7 @@ business_testing_config:
 
 ### 示例: 完整测试生成
 ```
-Orchestrator 调用: Skill("cadence-business-testing", workflow_id="WF-20260209-abc123")
+Orchestrator 调用: Task(subagent_type="cadence-business-testing", prompt="workflow_id: WF-20260209-abc123")
 
 Business Testing Skill:
 1. 📋 分析测试维度

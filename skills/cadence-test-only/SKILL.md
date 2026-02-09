@@ -102,14 +102,33 @@ api_doc = Read(file_path=api_path)
 code_analysis = analyze_code(code_path)
 ```
 
-### Step 2: 生成测试用例
-调用业务测试 Skill：
+### Step 2: 调用业务测试 Subagent
 ```python
-Skill(skill="cadence-business-testing", args={
-  "requirement": requirement,
-  "api_doc": api_doc,
-  "output_type": "test_cases"
-})
+Task(
+  subagent_type="cadence-business-testing",
+  prompt=f"""
+基于以下输入生成业务测试用例：
+
+**需求文档**:
+{requirement}
+
+**API 文档**:
+{api_doc}
+
+请完成：
+1. 分析需求和 API 设计
+2. 生成 Happy Path 测试用例
+3. 生成 Exception 测试用例
+4. 生成边界值测试用例
+5. 返回测试用例列表（JSON 格式）
+
+输出要求：
+- 用例包含：ID、名称、优先级、类型、前置条件、步骤、预期结果
+- 按 P0/P1/P2 分级
+  """,
+  description="业务测试用例生成",
+  model="sonnet"
+)
 ```
 
 ### Step 3: 人工审查

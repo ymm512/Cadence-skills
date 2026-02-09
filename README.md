@@ -83,15 +83,15 @@ cadence-skills/
 ├── skills/                        # Skills (轻交互任务)
 │   ├── cadence-orchestrator/      # 🎛️ 完整流程主控调度器
 │   ├── cadence-code-generation/   # 💻 代码生成 (完整流程用)
-│   ├── cadence-business-testing/  # 🧪 业务测试 (完整流程用)
 │   ├── cadence-requirement-only/  # 📋 独立需求分析
 │   ├── cadence-design-only/       # 🏗️ 独立方案设计
 │   ├── cadence-code-only/         # 💻 独立代码生成
 │   └── cadence-test-only/         # 🧪 独立测试生成
 │
 ├── agents/                        # Subagents (重分析任务)
-│   ├── cadence-requirement-analyst.md
-│   └── cadence-solution-architect.md
+│   ├── cadence-requirement-analyst.md   # 📋 PRD 分析
+│   ├── cadence-solution-architect.md    # 🏗️ 架构设计
+│   └── cadence-business-testing.md      # 🧪 业务测试用例生成
 │
 ├── prompts/                       # 提示词模板库 (18个)
 │   ├── requirement/               # 需求分析提示词
@@ -217,7 +217,7 @@ Cadence 自动执行:
 └─────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
-│ Phase 5: 业务测试 (Skills)                                   │
+│ Phase 5: 业务测试 (Subagent)                                 │
 │ - 测试用例生成 (Happy Path/Exception/Boundary)               │
 │ - 👤 人工审查补充                                            │
 │ - 自动化脚本生成 (Jest/Playwright)                           │
@@ -383,7 +383,7 @@ Orchestrator: ✅ 从代码生成阶段恢复
 - [需求分析 Agent](agents/cadence-requirement-analyst.md)
 - [方案设计 Agent](agents/cadence-solution-architect.md)
 - [代码生成 Skill](skills/cadence-code-generation/SKILL.md)
-- [业务测试 Skill](skills/cadence-business-testing/SKILL.md)
+- [业务测试 Subagent](agents/cadence-business-testing.md)
 
 ### 独立子流程文档
 - [独立需求分析](skills/cadence-requirement-only/SKILL.md)
@@ -403,8 +403,8 @@ Orchestrator: ✅ 从代码生成阶段恢复
 | 指标 | 数量 |
 |------|------|
 | **版本** | v1.1.0 |
-| **Skills** | 7 个 (3 完整流程 + 4 独立) |
-| **Subagents** | 2 个 |
+| **Skills** | 6 个 (1 主控 + 1 代码生成 + 4 独立) |
+| **Subagents** | 3 个 (需求分析 + 方案设计 + 业务测试) |
 | **Prompts** | 18 个模板 |
 | **代码行数** | ~7,600 行 |
 | **Git 提交** | 5 个结构化提交 |
