@@ -1,6 +1,6 @@
 # Cadence AI 自动化开发 Skills 系统
 
-[![版本](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/yourusername/cadence-skills)
+[![版本](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/michaelChe956/cadence-skills)
 [![架构](https://img.shields.io/badge/architecture-Hybrid%20(Subagent%2BSkills)-green.svg)]()
 [![状态](https://img.shields.io/badge/status-Production%20Ready-success.svg)]()
 [![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-Plugin-purple.svg)]()
@@ -16,6 +16,12 @@
 - ✅ **单元测试**: 自动生成测试用例和测试代码
 - ✅ **业务测试**: 生成业务测试用例和自动化脚本
 - ✅ **Git 集成**: 自动创建分支,提交代码,推送远程
+
+### 灵活的使用模式
+- 🔄 **完整流程**: 端到端自动化 (需求 → 设计 → 代码 → 测试)
+- ⚡ **独立子流程**: 可单独执行某个阶段
+- 📊 **状态持久化**: Serena Memory 支持断点续传
+- 🤝 **人工参与**: 关键节点 AskUserQuestion 确认
 
 ### 智能混合架构
 - 🔄 **重分析任务** → Subagent (隔离大量输出,工具限制)
@@ -37,17 +43,20 @@
 
 ```bash
 # 1. 添加 Marketplace
-/plugin marketplace add your-username/cadence-skills
+/plugin marketplace add michaelChe956/cadence-skills
 
-# 2. 安装插件
-/plugin install cadence-core@cadence-ai-development
+# 2. 安装完整流程插件
+/plugin install cadence-full@cadence-ai-development
+
+# 3. 或安装独立子流程插件
+/plugin install cadence-standalone@cadence-ai-development
 ```
 
 ### 方式 2: 手动安装
 
 ```bash
 # 克隆仓库到目标项目
-git clone https://github.com/yourusername/cadence-skills.git
+git clone https://github.com/michaelChe956/cadence-skills.git
 cp -r cadence-skills/skills/* your-project/.claude/skills/
 cp -r cadence-skills/agents/* your-project/.claude/agents/
 cp -r cadence-skills/prompts/* your-project/.claude/prompts/
@@ -69,21 +78,22 @@ cp -r cadence-skills/prompts/* ~/.claude/prompts/
 ```
 cadence-skills/
 ├── .claude-plugin/
-│   └── marketplace.json           # Claude Code 插件配置
+│   └── marketplace.json           # Claude Code 插件配置 (v1.1.0)
 │
 ├── skills/                        # Skills (轻交互任务)
-│   ├── cadence-orchestrator/      # 主控调度器
-│   │   └── SKILL.md
-│   ├── cadence-code-generation/   # 代码生成 Skill
-│   │   └── SKILL.md
-│   └── cadence-business-testing/  # 业务测试 Skill
-│       └── SKILL.md
+│   ├── cadence-orchestrator/      # 🎛️ 完整流程主控调度器
+│   ├── cadence-code-generation/   # 💻 代码生成 (完整流程用)
+│   ├── cadence-business-testing/  # 🧪 业务测试 (完整流程用)
+│   ├── cadence-requirement-only/  # 📋 独立需求分析
+│   ├── cadence-design-only/       # 🏗️ 独立方案设计
+│   ├── cadence-code-only/         # 💻 独立代码生成
+│   └── cadence-test-only/         # 🧪 独立测试生成
 │
 ├── agents/                        # Subagents (重分析任务)
 │   ├── cadence-requirement-analyst.md
 │   └── cadence-solution-architect.md
 │
-├── prompts/                       # 提示词模板库
+├── prompts/                       # 提示词模板库 (18个)
 │   ├── requirement/               # 需求分析提示词
 │   │   ├── prd-analysis.txt
 │   │   ├── rule-extraction.txt
@@ -105,8 +115,14 @@ cadence-skills/
 │       ├── automation-script.txt
 │       └── test-report.txt
 │
-└── .claude/                       # 本地开发用 (可选)
-    └── ...
+├── docs/                          # 文档
+│   ├── prd/                       # 示例 PRD
+│   │   └── task-management-system.md
+│   └── SESSION_SUMMARY_*.md       # 会话总结
+│
+├── README.md                      # 本文件
+├── CLAUDE.md                      # 项目规范
+└── IMPLEMENTATION_SUMMARY.md      # 实施总结
 ```
 
 ---
@@ -120,70 +136,116 @@ cadence-skills/
 - ✅ Serena MCP Server 已启用 (用于 Memory 和代码分析)
 - ✅ Context7 MCP Server 已启用 (可选,用于官方文档查询)
 
-### 2. 使用 Cadence
+### 2. 使用方式
 
-本项目已集成到当前仓库的 `.claude/` 目录中。
+#### 完整流程 (推荐)
 
-#### 方式 1: 自动激活 (推荐)
 ```
-你: "我有个新功能,PRD 在 docs/prd/feature-auth.md,帮我全流程开发"
-```
+你: "帮我用 Cadence 开发任务管理系统，PRD 在 docs/prd/task-management-system.md"
 
-Claude 会自动检测并激活 Cadence Orchestrator。
-
-#### 方式 2: 手动调用
-```
-你: "/cadence docs/prd/feature-auth.md"
+Cadence 自动执行:
+1. ✅ 需求整理 → 分析 PRD，提取业务规则
+2. ✅ 方案设计 → 设计架构和 API
+3. ✅ 代码生成 → 前后端代码 + 单元测试
+4. ✅ 业务测试 → 测试用例 + 自动化脚本
 ```
 
-或者:
+**触发词**: "Cadence", "全流程开发", "从需求到测试", "自动化开发"
+
+#### 独立子流程
+
 ```
-你: "使用 Cadence 开发这个功能"
+# 只分析需求
+你: "分析这个 PRD，生成需求文档"
+结果: docs/requirements/xxx-requirement.md
+
+# 只做设计 (基于需求文档)
+你: "根据需求文档设计技术方案"
+结果: docs/design/xxx-design.md
+
+# 只生成代码 (基于设计)
+你: "根据设计文档生成后端代码"
+结果: src/... (生成的代码文件)
+
+# 只生成测试
+你: "为登录模块生成测试用例"
+结果: docs/testing/test-cases.md + tests/...
 ```
+
+**触发词**: "分析PRD", "需求分析", "方案设计", "生成代码", "生成测试"
 
 ---
 
 ## 🔄 工作流程
 
-### 完整流程
+### 完整流程 (cadence-full)
 
-1. **Phase 1: 初始化**
-   - 生成工作流 ID
-   - 创建 Memory 存储
-   - 显示工作流概览
+```
+┌─────────────────────────────────────────────────────────────┐
+│ Phase 1: 初始化                                              │
+│ - 生成工作流 ID                                              │
+│ - 创建 Memory 存储                                           │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│ Phase 2: 需求整理 (Subagent)                                 │
+│ - 读取和解析 PRD                                             │
+│ - 提取业务规则 (19种规则类型)                                │
+│ - 识别工作流                                                 │
+│ - 划分功能模块                                               │
+│ 👤 人工确认模块划分                                          │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│ Phase 3: 方案设计 (Subagent)                                 │
+│ - 判断业务类型 (新功能/存量改造)                             │
+│ - 存量代码分析 (使用 Serena MCP)                             │
+│ - 技术架构设计                                               │
+│ - 数据模型设计                                               │
+│ - API 接口设计                                               │
+│ 👤 人工确认设计方案                                          │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│ Phase 4: 代码生成 (Skills)                                   │
+│ - Git 分支管理                                               │
+│ - 前端代码生成 (逐个审查)                                    │
+│ - 后端代码生成 (逐个审查)                                    │
+│ - 单元测试生成                                               │
+│ - 测试执行和调试                                             │
+│ - Git commit 和 push                                         │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│ Phase 5: 业务测试 (Skills)                                   │
+│ - 测试用例生成 (Happy Path/Exception/Boundary)               │
+│ - 👤 人工审查补充                                            │
+│ - 自动化脚本生成 (Jest/Playwright)                           │
+│ - 测试文档生成                                               │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│ Phase 6: 完成                                                │
+│ - 生成工作流报告                                             │
+│ - 清理临时文件                                               │
+│ ✅ 完成!                                                     │
+└─────────────────────────────────────────────────────────────┘
+```
 
-2. **Phase 2: 需求整理 (Subagent)**
-   - 读取和解析 PRD
-   - 提取业务规则
-   - 识别工作流
-   - 划分功能模块
-   - 👤 人工确认模块划分
+### 独立子流程 (cadence-standalone)
 
-3. **Phase 3: 方案设计 (Subagent)**
-   - 判断业务类型
-   - 存量代码分析 (使用 Serena MCP)
-   - 技术架构设计
-   - 数据模型设计
-   - API 接口设计
-   - 👤 人工确认设计方案
-
-4. **Phase 4: 代码生成 (Skills)**
-   - Git 分支管理
-   - 前端代码生成 (逐个审查)
-   - 后端代码生成 (逐个审查)
-   - 单元测试生成
-   - 测试执行和调试
-   - Git commit 和 push
-
-5. **Phase 5: 业务测试 (Skills)**
-   - 测试用例生成
-   - 👤 人工审查补充
-   - 自动化脚本生成
-   - 测试文档生成
-
-6. **Phase 6: 完成**
-   - 生成工作流报告
-   - 清理临时文件
+```
+需求文档 ──→ cadence-requirement-only ──→ 需求分析报告
+                                              │
+                                              ▼
+                                    cadence-design-only ──→ 技术设计文档
+                                                                  │
+                                                                  ▼
+                                                        cadence-code-only ──→ 代码
+                                                                              │
+                                                                              ▼
+                                                                    cadence-test-only ──→ 测试
+```
 
 ---
 
@@ -227,7 +289,7 @@ Orchestrator: ✅ 从代码生成阶段恢复
 
 ## 📊 使用示例
 
-### 新功能开发示例
+### 示例 1: 完整流程开发
 
 ```
 用户: "开发用户认证功能,PRD 在 docs/prd/auth.md"
@@ -246,31 +308,106 @@ Orchestrator: ✅ 从代码生成阶段恢复
 质量: 生产就绪
 ```
 
+### 示例 2: 独立子流程
+
+```
+# 场景: 只需要需求分析，不需要立即开发
+用户: "分析这个 PRD，生成需求文档"
+
+执行:
+1. 🔄 读取 PRD
+2. 🔄 调用需求分析 Subagent
+3. 📄 生成 docs/requirements/auth-requirement.md
+4. ✅ 完成!
+
+耗时: 约 15 分钟
+结果: 结构化需求文档，可用于后续开发或评审
+```
+
+### 示例 3: 从设计到代码
+
+```
+# 场景: 已有设计文档，只需要生成代码
+用户: "根据设计文档生成后端代码"
+
+执行:
+1. 🔄 读取设计文档
+2. 🔄 创建 Git 分支 feature/WF-xxx
+3. 🔄 逐个生成并审查代码文件
+4. 🔄 生成单元测试
+5. 🔄 运行测试并修复
+6. 🔄 Git commit 和 push
+7. ✅ 完成!
+
+耗时: 约 30-60 分钟
+结果: 可运行的代码 + 测试
+```
+
 ---
 
 ## 🛠️ 配置
 
-在各个组件的 SKILL.md 或 agent.md 文件中可以调整配置参数。
+### MCP Server 配置
 
-### 主要配置选项
+在 `.claude/settings.local.json` 中配置：
 
-- Subagent 超时时间
-- Skills 最大轮次
-- Checkpoint 间隔
-- 自动确认模式 (测试用)
-- 代码审查模式
-- 测试覆盖率要求
+```json
+{
+  "permissions": {
+    "allow": [
+      "mcp__serena__*",
+      "mcp__context7__*"
+    ]
+  }
+}
+```
+
+### 技能配置
+
+各个组件的配置可在对应 SKILL.md 中调整：
+
+| 配置项 | 默认值 | 说明 |
+|--------|--------|------|
+| Subagent 超时 | 30 分钟 | 需求/设计分析超时时间 |
+| Skills 最大轮次 | 10 | 代码审查最大迭代次数 |
+| Checkpoint 间隔 | 30 分钟 | 自动保存间隔 |
+| 代码审查模式 | 逐个 | 代码生成后逐个审查 |
+| 测试覆盖率目标 | 80% | 单元测试覆盖率要求 |
 
 ---
 
-## 📝 文档
+## 📚 文档
 
-详细文档请查看:
-- [Orchestrator 文档](.claude/skills/cadence-orchestrator/SKILL.md)
-- [需求分析文档](.claude/agents/cadence-requirement-analyst.md)
-- [方案设计文档](.claude/agents/cadence-solution-architect.md)
-- [代码生成文档](.claude/skills/cadence-code-generation/SKILL.md)
-- [业务测试文档](.claude/skills/cadence-business-testing/SKILL.md)
+### 核心文档
+- [Orchestrator 文档](skills/cadence-orchestrator/SKILL.md) - 完整流程主控
+- [需求分析 Agent](agents/cadence-requirement-analyst.md)
+- [方案设计 Agent](agents/cadence-solution-architect.md)
+- [代码生成 Skill](skills/cadence-code-generation/SKILL.md)
+- [业务测试 Skill](skills/cadence-business-testing/SKILL.md)
+
+### 独立子流程文档
+- [独立需求分析](skills/cadence-requirement-only/SKILL.md)
+- [独立方案设计](skills/cadence-design-only/SKILL.md)
+- [独立代码生成](skills/cadence-code-only/SKILL.md)
+- [独立测试生成](skills/cadence-test-only/SKILL.md)
+
+### 项目文档
+- [实施总结](IMPLEMENTATION_SUMMARY.md) - 详细实施过程
+- [会话总结](docs/SESSION_SUMMARY_2026-02-09.md) - 开发过程记录
+- [CLAUDE.md](CLAUDE.md) - 项目规范和开发指南
+
+---
+
+## 📊 统计信息
+
+| 指标 | 数量 |
+|------|------|
+| **版本** | v1.1.0 |
+| **Skills** | 7 个 (3 完整流程 + 4 独立) |
+| **Subagents** | 2 个 |
+| **Prompts** | 18 个模板 |
+| **代码行数** | ~7,600 行 |
+| **Git 提交** | 5 个结构化提交 |
 
 ---
 
@@ -279,16 +416,21 @@ Orchestrator: ✅ 从代码生成阶段恢复
 欢迎贡献! 流程:
 
 1. Fork 本仓库
-2. 创建 Feature 分支
-3. 提交修改
+2. 创建 Feature 分支 (`git checkout -b feature/xxx`)
+3. 提交修改 (`git commit -m 'feat: xxx'`)
 4. 创建 Pull Request
+
+### 贡献规范
+- 遵循 [Conventional Commits](https://www.conventionalcommits.org/) 规范
+- 类型: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+- 必须包含 Co-Authored-By (如果是 AI 协助)
 
 ---
 
 ## 📞 支持
 
-- 问题反馈: [GitHub Issues](https://github.com/yourusername/cadence-skills/issues)
-- 讨论: [GitHub Discussions](https://github.com/yourusername/cadence-skills/discussions)
+- **GitHub Issues**: [问题反馈](https://github.com/michaelChe956/cadence-skills/issues)
+- **GitHub Discussions**: [讨论区](https://github.com/michaelChe956/cadence-skills/discussions)
 
 ---
 
@@ -296,8 +438,24 @@ Orchestrator: ✅ 从代码生成阶段恢复
 
 - [Claude Code 文档](https://docs.claude.com/code)
 - [Subagent 架构](https://code.claude.com/docs/sub-agents)
+- [Anthropic Skills 示例](https://github.com/anthropics/skills)
 - [Serena MCP](https://github.com/cline/serena)
 - [Context7 MCP](https://context7.com)
+
+---
+
+## 📝 版本历史
+
+### v1.1.0 (2026-02-09)
+- ✅ 添加独立子流程 Skills (requirement-only, design-only, code-only, test-only)
+- ✅ 支持灵活选择执行阶段
+- ✅ 添加 Plugin Marketplace 配置
+
+### v1.0.0 (2026-02-09)
+- ✅ 初始版本发布
+- ✅ 完整流程实现 (需求 → 设计 → 代码 → 测试)
+- ✅ 混合架构 (Subagent + Skills)
+- ✅ 断点续传支持
 
 ---
 
