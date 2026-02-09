@@ -1,49 +1,40 @@
 {
   "name": "cadence-ai-development",
-  "owner": "Cadence Team <cadence@example.com>",
-  "description": "Cadence AI 自动化开发系统 - 从 PRD 到代码的端到端开发工作流，支持完整流程或独立子流程",
-  "version": "1.1.0",
+  "owner": {
+    "name": "Cadence Team",
+    "email": "cadence@example.com"
+  },
+  "metadata": {
+    "description": "Cadence AI 自动化开发系统 - 从 PRD 到代码的端到端开发工作流，支持完整流程或独立子流程",
+    "version": "1.1.0"
+  },
   "plugins": [
     {
       "name": "cadence-full",
       "description": "Cadence 完整工作流 - 端到端自动化开发 (需求→设计→代码→测试)。使用方式：'帮我用 Cadence 开发 [功能]'",
+      "source": "./",
+      "strict": false,
       "skills": [
         "./skills/cadence-orchestrator",
         "./skills/cadence-code-generation",
-        "./skills/cadence-business-testing"
-      ],
-      "agents": [
-        "./agents/cadence-requirement-analyst.md",
-        "./agents/cadence-solution-architect.md"
-      ],
-      "strict": false
-    },
-    {
-      "name": "cadence-standalone",
-      "description": "Cadence 独立子流程 - 可单独执行需求分析、方案设计、代码生成或测试生成",
-      "skills": [
+        "./skills/cadence-business-testing",
         "./skills/cadence-requirement-only",
         "./skills/cadence-design-only",
         "./skills/cadence-code-only",
         "./skills/cadence-test-only"
-      ],
-      "agents": [
-        "./agents/cadence-requirement-analyst.md",
-        "./agents/cadence-solution-architect.md"
-      ],
-      "strict": false
+      ]
     },
     {
       "name": "cadence-prompts",
-      "description": "Cadence 提示词模板库 - 需求分析、设计、代码生成和测试的专业模板",
-      "skills": [],
-      "resources": [
+      "description": "Cadence 提示词模板库 - 包含需求分析、设计、代码生成和测试的专业模板",
+      "source": "./",
+      "strict": false,
+      "skills": [
         "./prompts/requirement",
         "./prompts/design",
         "./prompts/code",
         "./prompts/test"
-      ],
-      "strict": false
+      ]
     }
   ]
 }
