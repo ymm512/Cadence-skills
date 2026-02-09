@@ -3,6 +3,7 @@
 [![版本](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/yourusername/cadence-skills)
 [![架构](https://img.shields.io/badge/architecture-Hybrid%20(Subagent%2BSkills)-green.svg)]()
 [![状态](https://img.shields.io/badge/status-Production%20Ready-success.svg)]()
+[![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-Plugin-purple.svg)]()
 
 一个基于混合模式 (Subagent + Skills) 的端到端自动化开发系统,从 PRD 需求文档到完整的代码实现和测试。
 
@@ -30,38 +31,82 @@
 
 ---
 
+## 📦 安装方式
+
+### 方式 1: Claude Code Plugin Marketplace (推荐)
+
+```bash
+# 1. 添加 Marketplace
+/plugin marketplace add your-username/cadence-skills
+
+# 2. 安装插件
+/plugin install cadence-core@cadence-ai-development
+```
+
+### 方式 2: 手动安装
+
+```bash
+# 克隆仓库到目标项目
+git clone https://github.com/yourusername/cadence-skills.git
+cp -r cadence-skills/skills/* your-project/.claude/skills/
+cp -r cadence-skills/agents/* your-project/.claude/agents/
+cp -r cadence-skills/prompts/* your-project/.claude/prompts/
+```
+
+### 方式 3: 全局安装
+
+```bash
+# 复制到用户级 .claude 目录
+cp -r cadence-skills/skills/* ~/.claude/skills/
+cp -r cadence-skills/agents/* ~/.claude/agents/
+cp -r cadence-skills/prompts/* ~/.claude/prompts/
+```
+
+---
+
 ## 📁 项目结构
 
 ```
-.claude/
-├── skills/                          # Skills (轻交互任务)
-│   ├── cadence-orchestrator/        # 主控调度器
-│   │   └── SKILL.md                 # 工作流编排
-│   ├── cadence-code-generation/     # 代码生成 Skill
-│   │   └── SKILL.md                 # 前后端代码生成
-│   └── cadence-business-testing/    # 业务测试 Skill
-│       └── SKILL.md                 # 测试用例生成
+cadence-skills/
+├── .claude-plugin/
+│   └── marketplace.json           # Claude Code 插件配置
 │
-├── agents/                          # Subagents (重分析任务)
-│   ├── cadence-requirement-analyst.md   # 需求分析 Subagent
-│   └── cadence-solution-architect.md    # 方案设计 Subagent
+├── skills/                        # Skills (轻交互任务)
+│   ├── cadence-orchestrator/      # 主控调度器
+│   │   └── SKILL.md
+│   ├── cadence-code-generation/   # 代码生成 Skill
+│   │   └── SKILL.md
+│   └── cadence-business-testing/  # 业务测试 Skill
+│       └── SKILL.md
 │
-└── prompts/                         # 提示词模板库
-    ├── requirement/                 # 需求分析提示词
-    │   ├── prd-analysis.txt
-    │   ├── rule-extraction.txt
-    │   └── module-split.txt
-    ├── design/                      # 方案设计提示词
-    │   ├── architecture.txt
-    │   └── existing-code-analysis.txt
-    ├── code/                        # 代码生成提示词
-    │   ├── frontend.txt
-    │   ├── backend.txt
-    │   └── unit-test.txt
-    └── test/                        # 测试生成提示词
-        ├── test-case-generation.txt
-        ├── happy-path.txt
-        └── exception-scenario.txt
+├── agents/                        # Subagents (重分析任务)
+│   ├── cadence-requirement-analyst.md
+│   └── cadence-solution-architect.md
+│
+├── prompts/                       # 提示词模板库
+│   ├── requirement/               # 需求分析提示词
+│   │   ├── prd-analysis.txt
+│   │   ├── rule-extraction.txt
+│   │   └── module-split.txt
+│   ├── design/                    # 方案设计提示词
+│   │   ├── architecture.txt
+│   │   └── existing-code-analysis.txt
+│   ├── code/                      # 代码生成提示词
+│   │   ├── frontend.txt
+│   │   ├── backend.txt
+│   │   ├── unit-test.txt
+│   │   ├── debug-fix.txt
+│   │   └── git-workflow.txt
+│   └── test/                      # 测试生成提示词
+│       ├── test-case-generation.txt
+│       ├── happy-path.txt
+│       ├── exception-scenario.txt
+│       ├── boundary-value.txt
+│       ├── automation-script.txt
+│       └── test-report.txt
+│
+└── .claude/                       # 本地开发用 (可选)
+    └── ...
 ```
 
 ---

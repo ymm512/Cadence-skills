@@ -1,0 +1,429 @@
+你是一个测试工程师。请为以下代码生成完整的单元测试。
+
+# 源代码
+{source_code}
+
+# 测试框架
+{test_framework}
+
+# 测试目标
+{test_target}
+
+---
+
+## 单元测试原则
+
+### 1. FIRST 原则
+- **F**ast (快速): 测试应该快速执行
+- **I**ndependent (独立): 测试之间相互独立
+- **R**epeatable (可重复): 每次运行结果一致
+- **S**elf-validating (自验证): 测试自动判断通过/失败
+- **T**imely (及时): 在开发代码时编写测试
+
+### 2. AAA 模式
+```
+Arrange (准备): 设置测试数据和环境
+Act (执行): 调用被测试的方法
+Assert (断言): 验证结果是否符合预期
+```
+
+### 3. 测试金字塔
+```
+        /\
+       /  \
+      / E2E\      少量 E2E 测试
+     /______\
+    /        \
+   / 集成测试 \   适量集成测试
+  /____________\
+ /              \
+/    单元测试    \  大量单元测试
+```
+
+---
+
+## 测试覆盖范围
+
+### 必须覆盖
+1. **正常流程**: 预期输入产生预期输出
+2. **边界条件**: 最大值、最小值、空值、null
+3. **异常场景**: 错误输入、异常抛出
+4. **业务规则**: 所有业务规则验证
+
+### 覆盖率目标
+```yaml
+line_coverage: ">= 80%"
+branch_coverage: ">= 70%"
+function_coverage: ">= 90%"
+```
+
+---
+
+## Jest 测试模板 (JavaScript/TypeScript)
+
+### 基本结构
+```typescript
+import { UserService } from '../services/UserService';
+import { UserRepository } from '../repositories/UserRepository';
+import { BusinessException } from '../exceptions/BusinessException';
+
+// Mock 依赖
+jest.mock('../repositories/UserRepository');
+
+describe('UserService', () => {
+  let userService: UserService;
+  let mockUserRepository: jest.Mocked<UserRepository>;
+
+  // 每个测试前的准备
+  beforeEach(() => {
+    // 清除所有 mock
+    jest.clearAllMocks();
+
+    // 创建 mock 实例
+    mockUserRepository = new UserRepository() as jest.Mocked<UserRepository>;
+    userService = new UserService(mockUserRepository);
+  });
+
+  // 每个测试后的清理
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  describe('createUser', () => {
+    // 正常流程测试
+    it('should create a new user successfully', async () => {
+      // Arrange
+      const createUserDto = {
+        email: 'test@example.com',
+        password: 'Password123!',
+        name: 'Test User'
+      };
+      const expectedUser = {
+        id: 'uuid-123',
+        email: createUserDto.email,
+        name: createUserDto.name,
+        createdAt: new Date()
+      };
+
+      mockUserRepository.findByEmail.mockResolvedValue(null);
+      mockUserRepository.create.mockResolvedValue(expectedUser);
+
+      // Act
+      const result = await userService.createUser(createUserDto);
+
+      // Assert
+      expect(result).toEqual(expectedUser);
+      expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(createUserDto.email);
+      expect(mockUserRepository.create).toHaveBeenCalledTimes(1);
+    });
+
+    // 异常场景测试
+    it('should throw BusinessException when email already exists', async () => {
+      // Arrange
+      const createUserDto = {
+        email: 'existing@example.com',
+        password: 'Password123!',
+        name: 'Test User'
+      };
+      mockUserRepository.findByEmail.mockResolvedValue({ id: 'existing-id' });
+
+      // Act & Assert
+      await expect(userService.createUser(createUserDto))
+        .rejects
+        .toThrow(BusinessException);
+
+      expect(mockUserRepository.create).not.toHaveBeenCalled();
+    });
+
+    // 边界条件测试
+    it('should handle empty name correctly', async () => {
+      // Arrange
+      const createUserDto = {
+        email: 'test@example.com',
+        password: 'Password123!',
+        name: ''
+      };
+
+      // Act & Assert
+      await expect(userService.createUser(createUserDto))
+        .rejects
+        .toThrow('名称不能为空');
+    });
+  });
+
+  describe('getUserById', () => {
+    it('should return user when found', async () => {
+      // Arrange
+      const userId = 'uuid-123';
+      const expectedUser = {
+        id: userId,
+        email: 'test@example.com',
+        name: 'Test User'
+      };
+      mockUserRepository.findById.mockResolvedValue(expectedUser);
+
+      // Act
+      const result = await userService.getUserById(userId);
+
+      // Assert
+      expect(result).toEqual(expectedUser);
+      expect(mockUserRepository.findById).toHaveBeenCalledWith(userId);
+    });
+
+    it('should return null when user not found', async () => {
+      // Arrange
+      mockUserRepository.findById.mockResolvedValue(null);
+
+      // Act
+      const result = await userService.getUserById('non-existent');
+
+      // Assert
+      expect(result).toBeNull();
+    });
+  });
+});
+```
+
+### Mock 技巧
+
+#### Mock 模块
+```typescript
+// 完全 mock 模块
+jest.mock('../utils/crypto', () => ({
+  hashPassword: jest.fn().mockResolvedValue('hashed-password'),
+  verifyPassword: jest.fn().mockResolvedValue(true)
+}));
+```
+
+#### Mock 部分方法
+```typescript
+jest.spyOn(userService, 'validateEmail').mockReturnValue(true);
+```
+
+#### Mock 时间
+```typescript
+beforeEach(() => {
+  jest.useFakeTimers();
+  jest.setSystemTime(new Date('2026-02-09'));
+});
+
+afterEach(() => {
+  jest.useRealTimers();
+});
+```
+
+---
+
+## Pytest 测试模板 (Python)
+
+### 基本结构
+```python
+import pytest
+from unittest.mock import Mock, patch, MagicMock
+from services.user_service import UserService
+from exceptions.business_exception import BusinessException
+
+
+class TestUserService:
+    """UserService 单元测试"""
+
+    @pytest.fixture
+    def mock_user_repository(self):
+        """创建 mock repository"""
+        return Mock()
+
+    @pytest.fixture
+    def user_service(self, mock_user_repository):
+        """创建被测试的 service"""
+        return UserService(mock_user_repository)
+
+    class TestCreateUser:
+        """createUser 方法测试"""
+
+        def test_should_create_user_successfully(
+            self, user_service, mock_user_repository
+        ):
+            """正常创建用户"""
+            # Arrange
+            create_dto = {
+                'email': 'test@example.com',
+                'password': 'Password123!',
+                'name': 'Test User'
+            }
+            expected_user = {
+                'id': 'uuid-123',
+                'email': create_dto['email'],
+                'name': create_dto['name']
+            }
+            mock_user_repository.find_by_email.return_value = None
+            mock_user_repository.create.return_value = expected_user
+
+            # Act
+            result = user_service.create_user(create_dto)
+
+            # Assert
+            assert result == expected_user
+            mock_user_repository.find_by_email.assert_called_once_with(
+                create_dto['email']
+            )
+
+        def test_should_raise_exception_when_email_exists(
+            self, user_service, mock_user_repository
+        ):
+            """邮箱已存在时抛出异常"""
+            # Arrange
+            create_dto = {'email': 'existing@example.com'}
+            mock_user_repository.find_by_email.return_value = {'id': 'existing'}
+
+            # Act & Assert
+            with pytest.raises(BusinessException) as exc_info:
+                user_service.create_user(create_dto)
+
+            assert exc_info.value.code == 'EMAIL_EXISTS'
+
+        @pytest.mark.parametrize('name,expected_error', [
+            ('', '名称不能为空'),
+            ('a', '名称至少 2 个字符'),
+            ('a' * 51, '名称最多 50 个字符'),
+        ])
+        def test_should_validate_name(
+            self, user_service, name, expected_error
+        ):
+            """参数化测试: 名称验证"""
+            create_dto = {
+                'email': 'test@example.com',
+                'password': 'Password123!',
+                'name': name
+            }
+
+            with pytest.raises(ValueError) as exc_info:
+                user_service.create_user(create_dto)
+
+            assert expected_error in str(exc_info.value)
+
+
+    class TestGetUserById:
+        """getUserById 方法测试"""
+
+        def test_should_return_user_when_found(
+            self, user_service, mock_user_repository
+        ):
+            """找到用户时返回用户"""
+            # Arrange
+            user_id = 'uuid-123'
+            expected_user = {'id': user_id, 'email': 'test@example.com'}
+            mock_user_repository.find_by_id.return_value = expected_user
+
+            # Act
+            result = user_service.get_user_by_id(user_id)
+
+            # Assert
+            assert result == expected_user
+
+        def test_should_return_none_when_not_found(
+            self, user_service, mock_user_repository
+        ):
+            """用户不存在时返回 None"""
+            mock_user_repository.find_by_id.return_value = None
+
+            result = user_service.get_user_by_id('non-existent')
+
+            assert result is None
+```
+
+### Pytest Fixtures
+```python
+# conftest.py
+import pytest
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+
+@pytest.fixture(scope='session')
+def db_engine():
+    """创建测试数据库引擎"""
+    engine = create_engine('sqlite:///:memory:')
+    return engine
+
+
+@pytest.fixture
+def db_session(db_engine):
+    """创建数据库 session"""
+    Session = sessionmaker(bind=db_engine)
+    session = Session()
+    yield session
+    session.rollback()
+    session.close()
+
+
+@pytest.fixture
+def sample_user():
+    """创建示例用户数据"""
+    return {
+        'id': 'uuid-123',
+        'email': 'test@example.com',
+        'name': 'Test User'
+    }
+```
+
+---
+
+## 测试最佳实践
+
+### 测试命名
+```yaml
+good_names:
+  - "should_return_user_when_id_is_valid"
+  - "should_throw_exception_when_email_already_exists"
+  - "should_hash_password_before_saving"
+
+bad_names:
+  - "test1"
+  - "testUser"
+  - "it_works"
+```
+
+### 测试组织
+```yaml
+structure:
+  - describe: "被测试的类或模块"
+    - describe: "被测试的方法"
+      - it: "具体的测试场景"
+```
+
+### 断言最佳实践
+```typescript
+// ✅ 好: 具体的断言
+expect(user.email).toBe('test@example.com');
+expect(users).toHaveLength(3);
+
+// ❌ 差: 模糊的断言
+expect(user).toBeTruthy();
+expect(result).not.toBeNull();
+```
+
+### Mock 最佳实践
+```yaml
+do:
+  - "只 mock 外部依赖 (数据库, API, 文件系统)"
+  - "mock 返回值要符合实际数据结构"
+  - "验证 mock 被正确调用"
+
+dont:
+  - "不要 mock 被测试的类本身"
+  - "不要 mock 太多内部实现"
+  - "不要在测试中依赖 mock 的调用顺序"
+```
+
+---
+
+## 输出要求
+
+1. **完整覆盖**: 覆盖所有公共方法
+2. **正负面测试**: 包含正常和异常场景
+3. **边界测试**: 包含边界条件
+4. **清晰命名**: 测试名称描述场景
+5. **独立性**: 测试之间相互独立
+6. **可读性**: 使用 AAA 模式组织代码
+
+只输出测试代码,不要包含额外解释。
