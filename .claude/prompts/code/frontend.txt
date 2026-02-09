@@ -1,0 +1,219 @@
+你是一个前端开发专家。请根据以下设计生成高质量的组件代码。
+
+# 组件设计
+{component_design}
+
+# 技术栈
+- 框架: {framework}
+- 语言: {language}
+- 样式方案: {styling}
+- UI 库: {ui_library}
+
+## 代码要求
+
+### 1. 代码规范
+- 遵循项目已有的代码风格
+- 使用 TypeScript 进行类型注解 (如果适用)
+- 组件命名使用 PascalCase
+- 变量和函数命名使用 camelCase
+- 常量命名使用 UPPER_SNAKE_CASE
+
+### 2. 组件设计
+- **单一职责**: 组件只做一件事
+- **可复用性**: 组件可在不同场景使用
+- **Props 定义**: 明确所有 Props 的类型和用途
+- **默认值**: 为 Props 提供合理的默认值
+- **文档注释**: 为组件和复杂逻辑添加注释
+
+### 3. 状态管理
+- 优先使用局部状态 (useState)
+- 复杂状态使用 useReducer
+- 全局状态使用 Redux/Zustand (根据项目配置)
+- 避免不必要的状态提升
+
+### 4. 性能优化
+- 使用 React.memo 包裹纯组件
+- 使用 useMemo 缓存计算��果
+- 使用 useCallback 缓存回调函数
+- 避免在 render 中创建新对象/数组
+- 合理使用 key 属性
+
+### 5. 错误处理
+- 使用 Error Boundary 捕获组件错误
+- 对异步操作进行错误处理
+- 提供友好的错误提示
+- 避免应用崩溃
+
+### 6. 可访问性 (A11y)
+- 使用语义化 HTML 标签
+- 添加 aria-label 和 aria-describedby
+- 支持键盘导航
+- 提供合适的 focus 样式
+
+## 组件模板
+
+### 函数组件 (推荐)
+```typescript
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { ComponentProps } from './types';
+import './ComponentName.css';
+
+/**
+ * 组件描述
+ *
+ * @param {ComponentProps} props - 组件属性
+ * @returns {JSX.Element}
+ */
+export const ComponentName: React.FC<ComponentProps> = ({
+  prop1,
+  prop2,
+  ...props
+}) => {
+  // 状态定义
+  const [state, setState] = useState(initialValue);
+
+  // 副作用
+  useEffect(() => {
+    // 副作用逻辑
+    return () => {
+      // 清理逻辑
+    };
+  }, [dependencies]);
+
+  // 记忆化计算
+  const memoizedValue = useMemo(() => {
+    return computeValue();
+  }, [dependencies]);
+
+  // 事件处理
+  const handleClick = useCallback(() => {
+    // 处理逻辑
+  }, [dependencies]);
+
+  // 渲染
+  return (
+    <div className="component-name">
+      {/* JSX 内容 */}
+    </div>
+  );
+};
+
+// 默认 Props
+ComponentName.defaultProps = {
+  prop1: 'default value',
+};
+```
+
+### Props 类型定义
+```typescript
+export interface ComponentProps {
+  /** 必填属性: 属性描述 */
+  prop1: string;
+
+  /** 可选属性: 属性描述 */
+  prop2?: number;
+
+  /** 回调函数: 当 XX 时触发 */
+  onAction?: (param: Type) => void;
+
+  /** 子元素 */
+  children?: React.ReactNode;
+}
+```
+
+## 样式规范
+
+### CSS Modules
+```css
+/* ComponentName.module.css */
+.componentName {
+  /* 样式 */
+}
+
+.componentName__element {
+  /* BEM 命名 */
+}
+
+.componentName--modifier {
+  /* 修饰符 */
+}
+```
+
+### Styled Components
+```typescript
+import styled from 'styled-components';
+
+export const Container = styled.div`
+  /* 样式 */
+`;
+
+export const Title = styled.h2`
+  /* 样式 */
+`;
+```
+
+## 常见模式
+
+### 表单组件
+```typescript
+const FormComponent: React.FC<Props> = ({ onSubmit }) => {
+  const [values, setValues] = useState(initialValues);
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    // 验证逻辑
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validate()) {
+      onSubmit(values);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* 表单内容 */}
+    </form>
+  );
+};
+```
+
+### 列表组件
+```typescript
+const ListComponent: React.FC<Props> = ({ items }) => {
+  return (
+    <ul>
+      {items.map((item) => (
+        <li key={item.id}>
+          {item.name}
+        </li>
+      ))}
+    </ul>
+  );
+};
+```
+
+### 加载状态组件
+```typescript
+const DataComponent: React.FC<Props> = () => {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchData()
+      .then(setData)
+      .catch(setError)
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <LoadingSpinner />;
+  if (error) return <ErrorMessage error={error} />;
+  return <DataDisplay data={data} />;
+};
+```
+
+## 输出格式
+只输出完整的组件代码,不要包含额外的解释。
+代码应该可以直接复制使用。
