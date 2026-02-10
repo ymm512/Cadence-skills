@@ -19,10 +19,22 @@ description: Use when user provides PRD documents or requests end-to-end softwar
 - 检测到触发词: "全流程开发", "从需求到测试", "自动化开发", "Cadence"
 - 用户上传 PRD 文件或指定 PRD 路径
 
-### 显式调用
+### 通过自然语言激活
+
+直接描述你的需求，Claude 会自动匹配并激活 Cadence：
+
 ```
-/cadence [PRD路径]
-/cadence-orchestrator
+"帮我用 Cadence 开发用户认证功能，PRD 在 docs/prd/auth.md"
+"全流程开发这个任务管理系统"
+"使用 Cadence 自动化开发"
+"从需求到测试完成这个功能"
+```
+
+### 查看已安装 Skills
+
+```
+"列出可用的 Cadence Skills"
+"显示已安装的插件"
 ```
 
 ## 核心职责
@@ -89,7 +101,7 @@ if len(prd_content) > 10000:
 #### 步骤 2.2: 调用需求整理 Subagent
 ```python
 Task(
-  subagent_type="cadence-requirement-analyst",
+  subagent_type="cadence-full:cadence-requirement-analyst",
   prompt=f"""
 分析以下 PRD 文档:
 
@@ -104,7 +116,8 @@ Task(
 返回 JSON 摘要。详细分析保留在你的 transcript 中。
   """,
   description="需求整理和模块划分",
-  model="sonnet"
+  model="sonnet",
+  max_turns=10
 )
 ```
 
@@ -198,7 +211,7 @@ AskUserQuestion(
 #### 步骤 3.3: 调用方案设计 Subagent
 ```python
 Task(
-  subagent_type="cadence-solution-architect",
+  subagent_type="cadence-full:cadence-solution-architect",
   prompt=f"""
 基于以下需求设计技术方案:
 
@@ -219,7 +232,8 @@ Task(
 返回设计文档 JSON。代码分析详情保留在你的 transcript 中。
   """,
   description="方案设计和架构决策",
-  model="sonnet"
+  model="sonnet",
+  max_turns=15
 )
 ```
 
@@ -303,10 +317,17 @@ design = read_memory(f"workflow/{workflow_id}/design")
 准备好了吗?
 ```
 
-#### 步骤 4.3: 触发 Skill
-```python
-Skill(skill="cadence-code-generation", args=workflow_id)
+#### 步骤 4.3: 引导用户激活代码生成
+
+由于代码生成需要频繁交互，请在主对话中引导用户：
+
 ```
+准备好了吗？说"开始代码生成"或"继续"来激活代码生成流程。
+```
+
+当用户确认后，`cadence-code-generation` Skill 会自动激活（基于其 YAML frontmatter 中定义的触发词）。
+
+> **技术说明**: Skills 与 Subagents 不同，Skills 在主对话内执行，通过关键词自动激活，不能使用 `Task()` 或 `Skill()` 工具调用。
 
 **Skill 内部流程** (详见 cadence-code-generation/SKILL.md):
 - Git 分支管理
@@ -368,7 +389,7 @@ design = read_memory(f"workflow/{workflow_id}/design")
 #### 步骤 5.3: 调用业务测试 Subagent
 ```python
 Task(
-  subagent_type="cadence-business-testing",
+  subagent_type="cadence-full:cadence-business-testing",
   prompt=f"""
 基于以下工作流上下文生成业务测试用例：
 
@@ -385,7 +406,8 @@ Task(
 返回 JSON 格式的测试摘要。
   """,
   description="业务测试用例生成",
-  model="sonnet"
+  model="sonnet",
+  max_turns=12
 )
 ```
 
