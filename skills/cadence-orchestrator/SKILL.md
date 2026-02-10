@@ -289,68 +289,98 @@ update_memory(f"workflow/{workflow_id}/context", {
 
 ---
 
-### Phase 4: 代码生成 (使用 Skills)
+### Phase 4: 代码生成 (使用 Subagent)
 
-#### 为什么用 Skills?
-- 频繁代码审查和修改
-- 快速编辑反馈,多轮交互
-- 即时调试和测试
+#### 为什么用 Subagent?
+- 代码生成产生大量输出（文件内容、测试结果）
+- 上下文隔离：详细过程在 Subagent transcript，不污染主对话
+- 支持通过 `Task()` 显式调用
 
 #### 步骤 4.1: 读取设计
 ```python
 design = read_memory(f"workflow/{workflow_id}/design")
 ```
 
-#### 步骤 4.2: 激活代码生成 Skill
-**直接在主对话中**:
-```
-现在进入代码生成阶段。
+#### 步骤 4.2: 调用代码生成 Subagent
 
-我将使用 cadence-code-generation Skill 来:
-1. 创建 Git 分支
-2. 生成前端代码 (分步审查)
-3. 生成后端代码 (分步审查)
-4. 生成单元测试
-5. 执行测试并调试
-6. Git commit 和 push
+使用 Task() 调用代码生成 Subagent:
 
-准备好了吗?
-```
-
-#### 步骤 4.3: 引导用户激活代码生成
-
-由于代码生成需要频繁交互，请在主对话中引导用户：
-
-```
-准备好了吗？说"开始代码生成"或"继续"来激活代码生成流程。
-```
-
-当用户确认后，`cadence-code-generation` Skill 会自动激活（基于其 YAML frontmatter 中定义的触发词）。
-
-> **技术说明**: Skills 与 Subagents 不同，Skills 在主对话内执行，通过关键词自动激活，不能使用 `Task()` 或 `Skill()` 工具调用。
-
-**Skill 内部流程** (详见 cadence-code-generation/SKILL.md):
-- Git 分支管理
-- 前端代码生成 + 审查
-- 后端代码生成 + 审查
-- 单元测试生成 + 审查
-- 测试执行 + 调试修复
-- Git 操作
-
-#### 步骤 4.4: 保存代码结果
 ```python
-code_result = {
-  "branch_name": "feature/WF-{workflow_id}",
-  "files_created": [...],
-  "files_modified": [...],
-  "test_coverage": "95%",
-  "test_results": "passed"
-}
+task_result = Task(
+  subagent_type="cadence-full:cadence-code-generation",
+  prompt=f"""
+基于以下工作流上下文生成代码：
 
-write_memory(f"workflow/{workflow_id}/code", code_result)
+**工作流 ID**: {workflow_id}
+
+请完成：
+1. 从 Memory 读取设计文档 (workflow/{workflow_id}/design)
+2. 创建 Git 分支 feature/WF-{workflow_id}
+3. 生成前端代码（组件、页面、工具函数）
+4. 生成后端代码（API、Service、Repository）
+5. 生成单元测试
+6. 执行测试并调试修复
+7. Git commit 和 push
+
+返回 JSON 格式的结果摘要，格式如下：
+{{
+  "branch_name": "分支名",
+  "files_created": ["文件路径列表"],
+  "files_modified": ["文件路径列表"],
+  "test_coverage": "覆盖率百分比",
+  "test_results": {{"total": N, "passed": N, "failed": N}},
+  "status": "success|failed|partial",
+  "summary": "执行摘要"
+}}
+  """,
+  description="基于设计方案生成代码",
+  model="sonnet",
+  max_turns=50
+)
 ```
 
-#### 步骤 4.5: 更新状态
+**Subagent 内部流程** (详见 cadence-code-generation Subagent):
+- Git 分支管理
+- 前端代码生成（批量模式）
+- 后端代码生成（批量模式）
+- 单元测试生成
+- 测试执行 + 调试修复
+- Git commit 和 push
+
+#### 步骤 4.3: 处理代码生成结果
+
+```python
+# 解析 Subagent 返回的 JSON
+code_result = parse_json_response(task_result)
+
+# 保存到 Memory
+write_memory(f"workflow/{workflow_id}/code", code_result)
+
+# 显示摘要给用户
+print(f"""
+✅ 代码生成完成!
+
+📊 执行摘要:
+- 分支: {code_result['branch_name']}
+- 新增文件: {len(code_result['files_created'])} 个
+- 修改文件: {len(code_result['files_modified'])} 个
+- 测试覆盖率: {code_result['test_coverage']}
+- 测试结果: {code_result['test_results']['passed']}/{code_result['test_results']['total']} 通过
+
+{code_result['summary']}
+""")
+
+# 如果测试有失败，提醒用户
+if code_result['test_results']['failed'] > 0:
+    print(f"""
+⚠️  注意: 有 {code_result['test_results']['failed']} 个测试未通过
+建议检查测试日志或手动修复。
+    """)
+```
+
+> **技术说明**: 代码生成已转为 Subagent 模式。详细代码生成过程在 Subagent transcript 中完成，主对话只接收结构化摘要。
+
+#### 步骤 4.4: 更新状态
 ```python
 update_memory(f"workflow/{workflow_id}/context", {
   "status": "testing",
@@ -637,10 +667,14 @@ Orchestrator: 从代码生成阶段恢复...
 ### Subagents
 - `cadence-requirement-analyst`: 需求整理 Subagent
 - `cadence-solution-architect`: 方案设计 Subagent
+- `cadence-code-generation`: 代码生成 Subagent
 
 ### Skills
-- `cadence-code-generation`: 代码生成 Skill
 - `cadence-business-testing`: 业务测试 Skill
+- `cadence-requirement-only`: 独立需求分析 Skill
+- `cadence-design-only`: 独立方案设计 Skill
+- `cadence-code-only`: 独立代码生成 Skill
+- `cadence-test-only`: 独立测试生成 Skill
 
 ### MCP Servers
 - **Serena MCP**: Memory 管理,符号操作,代码分析

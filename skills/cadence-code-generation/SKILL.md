@@ -1,9 +1,35 @@
 ---
 name: cadence-code-generation
-description: Use when generating code based on design documents. Handles Git branching, frontend/backend code generation, unit tests, test execution and debugging. Requires frequent interaction for code review. Usually activated by cadence-orchestrator.
+description: DEPRECATED - This Skill has been moved to Subagent. Use cadence-full:cadence-code-generation via Task() instead. Kept for backward compatibility.
 ---
 
-# Cadence Code Generation - 代码生成 Skill
+# ⚠️ 已弃用 (DEPRECATED)
+
+**重要提示**: 此 Skill 已迁移为 Subagent。
+
+## 新的使用方式
+
+```python
+Task(
+  subagent_type="cadence-full:cadence-code-generation",
+  prompt="基于设计方案生成代码...",
+  description="代码生成"
+)
+```
+
+## 为什么迁移?
+
+- 代码生成产生大量输出，需要 Subagent 隔离上下文
+- 支持通过 `Task()` 显式调用
+- 与业务测试保持一致的模式
+
+## 文件位置
+
+新的 Subagent 定义: `agents/cadence-code-generation.md`
+
+---
+
+# Cadence Code Generation - 代码生成 Skill (旧版)
 
 ## 基础信息
 - **技能名称**: Cadence Code Generation

@@ -16,7 +16,6 @@
       "strict": false,
       "skills": [
         "./skills/cadence-orchestrator",
-        "./skills/cadence-code-generation",
         "./skills/cadence-requirement-only",
         "./skills/cadence-design-only",
         "./skills/cadence-code-only",
@@ -25,7 +24,8 @@
       "agents": [
         "./agents/cadence-requirement-analyst.md",
         "./agents/cadence-solution-architect.md",
-        "./agents/cadence-business-testing.md"
+        "./agents/cadence-business-testing.md",
+        "./agents/cadence-code-generation.md"
       ]
     },
     {

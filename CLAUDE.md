@@ -17,14 +17,13 @@
 | 组件 | 类型 | 数量 | 用途 |
 |------|------|------|------|
 | cadence-orchestrator | Skill | 1 | 完整流程主控调度器 |
-| cadence-code-generation | Skill | 1 | 代码生成 (完整流程用) |
-| cadence-business-testing | Subagent | 1 | 业务测试 (完整流程用) |
 | cadence-requirement-only | Skill | 1 | 独立需求分析 |
 | cadence-design-only | Skill | 1 | 独立方案设计 |
 | cadence-code-only | Skill | 1 | 独立代码生成 |
 | cadence-test-only | Skill | 1 | 独立测试生成 |
 | cadence-requirement-analyst | Subagent | 1 | PRD 分析、业务规则提取 |
 | cadence-solution-architect | Subagent | 1 | 架构设计、代码分析 |
+| cadence-code-generation | Subagent | 1 | 代码生成 (完整流程用) |
 | cadence-business-testing | Subagent | 1 | 测试用例生成、自动化脚本 |
 | Prompt Templates | Resource | 18 | 提示词模板库 |
 
@@ -159,7 +158,6 @@ cadence-skills/
 | Skill | 用途 | 模式 |
 |-------|------|------|
 | cadence-orchestrator | 完整流程主控 | 协调 Subagent + Skills |
-| cadence-code-generation | 代码生成 | Skills (主对话内) |
 | cadence-requirement-only | 独立需求分析 | 独立执行 |
 | cadence-design-only | 独立方案设计 | 独立执行 |
 | cadence-code-only | 独立代码生成 | 独立执行 |
@@ -171,6 +169,7 @@ cadence-skills/
 |-------|------|------|
 | cadence-requirement-analyst | 需求分析 | 只读工具，大输出隔离 |
 | cadence-solution-architect | 方案设计 | 只读工具，代码分析 |
+| cadence-code-generation | 代码生成 | 批量生成，测试执行 |
 | cadence-business-testing | 业务测试 | 测试用例生成，隔离输出 |
 
 #### prompts/ - 提示词模板
@@ -189,7 +188,7 @@ cadence-skills/
 cadence-orchestrator
     ├── cadence-requirement-analyst (Subagent)
     ├── cadence-solution-architect (Subagent)
-    ├── cadence-code-generation (Skill)
+    ├── cadence-code-generation (Subagent)
     └── cadence-business-testing (Subagent)
 
 独立子流程:
@@ -292,9 +291,10 @@ cp -r agents/* your-project/.claude/agents/
 
 ### 当前版本
 
-**v1.1.0**
+**v1.1.1**
 - 完整流程 (orchestrator + code + test)
 - 独立子流程 (requirement-only, design-only, code-only, test-only)
+- 代码生成改为 Subagent 模式
 - Plugin Marketplace 支持
 
 ### 历史版本

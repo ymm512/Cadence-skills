@@ -82,7 +82,6 @@ cadence-skills/
 │
 ├── skills/                        # Skills (轻交互任务)
 │   ├── cadence-orchestrator/      # 🎛️ 完整流程主控调度器
-│   ├── cadence-code-generation/   # 💻 代码生成 (完整流程用)
 │   ├── cadence-requirement-only/  # 📋 独立需求分析
 │   ├── cadence-design-only/       # 🏗️ 独立方案设计
 │   ├── cadence-code-only/         # 💻 独立代码生成
@@ -91,6 +90,7 @@ cadence-skills/
 ├── agents/                        # Subagents (重分析任务)
 │   ├── cadence-requirement-analyst.md   # 📋 PRD 分析
 │   ├── cadence-solution-architect.md    # 🏗️ 架构设计
+│   ├── cadence-code-generation.md       # 💻 代码生成
 │   └── cadence-business-testing.md      # 🧪 业务测试用例生成
 │
 ├── prompts/                       # 提示词模板库 (18个)
@@ -207,10 +207,10 @@ Cadence 自动执行:
 └─────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
-│ Phase 4: 代码生成 (Skills)                                   │
+│ Phase 4: 代码生成 (Subagent)                                 │
 │ - Git 分支管理                                               │
-│ - 前端代码生成 (逐个审查)                                    │
-│ - 后端代码生成 (逐个审查)                                    │
+│ - 前端代码生成 (批量生成)                                    │
+│ - 后端代码生成 (批量生成)                                    │
 │ - 单元测试生成                                               │
 │ - 测试执行和调试                                             │
 │ - Git commit 和 push                                         │
@@ -277,8 +277,8 @@ Orchestrator: ✅ 从代码生成阶段恢复
 |---------|---------|------|
 | PRD 分析 | Subagent | 产生 5K-10K tokens 输出,隔离在 transcript |
 | 代码分析 | Subagent | 产生 10K-20K tokens 输出,工具限制只读 |
-| 代码审查 | Skills | 频繁交互,即时反馈,多轮修改 |
-| 测试调试 | Skills | 测试失败需要快速修复,无大量输出 |
+| 代码生成 | Subagent | 产生大量输出,隔离上下文,支持 Task() 调用 |
+| 业务测试 | Subagent | 生成大量测试用例和脚本,结构化输出 |
 
 **核心优势**:
 - ✅ 重分析用 Subagent → 隔离大输出,防止上下文污染
@@ -380,9 +380,9 @@ Orchestrator: ✅ 从代码生成阶段恢复
 
 ### 核心文档
 - [Orchestrator 文档](skills/cadence-orchestrator/SKILL.md) - 完整流程主控
-- [需求分析 Agent](agents/cadence-requirement-analyst.md)
-- [方案设计 Agent](agents/cadence-solution-architect.md)
-- [代码生成 Skill](skills/cadence-code-generation/SKILL.md)
+- [需求分析 Subagent](agents/cadence-requirement-analyst.md)
+- [方案设计 Subagent](agents/cadence-solution-architect.md)
+- [代码生成 Subagent](agents/cadence-code-generation.md)
 - [业务测试 Subagent](agents/cadence-business-testing.md)
 
 ### 独立子流程文档
@@ -402,9 +402,9 @@ Orchestrator: ✅ 从代码生成阶段恢复
 
 | 指标 | 数量 |
 |------|------|
-| **版本** | v1.1.0 |
-| **Skills** | 6 个 (1 主控 + 1 代码生成 + 4 独立) |
-| **Subagents** | 3 个 (需求分析 + 方案设计 + 业务测试) |
+| **版本** | v1.1.1 |
+| **Skills** | 5 个 (1 主控 + 4 独立) |
+| **Subagents** | 4 个 (需求分析 + 方案设计 + 代码生成 + 业务测试) |
 | **Prompts** | 18 个模板 |
 | **代码行数** | ~7,600 行 |
 | **Git 提交** | 5 个结构化提交 |
@@ -445,6 +445,12 @@ Orchestrator: ✅ 从代码生成阶段恢复
 ---
 
 ## 📝 版本历史
+
+### v1.1.1 (2026-02-10)
+- ✅ 将 `cadence-code-generation` 从 Skill 重构为 Subagent
+- ✅ 统一完整流程的组件类型（全部使用 Subagent 进行重任务）
+- ✅ 支持通过 `Task()` 显式调用代码生成
+- ✅ 旧 Skill 文件标记为 DEPRECATED（向后兼容）
 
 ### v1.1.0 (2026-02-09)
 - ✅ 添加独立子流程 Skills (requirement-only, design-only, code-only, test-only)
