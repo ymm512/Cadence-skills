@@ -3,6 +3,10 @@ name: cadence-orchestrator
 description: Use when user provides PRD documents or requests end-to-end software development workflow. Orchestrates requirement analysis, solution design, code generation and testing using hybrid Subagent+Skills architecture. Trigger words: '全流程开发', 'Cadence', '从需求到测试', '自动化开发', 'PRD'
 ---
 
+> **✅ Skill `cadence-orchestrator` 已加载成功**
+
+---
+
 # Cadence Orchestrator - 主控调度器
 
 ## 基础信息

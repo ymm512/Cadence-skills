@@ -3,6 +3,10 @@ name: cadence-code-generation
 description: DEPRECATED - This Skill has been moved to Subagent. Use cadence-full:cadence-code-generation via Task() instead. Kept for backward compatibility.
 ---
 
+> **⚠️ Skill `cadence-code-generation` 已加载（已弃用，请使用 Subagent 版本）**
+
+---
+
 # ⚠️ 已弃用 (DEPRECATED)
 
 **重要提示**: 此 Skill 已迁移为 Subagent。

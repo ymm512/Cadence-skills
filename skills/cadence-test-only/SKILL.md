@@ -3,6 +3,10 @@ name: cadence-test-only
 description: Use when user only wants to generate test cases and automation scripts WITHOUT code generation. Creates business test cases, API tests, E2E tests. Trigger words: '生成测试', '测试用例', '自动化测试', '业务测试'
 ---
 
+> **✅ Skill `cadence-test-only` 已加载成功**
+
+---
+
 # Cadence Test Only - 独立测试生成
 
 ## 用途

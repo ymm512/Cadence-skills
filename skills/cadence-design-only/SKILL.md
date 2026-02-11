@@ -3,6 +3,10 @@ name: cadence-design-only
 description: Use when user has requirement document and only wants technical design WITHOUT code generation. Analyzes existing code (if any), designs architecture, data model, and API. Trigger words: '方案设计', '技术设计', '架构设计', 'API设计'
 ---
 
+> **✅ Skill `cadence-design-only` 已加载成功**
+
+---
+
 # Cadence Design Only - 独立方案设计
 
 ## 用途
