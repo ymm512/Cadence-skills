@@ -17,6 +17,7 @@
 | 组件 | 类型 | 数量 | 用途 |
 |------|------|------|------|
 | cadence-orchestrator | Skill | 1 | 完整流程主控调度器 |
+| cadence-project-init | Skill | 1 | 项目初始化配置 |
 | cadence-requirement-only | Skill | 1 | 独立需求分析 |
 | cadence-design-only | Skill | 1 | 独立方案设计 |
 | cadence-code-only | Skill | 1 | 独立代码生成 |
@@ -135,6 +136,8 @@ cadence-skills/
 |------------|------|------|
 | **Serena** | Memory 管理、代码分析、断点续传 | ✅ 是 |
 | **Context7** | 官方文档查询 | ❌ 可选 |
+| **time** | 日期时间获取（cadence-project-init 必需） | ✅ 是 |
+| **cclsp** | LSP 语言服务器支持（可选） | ❌ 可选 |
 
 配置位置：`.claude/settings.local.json`
 
@@ -158,6 +161,7 @@ cadence-skills/
 | Skill | 用途 | 模式 |
 |-------|------|------|
 | cadence-orchestrator | 完整流程主控 | 协调 Subagent + Skills |
+| cadence-project-init | 项目初始化配置 | 独立执行 |
 | cadence-requirement-only | 独立需求分析 | 独立执行 |
 | cadence-design-only | 独立方案设计 | 独立执行 |
 | cadence-code-only | 独立代码生成 | 独立执行 |
@@ -192,8 +196,8 @@ cadence-orchestrator
     └── cadence-business-testing (Subagent)
 
 独立子流程:
-cadence-requirement-only ──→ cadence-design-only ──→ cadence-code-only ──→ cadence-test-only
-      (独立)                    (独立)                   (独立)                (独立)
+cadence-project-init ──→ cadence-requirement-only ──→ cadence-design-only ──→ cadence-code-only ──→ cadence-test-only
+      (独立)                    (独立)                   (独立)                   (独立)                (独立)
 
 共享资源:
 - prompts/ (所有组件使用)
@@ -291,14 +295,17 @@ cp -r agents/* your-project/.claude/agents/
 
 ### 当前版本
 
-**v1.1.1**
+**v1.2.0**
 - 完整流程 (orchestrator + code + test)
+- 项目初始化 Skill (cadence-project-init)
 - 独立子流程 (requirement-only, design-only, code-only, test-only)
 - 代码生成改为 Subagent 模式
 - Plugin Marketplace 支持
 
 ### 历史版本
 
+- **v1.1.1**: 代码生成改为 Subagent 模式
+- **v1.1.0**: 添加独立子流程 Skills
 - **v1.0.0**: 初始版本，完整流程实现
 
 ## 贡献指南
@@ -341,6 +348,6 @@ cp -r agents/* your-project/.claude/agents/
 
 ---
 
-**最后更新**: 2026-02-09
-**版本**: v1.1.0
+**最后更新**: 2026-02-11
+**版本**: v1.2.0
 **维护者**: Cadence Team

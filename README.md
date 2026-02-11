@@ -82,6 +82,7 @@ cadence-skills/
 │
 ├── skills/                        # Skills (轻交互任务)
 │   ├── cadence-orchestrator/      # 🎛️ 完整流程主控调度器
+│   ├── cadence-project-init/      # 🚀 项目初始化 (新增)
 │   ├── cadence-requirement-only/  # 📋 独立需求分析
 │   ├── cadence-design-only/       # 🏗️ 独立方案设计
 │   ├── cadence-code-only/         # 💻 独立代码生成
@@ -136,7 +137,32 @@ cadence-skills/
 - ✅ Serena MCP Server 已启用 (用于 Memory 和代码分析)
 - ✅ Context7 MCP Server 已启用 (可选,用于官方文档查询)
 
-### 2. 使用方式
+### 2. 项目初始化 (推荐首先执行)
+
+在使用 Cadence 之前，建议先初始化项目配置：
+
+> **注意**: `cadence init` 与 Claude Code 官方 `/init` 命令不同，专用于 Cadence 工作流配置。
+
+```
+你: "cadence init" 或 "初始化Cadence项目"
+
+Cadence 自动执行:
+1. 🔍 检测项目类型 (前端/后端/全栈)
+2. 📋 收集项目信息 (技术栈、命名等)
+3. ⚙️ 创建 .claude 目录结构
+4. 📝 生成 CLAUDE.md (中文强制规则)
+5. 🔧 配置 cclsp LSP 支持
+6. ✅ 完成!
+```
+
+**触发词**: `cadence init`, `初始化Cadence项目`, `配置Cadence开发环境`, `cadence setup`
+
+| 特性 | `/init` (官方) | `cadence init` (Cadence) |
+|------|---------------|-------------------------|
+| 目的 | 基础配置 | Cadence 开发工作流 |
+| 中文规则 | 无 | ✅ 强制中文 |
+| 项目类型检测 | 基础 | ✅ 前端/后端/全栈 |
+| 文档规范 | 通用 | ✅ Cadence专用 |
 
 #### 完整流程 (推荐)
 
@@ -386,6 +412,7 @@ Orchestrator: ✅ 从代码生成阶段恢复
 - [业务测试 Subagent](agents/cadence-business-testing.md)
 
 ### 独立子流程文档
+- [项目初始化](skills/cadence-project-init/SKILL.md) - 项目配置和规则初始化
 - [独立需求分析](skills/cadence-requirement-only/SKILL.md)
 - [独立方案设计](skills/cadence-design-only/SKILL.md)
 - [独立代码生成](skills/cadence-code-only/SKILL.md)
@@ -403,7 +430,7 @@ Orchestrator: ✅ 从代码生成阶段恢复
 | 指标 | 数量 |
 |------|------|
 | **版本** | v1.1.1 |
-| **Skills** | 5 个 (1 主控 + 4 独立) |
+| **Skills** | 6 个 (1 主控 + 1 初始化 + 4 独立) |
 | **Subagents** | 4 个 (需求分析 + 方案设计 + 代码生成 + 业务测试) |
 | **Prompts** | 18 个模板 |
 | **代码行数** | ~7,600 行 |

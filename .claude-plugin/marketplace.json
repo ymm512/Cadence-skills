@@ -19,7 +19,8 @@
         "./skills/cadence-requirement-only",
         "./skills/cadence-design-only",
         "./skills/cadence-code-only",
-        "./skills/cadence-test-only"
+        "./skills/cadence-test-only",
+        "./skills/cadence-project-init"
       ],
       "agents": [
         "./agents/cadence-requirement-analyst.md",
