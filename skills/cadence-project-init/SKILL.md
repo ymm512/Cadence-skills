@@ -1,10 +1,6 @@
 ---
 name: cadence-project-init
-description: Use when initializing or upgrading projects with Cadence AI development workflow. Creates .claude directory structure, generates Chinese CLAUDE.md with mandatory rules, detects project type (frontend/backend/fullstack), configures cclsp LSP and time MCP. Trigger words MUST start with 'cadence init' or '初始化Cadence项目' or '配置Cadence开发环境'. Note: This is DIFFERENT from Claude Code's native /init command.
----
-
-> **✅ Skill `cadence-project-init` 已加载成功**
-
+description: Use when initializing or upgrading projects with Cadence AI development workflow. Trigger words: 'cadence init', '初始化Cadence项目', '配置Cadence开发环境'. Note: DIFFERENT from Claude Code native /init command.
 ---
 
 # Cadence Project Init - 项目初始化

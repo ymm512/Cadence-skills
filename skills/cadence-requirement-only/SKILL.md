@@ -1,10 +1,6 @@
 ---
 name: cadence-requirement-only
-description: Use when user only wants to analyze PRD and generate requirement document WITHOUT proceeding to design or coding. Extracts business rules, identifies workflows, defines modules. Trigger words: '分析PRD', '需求分析', '提取业务规则', '模块划分'
----
-
-> **✅ Skill `cadence-requirement-only` 已加载成功**
-
+description: Use when user only wants requirement analysis WITHOUT proceeding to design or coding. Trigger words: '分析PRD', '需求分析', '提取业务规则', '模块划分'
 ---
 
 # Cadence Requirement Only - 独立需求分析

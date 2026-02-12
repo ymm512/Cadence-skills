@@ -1,10 +1,6 @@
 ---
 name: cadence-code-only
-description: Use when user has design document and only wants code generation WITHOUT full workflow. Generates frontend/backend code, unit tests based on existing design. Trigger words: '生成代码', '写代码', '实现这个设计', '代码生成'
----
-
-> **✅ Skill `cadence-code-only` 已加载成功**
-
+description: Use when user has design document and only wants code generation WITHOUT full workflow. Trigger words: '生成代码', '写代码', '实现这个设计', '代码生成'
 ---
 
 # Cadence Code Only - 独立代码生成

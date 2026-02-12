@@ -26,11 +26,15 @@
 | cadence-solution-architect | Subagent | 1 | 架构设计、代码分析 |
 | cadence-code-generation | Subagent | 1 | 代码生成 (完整流程用) |
 | cadence-business-testing | Subagent | 1 | 测试用例生成、自动化脚本 |
+| Commands | 快捷方式 | 6 | /cadence, /init, /requirement, /design, /code, /test |
+| Hooks | Hook | 1 | SessionStart 使用指南注入 |
 | Prompt Templates | Resource | 18 | 提示词模板库 |
 
 ### 架构特点
 
 - **混合模式**: Subagent 用于重分析任务 (隔离大输出)，Skills 用于轻交互任务 (即时反馈)
+- **命令快捷方式**: 通过 commands/ 目录提供 `/cadence`、`/init` 等短命令入口
+- **自动发现**: 采用 Superpowers 约定式模式，无需显式列举 skills/agents
 - **状态持久化**: 使用 Serena Memory 实现跨 session 的断点续传
 - **人工参与**: 关键节点使用 AskUserQuestion 进行结构化确认
 - **Plugin 格式**: 符合 Claude Code 官方 Plugin Marketplace 标准
@@ -90,12 +94,18 @@
 ```
 cadence-skills/
 ├── .claude-plugin/
-│   └── marketplace.json      # Plugin 配置，定义插件包结构
+│   ├── marketplace.json      # Plugin 配置，定义插件包结构
+│   └── plugin.json           # Plugin 元数据
 ├── skills/                   # Skills 目录
 │   └── {skill-name}/
 │       └── SKILL.md          # 必须包含 YAML frontmatter
 ├── agents/                   # Subagents 目录
 │   └── {agent-name}.md       # Subagent 定义文件
+├── commands/                 # 命令快捷方式
+│   └── {command}.md          # 映射到对应 Skill
+├── hooks/                    # Session hooks
+│   ├── hooks.json            # Hook 配置
+│   └── session-start.sh      # SessionStart hook 脚本
 ├── prompts/                  # 提示词模板
 │   ├── requirement/
 │   ├── design/
@@ -108,25 +118,27 @@ cadence-skills/
 
 ### Plugin 配置
 
+采用 Superpowers Plugin 模式，约定式自动发现 skills/agents/commands/hooks：
+
 `.claude-plugin/marketplace.json` 格式：
 
 ```json
 {
   "name": "package-name",
-  "owner": "Name <email>",
   "description": "包描述",
-  "version": "1.1.0",
+  "owner": { "name": "Name", "email": "email" },
   "plugins": [
     {
       "name": "plugin-name",
       "description": "插件描述",
-      "skills": ["./skills/skill-folder"],
-      "agents": ["./agents/agent-file.md"],
-      "strict": false
+      "version": "1.3.0",
+      "source": "./"
     }
   ]
 }
 ```
+
+`.claude-plugin/plugin.json` 提供插件元数据 (name, version, author, homepage 等)。
 
 ### MCP 集成
 
@@ -188,6 +200,14 @@ cadence-skills/
 ### 组件间关系
 
 ```
+命令快捷方式 (commands/):
+/cadence      → cadence-orchestrator (完整流程)
+/init         → cadence-project-init
+/requirement  → cadence-requirement-only
+/design       → cadence-design-only
+/code         → cadence-code-only
+/test         → cadence-test-only
+
 完整流程:
 cadence-orchestrator
     ├── cadence-requirement-analyst (Subagent)
@@ -295,15 +315,19 @@ cp -r agents/* your-project/.claude/agents/
 
 ### 当前版本
 
-**v1.2.0**
-- 完整流程 (orchestrator + code + test)
-- 项目初始化 Skill (cadence-project-init)
-- 独立子流程 (requirement-only, design-only, code-only, test-only)
-- 代码生成改为 Subagent 模式
-- Plugin Marketplace 支持
+**v1.3.0**
+- 采用 Superpowers Plugin 模式重构
+- 新增 commands/ 目录，支持 `/cadence`、`/init`、`/requirement`、`/design`、`/code`、`/test` 快捷命令
+- 新增 hooks/ 目录，SessionStart hook 自动注入使用指南
+- 新增 .claude-plugin/plugin.json 元数据文件
+- 简化 marketplace.json，移除显式 skills/agents 数组，采用约定式自动发现
+- 精简 6 个 SKILL.md 的 description，只保留触发条件
+- 删除已废弃的 cadence-code-generation 和 cadence-business-testing Skills 目录
 
 ### 历史版本
 
+- **v1.2.1**: 修复 SKILL.md 格式、移除无效 cadence-prompts 插件配置
+- **v1.2.0**: Plugin Marketplace 支持、项目初始化 Skill
 - **v1.1.1**: 代码生成改为 Subagent 模式
 - **v1.1.0**: 添加独立子流程 Skills
 - **v1.0.0**: 初始版本，完整流程实现
@@ -348,6 +372,6 @@ cp -r agents/* your-project/.claude/agents/
 
 ---
 
-**最后更新**: 2026-02-11
-**版本**: v1.2.0
+**最后更新**: 2026-02-12
+**版本**: v1.3.0
 **维护者**: Cadence Team
