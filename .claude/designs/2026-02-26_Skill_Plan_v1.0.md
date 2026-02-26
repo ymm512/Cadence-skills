@@ -98,7 +98,7 @@ graph TB
     B1 --> C
 
     C --> C1[理解技术架构]
-    C1 --> C2[读取技术栈配置] ⭐
+    C1 --> C2[读取技术栈配置]
 
     C2 --> C3{CLAUDE.md存在配置?}
     C3 -->|是| C4[使用CLAUDE.md配置]
@@ -188,12 +188,12 @@ graph TB
    - 验收标准与需求文档的验收标准对应
    - 标注验收标准的优先级
 
-9. **生成实现计划**
-   - 汇总为完整的实现计划文档
-   - 包含任务清单、依赖关系、并行建议、时间估计
-   - 不包含风险评估（已在 Design Review 完成）
+10. **生成实现计划**
+    - 汇总为完整的实现计划文档
+    - 包含任务清单、依赖关系、并行建议、时间估计
+    - 不包含风险评估（已在 Design Review 完成）
 
-10. **用户确认**
+11. **用户确认**
     - 确保实现计划合理可行
     - 确认任务分解是否完整
 
@@ -224,358 +224,39 @@ graph TB
 
 ## 输出产物
 
-**文件：** `.claude/designs/{date}_实现计划_{功能名称}_v1.0.md`
+> **📋 详细模板：** [2026-02-26_输出产物_Plan实现计划模板_v1.0.md](./2026-02-26_输出产物_Plan实现计划模板_v1.0.md)
 
-**内容结构：**
-```markdown
-# 实现计划
+**文件路径：** `.claude/designs/{date}_实现计划_{功能名称}_v1.0.md`
 
-## 1. 任务概览
-- 总任务数：X 个
-- 预计总时间：X-Y 小时
-- 并行任务数：X 个
-- 关键路径：Task 1 → Task 2 → Task 3
+**生成时间：** 5-40 分钟（取决于复杂度）
 
-## 2. 任务清单
+### 主要内容概览
 
-### Phase 1：基础任务（P0）
-#### Task 1：[任务名称]
-- **优先级**：P0
-- **复杂度**：中等
-- **时间估计**：2-3 小时
-- **依赖**：无
-- **描述**：[任务详细描述]
-- **技术约束**：[来自技术方案的约束]
-- **验收标准**：
-  - ✅ 标准 1：[具体可验证的标准]
-  - ✅ 标准 2：[具体可验证的标准]
+1. **任务概览**：总任务数、时间估计、关键路径
+2. **任务清单**：按优先级和依赖关系组织的详细任务列表
+3. **任务依赖关系**：Mermaid 图形化展示依赖关系和关键路径
+4. **并行执行建议**：识别可并行任务组，优化执行效率
+5. **Subagent 支持**：任务描述格式、优先级排序、分配建议
+6. **技术栈配置**：项目级配置、任务级继承、三层检测优先级
+7. **验收清单**：功能、质量、文档三个维度的验收标准
+8. **实现注意事项**：来自 Design Review 的要点和技术约束
 
-#### Task 2：[任务名称]
-- **优先级**：P0
-- **复杂度**：简单
-- **时间估计**：1-2 小时
-- **依赖**：Task 1
-- **描述**：[任务详细描述]
-- **验收标准**：
-  - ✅ 标准 1
-  - ✅ 标准 2
+### 技术栈配置流程
 
-### Phase 2：核心任务（P0）
-...
+Plan 文档会从 CLAUDE.md 读取项目技术栈配置，并输出到实现计划中：
 
-### Phase 3：扩展任务（P1/P2）
-...
-
-## 3. 任务依赖关系
-
-### 依赖关系图
-[Mermaid 依赖关系图]
-
-```mermaid
-graph LR
-    Task1[Task 1] --> Task2[Task 2]
-    Task2 --> Task3[Task 3]
-    Task3 --> Task7[Task 7]
-
-    Task1 --> Task4[Task 4]
-    Task1 --> Task5[Task 5]
-    Task1 --> Task6[Task 6]
-
-    Task4 --> Task7
-    Task5 --> Task7
-    Task6 --> Task7
+```
+CLAUDE.md (用户维护)
+    ↓ Plan Skill 读取
+实现计划 (tech_stack 配置)
+    ↓ Subagent 使用
+代码实现 (test/lint/format)
 ```
 
-### 关键路径
-- **关键路径**：Task 1 → Task 2 → Task 3 → Task 7
-- **关键路径时间**：8-12 小时
-
-## 4. 并行执行建议
-
-### 可并行任务组
-#### 并行组 1（Phase 1 完成后）
-- Task 4（预计 2-3 小时）
-- Task 5（预计 1-2 小时）
-- Task 6（预计 2-3 小时）
-- **并行执行时间**：3 小时（取最长）
-- **串行执行时间**：6-8 小时
-- **节省时间**：3-5 小时
-
-### 串行任务链
-- Task 1 → Task 2 → Task 3（必须串行）
-
-### 并行执行策略
-- **策略 1**：优先执行关键路径任务（Task 1-3-7）
-- **策略 2**：并行执行非关键路径任务（Task 4-5-6）
-- **策略 3**：Task 7 等待所有前置任务完成
-
-## 5. Subagent Development 支持
-
-### 任务分配建议
-- **Task 1**：可分配给 Subagent-1（独立任务）
-- **Task 4、5、6**：可并行分配给 Subagent-1、2、3（并行任务组）
-- **Task 7**：需等待 Task 4、5、6 完成后分配
-
-### 任务优先级排序
-1. Task 1（P0，无依赖）
-2. Task 2（P0，依赖 Task 1）
-3. Task 3（P0，依赖 Task 2）
-4. Task 4、5、6（P0，可并行）
-5. Task 7（P0，依赖 Task 3、4、5、6）
-
-### 任务描述格式（供 Subagent 使用）
-```yaml
-task_id: task-1
-task_name: "实现用户登录 API"
-priority: P0
-complexity: 中等
-estimated_time: "2-3 小时"
-dependencies: []
-description: |
-  实现用户登录 API，支持用户名/密码登录，返回 JWT token
-technical_constraints:
-  - 使用 Express.js 框架
-  - 使用 JWT 进行身份验证
-  - 密码使用 bcrypt 加密
-tech_stack:
-  language: "javascript"
-  test_command: "npm test"
-  test_coverage_command: "npm run test:coverage"
-  lint_command: "npm run lint"
-  format_command: "npm run format"
-  coverage_threshold: 80
-acceptance_criteria:
-  - ✅ 支持用户名/密码登录
-  - ✅ 返回有效的 JWT token
-  - ✅ 错误处理完善（用户不存在、密码错误）
-  - ✅ 单元测试覆盖率 > 80%
-```
-
-## 6. 技术栈配置（新增）⭐
-
-### 6.1 读取项目技术栈
-
-**步骤 1：检查 CLAUDE.md**
-
-读取项目根目录的 `CLAUDE.md` 文件，查找 `project_tech_stack` 配置：
-
-```yaml
-# CLAUDE.md 示例
-project_tech_stack:
-  language: "python"
-  test_command: "pytest tests/"
-  test_coverage_command: "pytest --cov=src --cov-report=term-missing --cov-fail-under=80"
-  lint_command: "flake8 src/"
-  format_command: "black src/"
-  coverage_threshold: 80
-```
-
-**步骤 2：如果 CLAUDE.md 没有配置**
-
-1. **自动检测项目类型**：
-   - 检查 `package.json` → JavaScript/TypeScript
-   - 检查 `requirements.txt` / `pyproject.toml` → Python
-   - 检查 `pom.xml` / `build.gradle` → Java
-   - 检查 `go.mod` → Go
-   - 检查 `Cargo.toml` → Rust
-
-2. **与用户确认**：
-   ```
-   检测到您的项目是 [Python] 项目。
-
-   建议的技术栈配置：
-   - 语言：Python
-   - 测试命令：pytest tests/
-   - 覆盖率命令：pytest --cov=src --cov-report=term-missing
-   - Lint 命令：flake8 src/
-   - Format 命令：black src/
-   - 覆盖率标准：80%
-
-   是否确认使用此配置？
-   [ ] 确认使用
-   [ ] 手动指定
-   ```
-
-3. **建议用户写入 CLAUDE.md**：
-   ```
-   💡 建议：将以下配置添加到项目根目录的 CLAUDE.md 文件，
-      避免每次创建 Plan 都要确认：
-
-   # 项目技术栈配置
-   project_tech_stack:
-     language: "python"
-     test_command: "pytest tests/"
-     test_coverage_command: "pytest --cov=src --cov-report=term-missing --cov-fail-under=80"
-     lint_command: "flake8 src/"
-     format_command: "black src/"
-     coverage_threshold: 80
-   ```
-
-### 6.2 输出到 Plan 文档
-
-将技术栈信息整理并输出到 Plan 文档的 "技术栈配置" 章节：
-
-```yaml
-tech_stack:
-  source: "CLAUDE.md"  # 或 "auto-detect"
-  language: "python"
-  test_command: "pytest tests/"
-  test_coverage_command: "pytest --cov=src --cov-report=term-missing --cov-fail-under=80"
-  lint_command: "flake8 src/"
-  lint_check_command: "flake8 src/ --exit-zero"
-  format_command: "black src/"
-  format_check_command: "black --check src/"
-  coverage_threshold: 80
-```
-
-### 6.3 任务中的技术栈
-
-每个任务继承项目技术栈，可以针对任务覆盖特定配置：
-
-```yaml
-task_id: task-1
-task_name: "实现用户登录 API"
-tech_stack:
-  language: "python"  # 继承自项目
-  test_command: "pytest tests/test_auth.py"  # 覆盖为任务特定的测试命令
-  # 其他配置继承自项目
-```
-
-### 6.4 Subagent 使用技术栈的优先级
-
-Subagent 执行任务时，按以下优先级获取技术栈信息：
-
-**Priority 1: Task Description（最高优先级）**
-- 任务描述中包含 `tech_stack` 部分
-- 来自 Plan 的任务配置
-- 可以覆盖项目级配置
-
-**Priority 2: CLAUDE.md（次优先级）**
-- 项目根目录的 `CLAUDE.md` 文件
-- 包含 `project_tech_stack` 配置
-- 项目级默认配置
-
-**Priority 3: Auto-Detect + User Confirm（兜底）**
-- 检测项目文件（package.json、requirements.txt 等）
-- **必须与用户确认**
-- 建议用户将配置写入 CLAUDE.md
-
-**检测流程**：
-```
-1. 检查任务描述中是否有 tech_stack
-   ↓ 如果没有
-2. 检查 CLAUDE.md 中是否有 project_tech_stack
-   ↓ 如果还没有
-3. 自动检测 → 询问用户确认 → 建议写入 CLAUDE.md
-```
-
-### 6.5 多语言配置示例
-
-#### JavaScript/TypeScript 项目
-```yaml
-project_tech_stack:
-  language: "typescript"
-  test_command: "npm test"
-  test_coverage_command: "npm run test:coverage"
-  lint_command: "npm run lint"
-  lint_check_command: "npm run lint:check"
-  format_command: "npm run format"
-  format_check_command: "npm run format:check"
-  coverage_threshold: 80
-```
-
-#### Python 项目
-```yaml
-project_tech_stack:
-  language: "python"
-  test_command: "pytest tests/"
-  test_coverage_command: "pytest --cov=src --cov-report=term-missing --cov-fail-under=80"
-  lint_command: "flake8 src/"
-  lint_check_command: "flake8 src/ --exit-zero"
-  format_command: "black src/"
-  format_check_command: "black --check src/"
-  coverage_threshold: 80
-```
-
-#### Java (Maven) 项目
-```yaml
-project_tech_stack:
-  language: "java"
-  test_command: "mvn test"
-  test_coverage_command: "mvn test jacoco:report"
-  lint_command: "mvn checkstyle:check"
-  format_command: "mvn spotless:apply"
-  format_check_command: "mvn spotless:check"
-  coverage_threshold: 80
-```
-
-#### Java (Gradle) 项目
-```yaml
-project_tech_stack:
-  language: "java"
-  test_command: "./gradlew test"
-  test_coverage_command: "./gradlew test jacocoTestReport"
-  lint_command: "./gradlew checkstyleMain"
-  format_command: "./gradlew spotlessApply"
-  format_check_command: "./gradlew spotlessCheck"
-  coverage_threshold: 80
-```
-
-#### Go 项目
-```yaml
-project_tech_stack:
-  language: "go"
-  test_command: "go test ./..."
-  test_coverage_command: "go test -coverprofile=coverage.out ./... && go tool cover -func=coverage.out"
-  lint_command: "golint ./..."
-  format_command: "gofmt -w ."
-  format_check_command: "gofmt -l ."
-  coverage_threshold: 80
-```
-
-#### Rust 项目
-```yaml
-project_tech_stack:
-  language: "rust"
-  test_command: "cargo test"
-  test_coverage_command: "cargo tarpaulin --out Stdout --fail-under 80"
-  lint_command: "cargo clippy"
-  format_command: "cargo fmt"
-  format_check_command: "cargo fmt -- --check"
-  coverage_threshold: 80
-```
-
-## 7. 验收清单
-
-### 功能验收
-- [ ] 所有 P0 任务完成
-- [ ] 所有验收标准通过
-- [ ] 单元测试覆盖率 ≥ 项目标准
-- [ ] 集成测试通过
-
-### 代码质量验收
-- [ ] 代码通过 Linter 检查
-- [ ] 代码通过 Formatter 检查
-- [ ] 代码通过 Code Review
-
-### 文档验收
-- [ ] API 文档完整
-- [ ] README 更新（如需要）
-
-## 8. 实现注意事项
-
-### 来自 Design Review 的要点
-- **要点 1**：[来自审查报告的关键注意事项]
-- **要点 2**：[来自审查报告的关键注意事项]
-
-### 技术约束
-- **约束 1**：[来自技术方案的约束]
-- **约束 2**：[来自技术方案的约束]
-
-### 存量代码改造
-- **改造 1**：[需要改造的存量代码]
-- **改造 2**：[需要改造的存量代码]
-```
+**三层检测优先级**：
+1. **Task Description**（最高优先级）：任务特定配置
+2. **CLAUDE.md**（次优先级）：项目级默认配置
+3. **Auto-Detect + User Confirm**（兜底）：自动检测并确认
 
 ## 关键检查清单 ✅
 
