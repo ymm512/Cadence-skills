@@ -975,173 +975,115 @@ graph LR
 
 ---
 
-## 7. 插件配置（v2.3 优化版）
+## 7. 插件配置
 
-### 7.1 plugin.json
+> **📄 完整文档**: [插件配置设计文档](./2026-02-26_技术方案_插件配置_v1.0.md)
+>
+> 本部分已独立为详细文档，包含：
+> - 完整的配置文件定义（plugin.json、marketplace.json、dependencies.json、hooks.json、agents.json）
+> - Skill 注册和命令配置
+> - 依赖关系详细定义
+> - Hooks 配置和脚本示例
+> - Subagent 定义和工作流
+> - 版本兼容性和最佳实践
 
-```json
-{
-  "schema_version": "v1",
-  "name": "cadence",
-  "version": "2.3.0",
-  "description": "AI自动化开发流程框架 - 基于Claude Code Skills",
-  "skills": [
-    {
-      "name": "using-cadence",
-      "path": "skills/using-cadence/SKILL.md",
-      "description": "入口Skill - 加载Cadence框架"
-    },
-    {
-      "name": "cadence-brainstorm",
-      "path": "skills/cadence-brainstorm/SKILL.md",
-      "description": "需求探索 - 通过对话生成PRD"
-    },
-    {
-      "name": "cadence-analyze",
-      "path": "skills/cadence-analyze/SKILL.md",
-      "description": "存量分析 - 分析现有代码"
-    },
-    {
-      "name": "cadence-requirement",
-      "path": "skills/cadence-requirement/SKILL.md",
-      "description": "需求分析 - 详细需求文档"
-    },
-    {
-      "name": "cadence-design",
-      "path": "skills/cadence-design/SKILL.md",
-      "description": "技术设计 - 技术方案和实现计划"
-    },
-    {
-      "name": "cadence-design-review",
-      "path": "skills/cadence-design-review/SKILL.md",
-      "description": "设计审查 - 技术方案审查"
-    },
-    {
-      "name": "cadence-plan",
-      "path": "skills/cadence-plan/SKILL.md",
-      "description": "实现计划 - 任务分解"
-    },
-    {
-      "name": "cadence-using-git-worktrees",
-      "path": "skills/cadence-using-git-worktrees/SKILL.md",
-      "description": "隔离环境 - Git Worktree"
-    },
-    {
-      "name": "cadence-subagent-development",
-      "path": "skills/cadence-subagent-development/SKILL.md",
-      "description": "代码实现 - Subagent驱动开发"
-    },
-    {
-      "name": "cadence-test-driven-development",
-      "path": "skills/cadence-test-driven-development/SKILL.md",
-      "description": "TDD - 测试驱动开发"
-    },
-    {
-      "name": "cadence-requesting-code-review",
-      "path": "skills/cadence-requesting-code-review/SKILL.md",
-      "description": "代码审查 - 审查流程"
-    },
-    {
-      "name": "cadence-test-design",
-      "path": "skills/cadence-test-design/SKILL.md",
-      "description": "集成测试方案 - 测试设计"
-    },
-    {
-      "name": "cadence-integration",
-      "path": "skills/cadence-integration/SKILL.md",
-      "description": "集成测试 - 执行测试"
-    },
-    {
-      "name": "cadence-deliver",
-      "path": "skills/cadence-deliver/SKILL.md",
-      "description": "交付 - 生成交付报告"
-    },
-    {
-      "name": "cadence-full-flow",
-      "path": "skills/cadence-full-flow/SKILL.md",
-      "description": "完整流程 - 11节点"
-    },
-    {
-      "name": "cadence-quick-flow",
-      "path": "skills/cadence-quick-flow/SKILL.md",
-      "description": "快速流程 - 6节点"
-    },
-    {
-      "name": "cadence-exploration-flow",
-      "path": "skills/cadence-exploration-flow/SKILL.md",
-      "description": "探索流程 - 5节点"
-    },
-    {
-      "name": "cadence-verification-before-completion",
-      "path": "skills/cadence-verification-before-completion/SKILL.md",
-      "description": "交付前验证"
-    },
-    {
-      "name": "cadence-finishing-a-development-branch",
-      "path": "skills/cadence-finishing-a-development-branch/SKILL.md",
-      "description": "完成开发分支"
-    }
-  ],
-  "commands": [
-    {
-      "name": "cadence:full-flow",
-      "description": "完整流程"
-    },
-    {
-      "name": "cadence:quick-flow",
-      "description": "快速流程"
-    },
-    {
-      "name": "cadence:exploration-flow",
-      "description": "探索流程"
-    },
-    {
-      "name": "cadence:status",
-      "description": "查看进度"
-    },
-    {
-      "name": "cadence:resume",
-      "description": "恢复进度"
-    }
-  ]
-}
+### 7.1 配置文件清单
+
+| 文件 | 用途 | 必需性 | 说明 |
+|------|------|-------|------|
+| `plugin.json` | Skill 注册和插件元数据 | ✅ 必须 | 22个 Skill + 25个 Command |
+| `marketplace.json` | 市场展示信息 | ✅ 必须 | 完整的功能特性描述 |
+| `dependencies.json` | Skill 依赖关系 | ✅ 必须 | 质量门禁定义 |
+| `hooks.json` | Hooks 配置 | ⭐ 推荐 | 6个 Hook 定义 |
+| `agents.json` | Subagent 定义 | ✅ 必须 | 3个 Subagent + 工作流 |
+
+### 7.2 v2.4 优化亮点
+
+**✨ 完善的元数据**:
+- 完整的 author、license、repository 信息
+- 版本兼容性声明（Claude Code、Serena MCP、Git）
+- 详细的 keywords 和 categories
+
+**📊 完整的 Skill 注册**:
+- **22个 Skill**（含2个新增前置 Skill）
+- **25个 Command**（覆盖所有 Skill）
+- Skill 分类标记（meta/prerequisite/node/flow/support）
+- 节点编号（node_number）
+
+**🔗 完整的依赖管理**:
+- Skill 依赖关系（requires + optional）
+- Flow 依赖关系（节点序列）
+- 质量门禁（before/during/after）
+- 外部依赖声明
+
+**🪝 Hooks 系统**:
+- `session-start` - 会话开始
+- `task-complete` - 任务完成
+- `node-complete` - 节点完成
+- `code-review-complete` - 审查完成
+- `pre-commit` / `pre-push` - Git hooks
+
+**🤖 Subagent 定义**:
+- `cadence-implementer` - 实现者
+- `cadence-spec-reviewer` - 规范审查者
+- `cadence-code-quality-reviewer` - 质量审查者
+- 完整的工作流序列和重试策略
+
+### 7.3 配置文件结构
+
+```
+.claude-plugin/
+├── plugin.json              ✅ 核心 - 22 Skills + 25 Commands
+├── marketplace.json         ✅ 市场 - 完整功能描述
+├── dependencies.json        ✅ 依赖 - 关系 + 质量门禁
+├── hooks.json               ⭐ Hooks - 6个钩子
+├── agents.json              ✅ Subagent - 3个定义 + 工作流
+└── README.md                ⭐ 文档
 ```
 
-### 7.2 marketplace.json
+### 7.4 Skill 统计
+
+| 分类 | 数量 | 包含 Skill |
+|------|------|-----------|
+| 🧬 **元Skill** | 1 | using-cadence |
+| 🔧 **前置Skill** | 5 | git-worktrees, tdd, requesting-review, **receiving-review** ✨, **self-review** ✨ |
+| 📋 **节点Skill** | 11 | brainstorm → deliver |
+| 🔀 **流程Skill** | 3 | full-flow, quick-flow, exploration-flow |
+| ✅ **支持Skill** | 2 | verification, finishing |
+| **总计** | **22** | - |
+
+### 7.5 Command 统计
+
+| 类型 | 数量 | 示例 |
+|------|------|------|
+| **节点命令** | 11 | /cadence:brainstorm, /cadence:design, /cadence:develop |
+| **流程命令** | 3 | /cadence:full-flow, /cadence:quick-flow |
+| **管理命令** | 6 | /cadence:status, /cadence:resume, /cadence:checkpoint |
+| **质量命令** | 4 | /cadence:tdd, /cadence:request-review, /cadence:self-review |
+| **完成命令** | 1 | /cadence:finish |
+| **总计** | **25** | - |
+
+### 7.6 质量门禁示例
 
 ```json
-{
-  "schema_version": "v1",
-  "name": "cadence",
-  "version": "2.3.0",
-  "display_name": "Cadence AI Development Framework",
-  "description": "基于Claude Code Skills的AI自动化开发流程框架，覆盖需求探索到交付部署全流程",
-  "author": "Cadence Team",
-  "homepage": "https://github.com/cadence-skills/cadence",
-  "keywords": [
-    "ai",
-    "automation",
-    "development",
-    "workflow",
-    "claude-code",
-    "skills",
-    "tdd",
-    "subagent"
-  ],
-  "categories": [
-    "Development",
-    "Workflow"
-  ],
-  "features": {
-    "full_flow": "11节点完整流程",
-    "quick_flow": "6节点快速流程",
-    "exploration_flow": "5节点探索流程",
-    "tdd": "测试驱动开发",
-    "code_review": "代码审查机制",
-    "git_worktrees": "Git Worktree隔离"
+"quality_gates": {
+  "cadence-subagent-development": {
+    "before": [
+      {"skill": "cadence-git-worktrees", "check": "验证 Worktree 已创建"}
+    ],
+    "during": [
+      {"skill": "cadence-test-driven-development", "check": "强制执行 TDD 流程"},
+      {"skill": "cadence-self-review", "check": "每个 task 完成后自审"}
+    ],
+    "after": [
+      {"skill": "cadence-requesting-code-review", "check": "Spec Compliance Review"},
+      {"skill": "cadence-requesting-code-review", "check": "Code Quality Review"}
+    ]
   }
 }
 ```
+
+> **📌 详细内容**: 请查看 [插件配置设计文档](./2026-02-26_技术方案_插件配置_v1.0.md)
 
 ---
 
