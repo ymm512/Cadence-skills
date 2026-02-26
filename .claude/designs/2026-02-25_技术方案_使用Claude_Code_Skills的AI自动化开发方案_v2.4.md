@@ -70,7 +70,9 @@
 
 ### 2.1 流程概览
 
-> **重要说明**: 实际是11个核心节点,每个节点对应一个独立Skill
+> **重要说明**:
+> - **v2.4 MVP 版本**：实现 4.1-4.8 节点（共 8 个核心节点）
+> - **v2.5+ 版本**：将实现 4.9-4.11 节点（Test Design、Integration、Deliver）
 
 ```mermaid
 graph TB
@@ -81,10 +83,12 @@ graph TB
     E -->|审查通过| F[6. Plan<br/>实现计划]
     F -->|计划确认| G[7. Git Worktrees<br/>隔离环境]
     G -->|环境就绪| H[8. Subagent Development<br/>代码实现+单元测试]
-    H -->|审查通过| I[9. Test Design<br/>集成测试方案]
-    I -->|设计确认| J[10. Integration<br/>集成测试]
-    J -->|测试通过| K[11. Deliver<br/>交付]
-    K -->|用户确认| L[✅ 完成]
+    H -->|v2.4 MVP完成| I1[✅ MVP版本完成]
+
+    H -.->|v2.5+| I[9. Test Design<br/>集成测试方案]
+    I -.->|设计确认| J[10. Integration<br/>集成测试]
+    J -.->|测试通过| K[11. Deliver<br/>交付]
+    K -.->|用户确认| L[✅ 完整流程完成]
 
     style A fill:#e3f2fd
     style B fill:#fce4ec
@@ -94,19 +98,22 @@ graph TB
     style F fill:#fff9c4
     style G fill:#e1f5fe
     style H fill:#e8f5e9
-    style I fill:#fce4ec
-    style J fill:#e0f2f1
-    style K fill:#fff9c4
+    style I fill:#d3d3d3,stroke-dasharray: 5 5
+    style J fill:#d3d3d3,stroke-dasharray: 5 5
+    style K fill:#d3d3d3,stroke-dasharray: 5 5
+    style I1 fill:#c8e6c9
     style L fill:#c8e6c9
 ```
 
 **关键依赖说明:**
-- 节点7(Git Worktrees)是节点8(Subagent Development的**前置Skill**
+- 节点7(Git Worktrees)是节点8(Subagent Development)的**前置Skill**
 - 节点8内部强制使用TDD流程和代码审查
 - 每个节点可独立调用,但完整流程有严格顺序
+- **v2.4 MVP 版本**：4.9-4.11 节点用虚线表示，待 v2.5+ 版本实现
 
 ### 2.2 节点清单
 
+**v2.4 MVP 版本节点**（已实现 ✅）：
 | 序号 | 节点名称 | Skill名称 | 目的 | 输入来源 | 确认 | 产物 | 跳过条件 |
 |------|---------|-----------|------|---------|------|------|---------|
 | 1 | Brainstorm | cadence-brainstorm | 需求探索 | 用户对话/已有PRD | 用户确认PRD | PRD文档 | 已有PRD |
@@ -117,15 +124,21 @@ graph TB
 | 6 | Plan | cadence-plan | 实现计划 | 技术方案 | 用户确认计划 | 实现计划文档 | - |
 | 7 | Git Worktrees | cadence-using-git-worktrees | 隔离环境 | 实现计划 | 环境就绪 | Worktree目录 | 单人开发 |
 | 8 | **Subagent Development** ⭐ | cadence-subagent-development | 代码实现+单元测试 | 实现计划+Worktree | 审查通过 | 业务代码+单元测试 | - |
+
+**v2.5+ 版本节点**（待实现 ⏳）：
+| 序号 | 节点名称 | Skill名称 | 目的 | 输入来源 | 确认 | 产物 | 跳过条件 |
+|------|---------|-----------|------|---------|------|------|---------|
 | 9 | **Test Design** ⭐ | cadence-test-design | 集成测试方案 | 需求+技术方案+代码 | 用户确认设计 | 集成测试方案文档 | 简单功能 |
 | 10 | Integration | cadence-integration | 集成测试 | 测试方案 | 测试通过 | 集成测试+报告 | 简单功能 |
 | 11 | Deliver | cadence-deliver | 交付 | 测试结果 | 用户确认交付 | 交付报告 | - |
 
 **重要说明:**
-- ⭐ 标记的节点是v2.3版本的关键改进节点
+- ⭐ 标记的节点是关键改进节点
 - 每个节点对应一个独立Skill,可通过`Skill tool: cadence-xxx`调用
 - 节点7是节点8的**前置Skill**,必须先创建隔离环境才能开发
 - 节点8内部强制使用TDD流程(`cadence-test-driven-development`)和代码审查(`cadence-requesting-code-review`)
+- **v2.4 MVP 版本**：只包含 4.1-4.8 节点，已全部实现
+- **v2.5+ 版本**：将实现 4.9-4.11 节点（Test Design、Integration、Deliver）
 
 ### 2.3 流程特点
 
@@ -212,8 +225,9 @@ graph LR
     E --> E1[Deliver]
 ```
 
-**详细节点清单(11个节点):**
+**详细节点清单:**
 
+**v2.4 MVP 版本节点**（已实现 ✅）：
 | Phase | 节点 | 可否并行 | 依赖节点 | 预估时间(动态) |
 |-------|------|---------|---------|---------------|
 | Phase 1 | 1. Brainstorm | ❌ | 无 | 15-30分钟 |
@@ -224,12 +238,24 @@ graph LR
 | Phase 2 | 6. Plan | ❌ | Design Review | 10-20分钟 |
 | Phase 3 | 7. Git Worktrees | ❌ | Plan | 5分钟 |
 | Phase 3 | 8. Subagent Development | ✅ | Git Worktrees | 60-180分钟(根据任务数) |
+
+**v2.5+ 版本节点**（待实现 ⏳）：
+| Phase | 节点 | 可否并行 | 依赖节点 | 预估时间(动态) |
+|-------|------|---------|---------|---------------|
 | Phase 4 | 9. Test Design | ❌ | Subagent Development | 15-30分钟 |
 | Phase 4 | 10. Integration | ✅ | Test Design | 20-40分钟 |
 | Phase 5 | 11. Deliver | ❌ | Integration | 10-20分钟 |
 
-**总预估时间:** 根据功能复杂度动态调整
+**总预估时间:**
 
+**v2.4 MVP 版本**（4.1-4.8 节点）：
+| 复杂度 | 代码量预估 | 总时间范围 |
+|--------|-----------|-----------|
+| 🟢 简单 | <500行 | 2-3小时 |
+| 🟡 中等 | 500-2000行 | 3-5小时 |
+| 🔴 复杂 | >2000行 | 5-8小时 |
+
+**v2.5+ 完整版本**（4.1-4.11 节点）：
 | 复杂度 | 代码量预估 | 总时间范围 |
 |--------|-----------|-----------|
 | 🟢 简单 | <500行 | 3-4小时 |
@@ -238,7 +264,7 @@ graph LR
 
 **并行执行能力:**
 - ✅ **Subagent Development可并行**: 如果实现计划中有多个独立任务,可启动多个并发Subagent
-- ✅ **Integration可并行**: 如果测试方案中有多个独立测试场景,可并行执行
+- ✅ **Integration可并行**（v2.5+）: 如果测试方案中有多个独立测试场景,可并行执行
 - ❌ **其他节点必须顺序执行**: 由于依赖关系,必须按顺序完成
 
 **调用方式:**
@@ -513,6 +539,12 @@ graph TD
 
 ### 4.9 节点9：Test Design（集成测试方案）⭐
 
+> **⚠️ v2.5+ 待实现**：此节点在 v2.4 MVP 版本中不包含，将在 v2.5+ 版本中实现。
+>
+> **当前状态**：⏳ 规划中 | **计划版本**：v2.5+
+
+#### Skill 关联
+
 #### Skill 关联
 ```yaml
 Skill: cadence-test-design
@@ -589,6 +621,12 @@ Skill: cadence-test-design
 
 ### 4.10 节点10：Integration（集成测试）
 
+> **⚠️ v2.5+ 待实现**：此节点在 v2.4 MVP 版本中不包含，将在 v2.5+ 版本中实现。
+>
+> **当前状态**：⏳ 规划中 | **计划版本**：v2.5+
+
+#### Skill 关联
+
 #### Skill 关联
 ```yaml
 Skill: cadence-integration
@@ -659,6 +697,12 @@ Skill: cadence-integration
 ---
 
 ### 4.11 节点11：Deliver（交付）
+
+> **⚠️ v2.6+ 待实现**：此节点在 v2.4 MVP 版本中不包含，将在 v2.6+ 版本中实现。
+>
+> **当前状态**：⏳ 规划中 | **计划版本**：v2.6+
+
+#### Skill 关联
 
 #### Skill 关联
 ```yaml
