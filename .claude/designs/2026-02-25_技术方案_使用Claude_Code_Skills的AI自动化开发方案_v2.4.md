@@ -771,9 +771,109 @@ Skill: cadence-deliver
 
 ---
 
-## 5. 进度追踪机制（v2.3 优化）
+## 5. 进度追踪与状态管理（v2.4 完整版）
 
-### 5.1 使用 TodoWrite 追踪
+> **详细文档**: [进度追踪与状态管理_v1.0.md](./2026-02-26_进度追踪与状态管理_v1.0.md)
+
+### 5.1 核心组件
+
+本章节包含以下核心机制（详见独立文档）：
+
+1. **TodoWrite 任务结构**
+   - 标准字段定义（taskId, subject, description, status, blockedBy, blocks, owner, priority, metadata）
+   - 任务依赖管理（强依赖/弱依赖）
+   - 并行识别机制
+
+2. **验证机制**
+   - 独立 Skill: `cadence-verification-before-completion`
+   - 验证铁律：NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
+   - 门控功能（5 步）
+   - **详细文档**: [Skill_Verification_Before_Completion_v1.0.md](./2026-02-26_Skill_Verification_Before_Completion_v1.0.md)
+
+3. **失败处理机制**
+   - 固定重试策略（测试 3 次/审查 2 次/覆盖率 2 次）
+   - 人工介入流程（4 个选项）
+   - 失败日志记录（基于 Serena Memory）
+
+4. **会话记忆系统**
+   - 基于 Serena MCP 实现
+   - Session Summary（会话总结）
+   - Checkpoint（检查点）
+   - 会话恢复流程
+
+5. **断点续传**
+   - 5 种恢复场景
+   - 详细的恢复逻辑
+   - 上下文重建
+
+6. **进度可视化**
+   - 状态查询命令（`/cadence:status`）
+   - 进度报告格式（每日/周报）
+   - 实时监控（`/cadence:monitor`）
+
+### 5.2 快速参考
+
+#### TodoWrite 任务结构示例
+
+```json
+{
+  "taskId": "task-1",
+  "subject": "创建用户模型",
+  "description": "基于 PRD 需求，创建 User 数据模型...",
+  "status": "in_progress",
+  "blockedBy": [],
+  "blocks": ["task-2"],
+  "owner": "subagent-001",
+  "priority": "P0",
+  "metadata": {
+    "complexity": "high",
+    "timeEstimate": { "min": 2, "max": 4 },
+    "testRetries": 0,
+    "reviewRetries": 0,
+    "coverageRetries": 0,
+    "createdAt": "2026-02-26T10:00:00Z",
+    "updatedAt": "2026-02-26T12:30:00Z"
+  }
+}
+```
+
+#### 验证铁律
+
+```
+NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
+没有新鲜验证证据 = 不声称完成
+```
+
+#### 固定重试策略
+
+| 失败类型 | 最大重试次数 | 超过次数后 |
+|---------|------------|-----------|
+| 测试失败 | 3 次 | 人工介入 |
+| 审查失败 | 2 次 | 人工介入 |
+| 覆盖率不足 | 2 次 | 人工介入 |
+
+#### 会话记忆 API
+
+```javascript
+// 创建 Session Summary
+write_memory({
+  memory_name: `session-${date}-${projectName}`,
+  content: sessionSummaryContent
+})
+
+// 创建 Checkpoint
+write_memory({
+  memory_name: `checkpoint-${taskId}-${timestamp}`,
+  content: checkpointContent
+})
+
+// 读取 Session Summary
+read_memory({
+  memory_name: `session-${date}-${projectName}`
+})
+```
+
+#### 进度查询命令
 
 ```bash
 # 查看当前进度
@@ -781,52 +881,35 @@ Skill: cadence-deliver
 
 # 恢复进度
 /cadence:resume
+
+# 创建检查点
+/cadence:checkpoint
+
+# 生成报告
+/cadence:report --daily
+/cadence:report --weekly
+
+# 实时监控
+/cadence:monitor
 ```
 
-### 5.2 TodoWrite 结构
+### 5.3 集成关系
 
-```
-## 当前任务
+**与第 4 部分（节点流程）的集成**：
+- 每个节点完成后创建 Checkpoint
+- 节点间转换时保存 Session Summary
+- 验证输出产物
 
-### 项目：用户权限管理系统
-### 流程：完整流程（11节点）
-### 当前阶段：Subagent Development
+**与第 6 部分（Skills 目录）的集成**：
+- `cadence-verification-before-completion` Skill
+- `cadence-subagent-development` Skill
+- `cadence-status` / `cadence-resume` / `cadence-checkpoint` / `cadence-report` Skills
 
-✅ 已完成：
-- [x] Brainstorm - PRD 已生成
-- [x] Analyze - 存量分析已完成
-- [x] Requirement - 需求文档已生成
-- [x] Design - 技术方案已生成
-- [x] Design Review - 设计审查已通过
-- [x] Plan - 实现计划已确认
-- [x] Git Worktrees - 环境已创建
-
-🔄 进行中：
-- [ ] Subagent Development（Task 3/5）
-  - [x] Task 1: 创建用户模型
-  - [x] Task 2: 实现用户CRUD
-  - [ ] Task 3: 实现权限分配 ← 当前
-  - [ ] Task 4: 实现角色管理
-  - [ ] Task 5: 实现权限验证
-
-⏳ 待完成：
-- [ ] Test Design
-- [ ] Integration
-- [ ] Deliver
-```
-
-### 5.3 断点续传
-
-```bash
-# 会话中断后，恢复进度
-/cadence:resume
-```
-
-**恢复逻辑：**
-1. 检查 TodoWrite 状态
-2. 读取当前进度
-3. 询问用户是否继续
-4. 从最后一个未完成节点继续
+**与第 7 部分（双通道调用）的集成**：
+- 命令：`/cadence:status` → Skill: `cadence-status`
+- 命令：`/cadence:resume` → Skill: `cadence-resume`
+- 命令：`/cadence:checkpoint` → Skill: `cadence-checkpoint`
+- 命令：`/cadence:report` → Skill: `cadence-report`
 
 ---
 
