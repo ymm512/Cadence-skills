@@ -891,7 +891,7 @@ Cadence 使用三层 Subagent 协作模式，由 `cadence-subagent-development` 
 
 详细的 Subagent 定义、Prompt 模板、多语言配置和使用示例请参考：
 
-**👉 [Subagent 定义文档 v2.4](./2026-02-26_技术方案_Subagent定义_v2.4.md)**
+**👉[2026-02-26_技术方案_Subagent定义_v1.0.md](./2026-02-26_技术方案_Subagent定义_v1.0.md)**
 
 ---
 
