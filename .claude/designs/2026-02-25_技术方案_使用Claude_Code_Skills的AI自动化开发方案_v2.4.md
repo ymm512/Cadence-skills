@@ -505,81 +505,9 @@ graph TD
 
 ### 4.8 节点8：Subagent Development（代码实现+单元测试）⭐
 
-#### Skill 关联
-```yaml
-Skill: cadence-subagent-development
-路径: skills/cadence-subagent-development/SKILL.md
-前置Skill:
-  - cadence-using-git-worktrees  # 必须先创建隔离环境
-  - cadence-test-driven-development  # TDD 流程
-  - cadence-requesting-code-review   # 审查流程
-触发关键词: "写代码", "实现功能", "开发"
-```
+**Skill 文档**：[2026-02-26_Skill_Subagent_Development_v1.0.md](./2026-02-26_Skill_Subagent_Development_v1.0.md)
 
-#### 目的
-使用 Subagent 开发代码，遵循 TDD 流程，同时编写单元测试，并进行代码质量审查。
-
-#### 动态时间预估
-
-| 复杂度 | 时间范围 | 说明 |
-|-------|---------|------|
-| 🟢 简单 | 30-60分钟 | 1-3个任务 |
-| 🟡 中等 | 60-120分钟 | 3-5个任务 |
-| 🔴 复杂 | 120-240分钟 | 5+个任务（可并行） |
-
-#### 前置 Skill（必须）
-
-```yaml
-required_skills:
-  - cadence-using-git-worktrees   # 必须先创建隔离环境
-  - cadence-test-driven-development  # TDD 流程
-  - cadence-requesting-code-review   # 审查流程
-```
-
-#### 关键检查清单 ✅
-
-```
-□ TDD 流程：
-  □ 是否先写测试（RED阶段）？
-  □ 是否实现最小代码通过测试（GREEN阶段）？
-  □ 是否重构代码（BLUE阶段）？
-
-□ 代码质量：
-  □ 是否通过 lint 检查？
-  □ 是否通过 format 检查？
-  □ 单元测试覆盖率是否达标？
-
-□ 代码审查：
-  □ 是否进行了代码审查？
-  □ 是否修复了审查发现的问题？
-
-□ 实现完整性：
-  □ 是否实现了所有验收标准？
-  □ 是否有遗漏的功能点？
-```
-
-#### Red Flags ⚠️
-
-| 错误做法 | 正确做法 |
-|---------|---------|
-| ❌ 没有 worktree 直接开发 | ✅ 必须先创建隔离环境 |
-| ❌ 先写代码后写测试 | ✅ 必须遵循 TDD 流程 |
-| ❌ 跳过代码审查 | ✅ 每次提交都必须审查 |
-| ❌ 实现与需求不符 | ✅ 必须验证验收标准 |
-| ❌ 多个 Subagent 同时开发同一任务 | ✅ 必须顺序执行避免冲突 |
-
-#### 确认机制
-```
-Subagent 开发后：
-展示实现的功能点
-展示测试结果（通过/失败）
-展示 linting 结果
-
-询问："是否按照需求实现了所有功能？代码质量是否达标？"
-├── ✅ 是 → 保存代码，进入 test-design
-├── ⚠️ 有问题 → 修复代码
-└── ❌ 不符合 → 重新实现
-```
+**简要说明**：使用 Subagent 开发代码，强制遵循 TDD 流程（RED-GREEN-BLUE），同时编写单元测试，并进行代码质量审查。支持并行执行（最多 49 个并发）、自动审查、覆盖率检查（P0 ≥ 80%）、验收标准验证。不可跳过此节点。
 
 ---
 
