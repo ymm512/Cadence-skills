@@ -913,247 +913,65 @@ read_memory({
 
 ---
 
-## 6. Skills 目录结构（v2.3 优化版）
+## 6. Skills 目录结构
 
-> **v2.3 优化说明**:
-> - 增加每个Skill的详细说明(文件列表、用途)
-> - 参考superpowers结构优化目录组织
-> - 增加技能分类和依赖关系
+> **📄 完整文档**: [Skills目录结构设计文档](./2026-02-26_技术方案_Skills目录结构_v1.0.md)
+>
+> 本部分已独立为详细文档，包含：
+> - 完整的目录结构定义
+> - Skill 分类说明（元Skill、前置Skill、节点Skill、流程Skill、支持Skill）
+> - Skill 依赖关系图
+> - 关键 Skill 详细说明
+> - 文件组织规范
+> - 与 superpowers 的对比
+> - 实施计划和版本历史
 
-### 6.1 目录结构总览
-
-```
-cadence-skills/                          # Cadence技能包根目录
-├── .claude-plugin/                      # 插件配置
-│   ├── plugin.json                       # Skill注册配置
-│   └── marketplace.json                  # 市场配置
-│
-├── agents/                               # Subagent定义
-│   ├── implementer.md                    # 实现者Agent
-│   ├── spec-reviewer.md                  # 规范审查Agent
-│   └── code-quality-reviewer.md          # 代码质量审查Agent
-│
-├── skills/                               # Skills目录
-│   ├── # 🧬 元Skill（核心入口）
-│   ├── using-cadence/
-│   │   ├── SKILL.md                      # 入口Skill定义
-│   │   └── README.md                     # 使用说明
-│   │
-│   ├── # 🔧 前置Skill（必须调用）
-│   ├── cadence-using-git-worktrees/
-│   │   ├── SKILL.md                      # Skill定义
-│   │   ├── README.md                     # 使用说明
-│   │   └── examples.md                   # 示例
-│   │
-│   ├── cadence-test-driven-development/
-│   │   ├── SKILL.md                      # Skill定义
-│   │   ├── README.md                     # TDD流程说明
-│   │   └── testing-anti-patterns.md      # 测试反模式
-│   │
-│   ├── cadence-requesting-code-review/
-│   │   ├── SKILL.md                      # Skill定义
-│   │   ├── README.md                     # 审查流程说明
-│   │   └── code-reviewer.md              # 审查清单
-│   │
-│   ├── # 📋 节点Skills（11个节点）
-│   ├── cadence-brainstorm/
-│   │   └── SKILL.md                      # 需求探索
-│   │
-│   ├── cadence-analyze/
-│   │   └── SKILL.md                      # 存量分析
-│   │
-│   ├── cadence-requirement/
-│   │   └── SKILL.md                      # 需求分析
-│   │
-│   ├── cadence-design/
-│   │   └── SKILL.md                      # 技术设计
-│   │
-│   ├── cadence-design-review/
-│   │   └── SKILL.md                      # 设计审查
-│   │
-│   ├── cadence-plan/
-│   │   └── SKILL.md                      # 实现计划
-│   │
-│   ├── cadence-subagent-development/
-│   │   ├── SKILL.md                      # Skill定义
-│   │   ├── implementer-prompt.md          # 实现者Prompt
-│   │   ├── spec-reviewer-prompt.md        # 规范审查Prompt
-│   │   └── code-quality-reviewer-prompt.md # 代码质量Prompt
-│   │
-│   ├── cadence-test-design/
-│   │   └── SKILL.md                      # 集成测试方案
-│   │
-│   ├── cadence-integration/
-│   │   └── SKILL.md                      # 集成测试
-│   │
-│   ├── cadence-deliver/
-│   │   └── SKILL.md                      # 交付
-│   │
-│   ├── # 🔀 流程Skills（组合节点）
-│   ├── cadence-full-flow/
-│   │   └── SKILL.md                      # 完整流程
-│   │
-│   ├── cadence-quick-flow/
-│   │   └── SKILL.md                      # 快速流程
-│   │
-│   ├── cadence-exploration-flow/
-│   │   └── SKILL.md                      # 探索流程
-│   │
-│   └── # ✅ 支持Skills
-│       ├── cadence-verification-before-completion/
-│       │   └── SKILL.md                  # 交付前验证
-│       │
-│       └── cadence-finishing-a-development-branch/
-│           └── SKILL.md                  # 完成开发分支
-│
-├── commands/                             # 命令定义
-│   ├── brainstorm.md
-│   ├── analyze.md
-│   ├── requirement.md
-│   ├── design.md
-│   ├── design-review.md
-│   ├── plan.md
-│   ├── git-worktrees.md
-│   ├── subagent-development.md
-│   ├── test-design.md
-│   ├── integration.md
-│   ├── deliver.md
-│   ├── full-flow.md
-│   ├── quick-flow.md
-│   ├── exploration-flow.md
-│   └── status.md
-│
-├── hooks/                                # Hooks配置
-│   ├── hooks.json
-│   ├── session-start
-│   └── run-hook.cmd
-│
-└── README.md
-```
-
-### 6.2 Skill分类说明
+### 6.1 Skill 分类总览
 
 | 分类 | 数量 | 说明 | 必需性 |
 |------|------|------|-------|
-| 🧬 元Skill | 1 | using-cadence入口Skill | 必须加载 |
-| 🔧 前置Skill | 3 | 质量保证基础 | 特定场景必须 |
-| 📋 节点Skill | 11 | 11个核心节点 | 按需调用 |
-| 🔀 流程Skill | 3 | 流程组合 | 按需调用 |
-| ✅ 支持Skill | 2 | 辅助功能 | 可选 |
+| 🧬 **元Skill** | 1 | using-cadence入口Skill | 必须加载 |
+| 🔧 **前置Skill** | 5 | 质量保证基础（含2个新增） | 特定场景必须 |
+| 📋 **节点Skill** | 11 | 11个核心节点 | 按需调用 |
+| 🔀 **流程Skill** | 3 | 流程组合 | 按需调用 |
+| ✅ **支持Skill** | 2 | 辅助功能 | 可选 |
 
-### 6.3 Skill依赖关系
+### 6.2 v2.4 优化亮点
+
+**✨ 新增前置Skill（2个）**:
+1. `cadence-receiving-code-review` - 接收审查反馈
+2. `cadence-self-review` - 自我审查机制
+
+**⭐ 增强的 Subagent Development**:
+- 两阶段审查机制（Spec Review → Quality Review）
+- 完整的 prompt templates
+- Self-review checklist
+- 详细的使用示例
+
+**📚 增强 TDD 支持**:
+- testing-anti-patterns.md（测试反模式）
+- red-green-refactor.md（循环详解）
+- examples/（示例目录）
+
+**📖 文档完整性**:
+- 每个 Skill 包含：SKILL.md + README.md + examples.md
+- 支持文件：prompt templates、checklists、anti-patterns
+
+### 6.3 关键依赖关系
 
 ```mermaid
-graph TB
-    A[using-cadence] --> B[节点Skills]
-    A --> C[流程Skills]
-
-    B --> D1[cadence-brainstorm]
-    B --> D2[cadence-analyze]
-    B --> D3[cadence-requirement]
-    B --> D4[cadence-design]
-    B --> D5[cadence-design-review]
-    B --> D6[cadence-plan]
-
-    D6 --> E[cadence-using-git-worktrees]
-    E --> D7[cadence-subagent-development]
-
-    D7 --> F1[cadence-test-driven-development]
-    D7 --> F2[cadence-requesting-code-review]
-
-    D7 --> D8[cadence-test-design]
-    D8 --> D9[cadence-integration]
-    D9 --> D10[cadence-deliver]
-
-    D10 --> G1[cadence-verification-before-completion]
-    D10 --> G2[cadence-finishing-a-development-branch]
+graph LR
+    A[Plan] --> B[Git Worktrees]
+    B --> C[Subagent Development]
+    C --> D1[TDD]
+    C --> D2[Requesting Code Review]
+    C --> D3[Receiving Code Review]
+    C --> D4[Self Review]
+    D2 --> E[Spec Review]
+    E --> F[Quality Review]
 ```
 
-### 6.4 关键Skill说明
-
-#### 🧬 元Skill: using-cadence
-
-**路径:** `skills/using-cadence/SKILL.md`
-
-**用途:** 入口Skill,加载Cadence框架,建立技能使用规范
-
-**触发条件:**
-- 会话开始时自动加载
-- 用户提及任何Cadence相关关键词时
-
-**核心功能:**
-- 加载Skill注册表
-- 建立Skill调用规范
-- 提供双通道调用入口
-
----
-
-#### 🔧 前置Skill: cadence-using-git-worktrees
-
-**路径:** `skills/cadence-using-git-worktrees/SKILL.md`
-
-**用途:** 创建隔离的开发环境
-
-**触发条件:**
-- Subagent Development之前必须调用
-
-**核心功能:**
-- 检查worktree是否已存在
-- 创建新的feature分支worktree
-- 验证worktree可用性
-- 记录worktree状态到`.claude/state/worktree.json`
-
----
-
-#### 🔧 前置Skill: cadence-test-driven-development
-
-**路径:** `skills/cadence-test-driven-development/SKILL.md`
-
-**用途:** 强制TDD开发流程
-
-**触发条件:**
-- 任何代码实现之前必须调用
-
-**核心功能:**
-- RED阶段:先写失败测试
-- GREEN阶段:实现最小代码通过测试
-- BLUE阶段:重构代码
-- 强制执行三阶段流程
-
----
-
-#### 🔧 前置Skill: cadence-requesting-code-review
-
-**路径:** `skills/cadence-requesting-code-review/SKILL.md`
-
-**用途:** 代码审查流程
-
-**触发条件:**
-- 每次代码提交后必须调用
-
-**核心功能:**
-- 触发Code Review Agent
-- 检查代码质量清单
-- 验证lint/format通过
-- 确保审查通过后才能合并
-
----
-
-#### 📋 节点Skill: cadence-subagent-development
-
-**路径:** `skills/cadence-subagent-development/SKILL.md`
-
-**用途:** 一体化代码开发+单元测试
-
-**触发条件:**
-- Plan完成后调用
-
-**核心功能:**
-- 加载实现计划
-- 调用Implementer Agent执行任务
-- 强制TDD流程
-- 自动代码审查
-- 更新TodoWrite状态
+> **📌 详细内容**: 请查看 [Skills目录结构设计文档](./2026-02-26_技术方案_Skills目录结构_v1.0.md)
 
 ---
 
