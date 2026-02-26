@@ -497,72 +497,9 @@ graph TD
 
 ### 4.7 节点7：Git Worktrees（隔离环境）
 
-#### Skill 关联
-```yaml
-Skill: cadence-using-git-worktrees
-路径: skills/cadence-using-git-worktrees/SKILL.md
-触发关键词: "隔离环境", "worktree", "分支"
-前置要求: 必须先完成 Plan 节点
-```
+**Skill 文档**：[2026-02-26_Skill_Git_Worktrees_v1.0.md](./2026-02-26_Skill_Git_Worktrees_v1.0.md)
 
-#### 目的
-创建隔离的开发环境，使用 git worktree 避免污染主分支。
-
-#### 动态时间预估
-
-| 场景 | 时间范围 | 说明 |
-|-----|---------|------|
-| 🟢 标准 | 5分钟 | 常规创建 |
-| 🟡 复杂 | 5-10分钟 | 需要清理或处理冲突 |
-
-#### 输出产物
-
-**产物1：** Git worktree 目录
-
-**文件：** `.claude/state/worktree.json`
-
-```json
-{
-  "project": "功能名称",
-  "main_branch": "main",
-  "worktree_branch": "feature/xxx",
-  "worktree_path": "../workspace/xxx",
-  "created_at": "2026-02-25T10:00:00Z"
-}
-```
-
-#### 关键检查清单 ✅
-
-```
-□ 分支创建：是否创建了新的 feature 分支？
-□ Worktree路径：worktree 路径是否合理（建议 ../workspace/xxx）？
-□ 主分支状态：主分支是否是最新的？
-□ 冲突检查：是否有未解决的冲突？
-□ 环境验证：worktree 是否可以正常开发？
-```
-
-#### Red Flags ⚠️
-
-| 错误做法 | 正确做法 |
-|---------|---------|
-| ❌ 直接在主分支开发 | ✅ 必须使用 worktree 隔离 |
-| ❌ worktree 路径与主项目混用 | ✅ 建议使用独立目录 |
-| ❌ 不验证 worktree 可用性 | ✅ 必须验证环境就绪 |
-
-#### 确认机制
-```
-创建 worktree 后：
-展示分支信息
-展示工作目录路径
-询问："环境是否就绪？"
-├── ✅ 是 → 进入 subagent-development
-├── ⚠️ 需要调整 → 调整环境
-└── ❌ 失败 → 重新创建
-```
-
-#### 跳过条件
-- 用户明确不需要
-- 单人开发模式
+**简要说明**：创建隔离的开发环境，使用 git worktree 避免污染主分支。负责环境准备、分支创建（`feature/{feature-name}`）、路径管理（`../workspace/{feature-name}`）和环境验证。不负责依赖安装和代码开发（由 Subagent Development 负责）。
 
 ---
 
