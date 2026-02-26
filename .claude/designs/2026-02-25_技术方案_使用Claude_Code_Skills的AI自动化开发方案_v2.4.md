@@ -859,7 +859,7 @@ Skill: cadence-deliver
 
 ## 8. Subagent 定义
 
-> **详细文档**：[2026-02-26_技术方案_Subagent定义_v2.4.md](./2026-02-26_技术方案_Subagent定义_v2.4.md)
+> **详细文档**：[2026-02-26_技术方案_Subagent定义_v1.0.md](./2026-02-26_技术方案_Subagent定义_v1.0.md)
 
 ### 8.1 架构概览
 
