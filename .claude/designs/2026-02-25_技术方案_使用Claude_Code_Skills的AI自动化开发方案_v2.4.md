@@ -771,160 +771,42 @@ Skill: cadence-deliver
 
 ---
 
-## 5. 进度追踪与状态管理（v2.4 完整版）
+## 5. 进度追踪与状态管理
 
-> **详细文档**: [进度追踪与状态管理_v1.0.md](./2026-02-26_进度追踪与状态管理_v1.0.md)
+> **📄 完整文档**: [进度追踪与状态管理_v1.0.md](./2026-02-26_进度追踪与状态管理_v1.0.md)
 
-### 5.1 核心组件
+本部分已独立为详细文档，包含完整的进度追踪和状态管理机制。
 
-本章节包含以下核心机制（详见独立文档）：
+### 5.1 核心组件概览
 
-1. **TodoWrite 任务结构**
-   - 标准字段定义（taskId, subject, description, status, blockedBy, blocks, owner, priority, metadata）
-   - 任务依赖管理（强依赖/弱依赖）
-   - 并行识别机制
+| 组件 | 说明 | 关键特性 |
+|------|------|---------|
+| **TodoWrite 任务结构** | 任务管理核心 | 标准字段、依赖管理、并行识别 |
+| **验证机制** | 完成验证铁律 | 独立 Skill、5步门控、验证场景 |
+| **失败处理机制** | 自动重试策略 | 固定重试（测试3次/审查2次）、人工介入 |
+| **会话记忆系统** | 跨会话持久化 | Session Summary、Checkpoint（基于 Serena MCP） |
+| **断点续传** | 进度恢复 | 5种恢复场景、上下文重建 |
+| **进度可视化** | 状态监控 | `/cadence:status`、进度报告、实时监控 |
 
-2. **验证机制**
-   - 独立 Skill: `cadence-verification-before-completion`
-   - 验证铁律：NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
-   - 门控功能（5 步）
-   - **详细文档**: [Skill_Verification_Before_Completion_v1.0.md](./2026-02-26_Skill_Verification_Before_Completion_v1.0.md)
-
-3. **失败处理机制**
-   - 固定重试策略（测试 3 次/审查 2 次/覆盖率 2 次）
-   - 人工介入流程（4 个选项）
-   - 失败日志记录（基于 Serena Memory）
-
-4. **会话记忆系统**
-   - 基于 Serena MCP 实现
-   - Session Summary（会话总结）
-   - Checkpoint（检查点）
-   - 会话恢复流程
-
-5. **断点续传**
-   - 5 种恢复场景
-   - 详细的恢复逻辑
-   - 上下文重建
-
-6. **进度可视化**
-   - 状态查询命令（`/cadence:status`）
-   - 进度报告格式（每日/周报）
-   - 实时监控（`/cadence:monitor`）
-
-### 5.2 快速参考
-
-#### TodoWrite 任务结构示例
-
-```json
-{
-  "taskId": "task-1",
-  "subject": "创建用户模型",
-  "description": "基于 PRD 需求，创建 User 数据模型...",
-  "status": "in_progress",
-  "blockedBy": [],
-  "blocks": ["task-2"],
-  "owner": "subagent-001",
-  "priority": "P0",
-  "metadata": {
-    "complexity": "high",
-    "timeEstimate": { "min": 2, "max": 4 },
-    "testRetries": 0,
-    "reviewRetries": 0,
-    "coverageRetries": 0,
-    "createdAt": "2026-02-26T10:00:00Z",
-    "updatedAt": "2026-02-26T12:30:00Z"
-  }
-}
-```
-
-#### 验证铁律
-
-```
-NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
-没有新鲜验证证据 = 不声称完成
-```
-
-#### 固定重试策略
-
-| 失败类型 | 最大重试次数 | 超过次数后 |
-|---------|------------|-----------|
-| 测试失败 | 3 次 | 人工介入 |
-| 审查失败 | 2 次 | 人工介入 |
-| 覆盖率不足 | 2 次 | 人工介入 |
-
-#### 会话记忆 API
-
-```javascript
-// 创建 Session Summary
-write_memory({
-  memory_name: `session-${date}-${projectName}`,
-  content: sessionSummaryContent
-})
-
-// 创建 Checkpoint
-write_memory({
-  memory_name: `checkpoint-${taskId}-${timestamp}`,
-  content: checkpointContent
-})
-
-// 读取 Session Summary
-read_memory({
-  memory_name: `session-${date}-${projectName}`
-})
-```
-
-#### 进度查询命令
+### 5.2 关键命令
 
 ```bash
-# 查看当前进度
-/cadence:status
-
-# 恢复进度
-/cadence:resume
-
-# 创建检查点
-/cadence:checkpoint
-
-# 生成报告
-/cadence:report --daily
-/cadence:report --weekly
-
-# 实时监控
-/cadence:monitor
+/cadence:status      # 查看当前进度
+/cadence:resume      # 恢复进度
+/cadence:checkpoint  # 创建检查点
+/cadence:report      # 生成报告（每日/周报）
+/cadence:monitor     # 实时监控
 ```
 
-### 5.3 集成关系
-
-**与第 4 部分（节点流程）的集成**：
-- 每个节点完成后创建 Checkpoint
-- 节点间转换时保存 Session Summary
-- 验证输出产物
-
-**与第 6 部分（Skills 目录）的集成**：
-- `cadence-verification-before-completion` Skill
-- `cadence-subagent-development` Skill
-- `cadence-status` / `cadence-resume` / `cadence-checkpoint` / `cadence-report` Skills
-
-**与第 7 部分（双通道调用）的集成**：
-- 命令：`/cadence:status` → Skill: `cadence-status`
-- 命令：`/cadence:resume` → Skill: `cadence-resume`
-- 命令：`/cadence:checkpoint` → Skill: `cadence-checkpoint`
-- 命令：`/cadence:report` → Skill: `cadence-report`
+> **📌 详细内容**: 请查看 [进度追踪与状态管理_v1.0.md](./2026-02-26_进度追踪与状态管理_v1.0.md)
 
 ---
 
 ## 6. Skills 目录结构
 
 > **📄 完整文档**: [Skills目录结构设计文档](./2026-02-26_技术方案_Skills目录结构_v1.0.md)
->
-> 本部分已独立为详细文档，包含：
-> - 完整的目录结构定义
-> - Skill 分类说明（元Skill、前置Skill、节点Skill、流程Skill、支持Skill）
-> - Skill 依赖关系图
-> - 关键 Skill 详细说明
-> - 文件组织规范
-> - 与 superpowers 的对比
-> - 实施计划和版本历史
+
+本部分已独立为详细文档，包含完整的目录结构定义、Skill 分类说明、依赖关系图、文件组织规范等。
 
 ### 6.1 Skill 分类总览
 
@@ -938,38 +820,10 @@ read_memory({
 
 ### 6.2 v2.4 优化亮点
 
-**✨ 新增前置Skill（2个）**:
-1. `cadence-receiving-code-review` - 接收审查反馈
-2. `cadence-self-review` - 自我审查机制
-
-**⭐ 增强的 Subagent Development**:
-- 两阶段审查机制（Spec Review → Quality Review）
-- 完整的 prompt templates
-- Self-review checklist
-- 详细的使用示例
-
-**📚 增强 TDD 支持**:
-- testing-anti-patterns.md（测试反模式）
-- red-green-refactor.md（循环详解）
-- examples/（示例目录）
-
-**📖 文档完整性**:
-- 每个 Skill 包含：SKILL.md + README.md + examples.md
-- 支持文件：prompt templates、checklists、anti-patterns
-
-### 6.3 关键依赖关系
-
-```mermaid
-graph LR
-    A[Plan] --> B[Git Worktrees]
-    B --> C[Subagent Development]
-    C --> D1[TDD]
-    C --> D2[Requesting Code Review]
-    C --> D3[Receiving Code Review]
-    C --> D4[Self Review]
-    D2 --> E[Spec Review]
-    E --> F[Quality Review]
-```
+- ✨ **新增前置Skill（2个）**: `cadence-receiving-code-review`、`cadence-self-review`
+- ⭐ **增强的 Subagent Development**: 两阶段审查机制（Spec Review → Quality Review）
+- 📚 **增强 TDD 支持**: testing-anti-patterns、red-green-refactor、examples
+- 📖 **文档完整性**: SKILL.md + README.md + examples.md + 支持文件
 
 > **📌 详细内容**: 请查看 [Skills目录结构设计文档](./2026-02-26_技术方案_Skills目录结构_v1.0.md)
 
@@ -978,14 +832,8 @@ graph LR
 ## 7. 插件配置
 
 > **📄 完整文档**: [插件配置设计文档](./2026-02-26_技术方案_插件配置_v1.0.md)
->
-> 本部分已独立为详细文档，包含：
-> - 完整的配置文件定义（plugin.json、marketplace.json、dependencies.json、hooks.json、agents.json）
-> - Skill 注册和命令配置
-> - 依赖关系详细定义
-> - Hooks 配置和脚本示例
-> - Subagent 定义和工作流
-> - 版本兼容性和最佳实践
+
+本部分已独立为详细文档，包含完整的配置文件定义、Skill 注册、依赖关系、Hooks 配置、Subagent 定义等。
 
 ### 7.1 配置文件清单
 
@@ -999,89 +847,11 @@ graph LR
 
 ### 7.2 v2.4 优化亮点
 
-**✨ 完善的元数据**:
-- 完整的 author、license、repository 信息
-- 版本兼容性声明（Claude Code、Serena MCP、Git）
-- 详细的 keywords 和 categories
-
-**📊 完整的 Skill 注册**:
-- **22个 Skill**（含2个新增前置 Skill）
-- **25个 Command**（覆盖所有 Skill）
-- Skill 分类标记（meta/prerequisite/node/flow/support）
-- 节点编号（node_number）
-
-**🔗 完整的依赖管理**:
-- Skill 依赖关系（requires + optional）
-- Flow 依赖关系（节点序列）
-- 质量门禁（before/during/after）
-- 外部依赖声明
-
-**🪝 Hooks 系统**:
-- `session-start` - 会话开始
-- `task-complete` - 任务完成
-- `node-complete` - 节点完成
-- `code-review-complete` - 审查完成
-- `pre-commit` / `pre-push` - Git hooks
-
-**🤖 Subagent 定义**:
-- `cadence-implementer` - 实现者
-- `cadence-spec-reviewer` - 规范审查者
-- `cadence-code-quality-reviewer` - 质量审查者
-- 完整的工作流序列和重试策略
-
-### 7.3 配置文件结构
-
-```
-.claude-plugin/
-├── plugin.json              ✅ 核心 - 22 Skills + 25 Commands
-├── marketplace.json         ✅ 市场 - 完整功能描述
-├── dependencies.json        ✅ 依赖 - 关系 + 质量门禁
-├── hooks.json               ⭐ Hooks - 6个钩子
-├── agents.json              ✅ Subagent - 3个定义 + 工作流
-└── README.md                ⭐ 文档
-```
-
-### 7.4 Skill 统计
-
-| 分类 | 数量 | 包含 Skill |
-|------|------|-----------|
-| 🧬 **元Skill** | 1 | using-cadence |
-| 🔧 **前置Skill** | 5 | git-worktrees, tdd, requesting-review, **receiving-review** ✨, **self-review** ✨ |
-| 📋 **节点Skill** | 11 | brainstorm → deliver |
-| 🔀 **流程Skill** | 3 | full-flow, quick-flow, exploration-flow |
-| ✅ **支持Skill** | 2 | verification, finishing |
-| **总计** | **22** | - |
-
-### 7.5 Command 统计
-
-| 类型 | 数量 | 示例 |
-|------|------|------|
-| **节点命令** | 11 | /cadence:brainstorm, /cadence:design, /cadence:develop |
-| **流程命令** | 3 | /cadence:full-flow, /cadence:quick-flow |
-| **管理命令** | 6 | /cadence:status, /cadence:resume, /cadence:checkpoint |
-| **质量命令** | 4 | /cadence:tdd, /cadence:request-review, /cadence:self-review |
-| **完成命令** | 1 | /cadence:finish |
-| **总计** | **25** | - |
-
-### 7.6 质量门禁示例
-
-```json
-"quality_gates": {
-  "cadence-subagent-development": {
-    "before": [
-      {"skill": "cadence-git-worktrees", "check": "验证 Worktree 已创建"}
-    ],
-    "during": [
-      {"skill": "cadence-test-driven-development", "check": "强制执行 TDD 流程"},
-      {"skill": "cadence-self-review", "check": "每个 task 完成后自审"}
-    ],
-    "after": [
-      {"skill": "cadence-requesting-code-review", "check": "Spec Compliance Review"},
-      {"skill": "cadence-requesting-code-review", "check": "Code Quality Review"}
-    ]
-  }
-}
-```
+- ✨ **完善的元数据**: 完整的 author、license、repository、版本兼容性声明
+- 📊 **完整的 Skill 注册**: 22个 Skill（含2个新增）、25个 Command
+- 🔗 **完整的依赖管理**: Skill 依赖、Flow 依赖、质量门禁（before/during/after）
+- 🪝 **Hooks 系统**: session-start、task-complete、node-complete、code-review-complete、pre-commit、pre-push
+- 🤖 **Subagent 定义**: implementer、spec-reviewer、code-quality-reviewer + 工作流
 
 > **📌 详细内容**: 请查看 [插件配置设计文档](./2026-02-26_技术方案_插件配置_v1.0.md)
 
