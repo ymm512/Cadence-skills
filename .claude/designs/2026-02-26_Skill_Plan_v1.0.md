@@ -137,15 +137,50 @@ graph TB
    - 理解技术选型和约束
 
 3. **读取技术栈配置** ⭐⭐（新增）
-   - **步骤 1：检查 CLAUDE.md**
+   - **步骤 1：检查用户对话中是否指定**
+     - 如果用户在对话中已指定技术栈配置，使用用户指定的配置
+     - 示例："使用 Python + pytest"
+   - **步骤 2：检查 CLAUDE.md**
      - 读取项目根目录的 `CLAUDE.md` 文件
-     - 查找 `project_tech_stack` 配置
+     - 查找 `tech_stack` 配置
      - 如果存在 → 直接使用
-   - **步骤 2：如果 CLAUDE.md 没有配置**
-     - 自动检测项目类型（package.json、requirements.txt 等）
-     - **与用户确认技术栈配置**
-     - 建议用户将配置写入 CLAUDE.md
-   - **步骤 3：整理输出**
+   - **步骤 3：如果未找到配置**
+     - **停止并提示用户配置 CLAUDE.md**：
+       ```
+       ⚠️ 技术栈配置未找到。
+
+       请在 CLAUDE.md 中配置技术栈：
+
+       ## Tech Stack
+
+       ```yaml
+       tech_stack:
+         language: "your-language"
+         test_command: "your-test-command"
+         test_coverage_command: "your-coverage-command"
+         lint_command: "your-lint-command"
+         format_command: "your-format-command"
+         coverage_threshold: 80
+       ```
+
+       示例配置：
+
+       **JavaScript/TypeScript:**
+       language: "javascript"
+       test_command: "npm test"
+       test_coverage_command: "npm run test:coverage"
+       lint_command: "npm run lint"
+       format_command: "npm run format"
+
+       **Python:**
+       language: "python"
+       test_command: "pytest tests/"
+       test_coverage_command: "pytest --cov=src --cov-report=term-missing"
+       lint_command: "flake8 src/ tests/"
+       format_command: "black src/ tests/ && isort src/ tests/"
+       ```
+     - **等待用户配置完成**
+   - **步骤 4：整理输出**
      - 将技术栈信息输出到 Plan 文档的"技术栈配置"章节
      - 每个任务继承项目技术栈配置
 
@@ -253,10 +288,15 @@ CLAUDE.md (用户维护)
 代码实现 (test/lint/format)
 ```
 
-**三层检测优先级**：
-1. **Task Description**（最高优先级）：任务特定配置
-2. **CLAUDE.md**（次优先级）：项目级默认配置
-3. **Auto-Detect + User Confirm**（兜底）：自动检测并确认
+**技术栈配置优先级**：
+1. **User Specified in Conversation**（最高优先级）：用户在对话中指定
+2. **CLAUDE.md Configuration**（次优先级）：项目级默认配置
+3. **Missing Configuration**（缺失）：提示用户配置 CLAUDE.md
+
+**⚠️ 重要：不自动检测**
+- ❌ 不使用 auto-detect 逻辑
+- ✅ 必须从用户对话或 CLAUDE.md 获取配置
+- ✅ 如果缺失，提示用户配置
 
 ## 关键检查清单 ✅
 

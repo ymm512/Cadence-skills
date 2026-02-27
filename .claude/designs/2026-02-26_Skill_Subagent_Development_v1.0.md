@@ -236,14 +236,265 @@ graph TB
   - 并行任务：同时分配给多个 Subagent
   - 混合任务：先串行，后并行
 
-#### 5. **Subagent 执行任务**
-- 使用 Task 工具调用 Subagent
-- Subagent 在 worktree 目录中工作
-- Subagent 在 feature 分支上开发
-- **执行模式**：
-  - **串行执行**：Task 1 → Task 2 → Task 3
-  - **并行执行**：Task 4 || Task 5 || Task 6
-  - **混合执行**：Task 1 → Task 2 → [Task 4 || Task 5 || Task 6] → Task 7
+#### 5. **Subagent 执行任务** ⭐
+
+**使用 Task 工具动态调用 Subagent（关键：不使用静态配置）**
+
+Subagent 在 worktree 目录中工作，在 feature 分支上开发。
+
+**执行模式**：
+- **串行执行**：Task 1 → Task 2 → Task 3
+- **并行执行**：Task 4 || Task 5 || Task 6
+- **混合执行**：Task 1 → Task 2 → [Task 4 || Task 5 || Task 6] → Task 7
+
+**完整调用流程**：
+
+##### 5.1 调用 Implementer Subagent
+
+```markdown
+Task tool (general-purpose):
+  description: "Implement {task_name}"
+  prompt: |
+    You are implementing: **{task_name}**
+
+    ## Task Description
+    {完整任务描述，来自Plan}
+
+    ## Context
+    - **Project**: {project_name}
+    - **Feature Branch**: {feature_branch}
+    - **Work Directory**: {worktree_path}
+    - **Dependencies**: {依赖任务列表}
+    - **Priority**: {P0/P1/P2}
+
+    ## Acceptance Criteria
+    {验收标准列表，来自Plan}
+
+    ## Technical Constraints
+    {技术约束，来自Design}
+
+    ## TDD Workflow (MUST FOLLOW)
+
+    ### Phase 1: RED
+    1. Write failing tests first
+    2. Run tests to verify they fail
+    3. Commit test file: `test: add test for {feature}`
+
+    ### Phase 2: GREEN
+    1. Write minimal code to pass tests
+    2. Run tests to verify they pass
+    3. Commit implementation: `feat: implement {feature}`
+
+    ### Phase 3: BLUE
+    1. Refactor code for quality
+    2. Run lint and format checks
+    3. Verify tests still pass
+    4. Commit refactoring: `refactor: optimize {feature}`
+
+    ## Self-Review Checklist
+    Before reporting completion, verify:
+    - [ ] All acceptance criteria met
+    - [ ] Test coverage ≥ {threshold}%
+    - [ ] Lint checks pass
+    - [ ] Format checks pass
+    - [ ] No extra features added (YAGNI)
+
+    ## Output Format
+    Report your completion with:
+    ```
+    ## Implementation Complete
+
+    ### Files Changed
+    - {file_path}: {description}
+
+    ### Test Results
+    - Coverage: {X}%
+    - All tests passing: {yes/no}
+
+    ### Acceptance Criteria Status
+    - [x] Criterion 1: {status}
+    - [x] Criterion 2: {status}
+    ...
+
+    ### Self-Review Results
+    - Code quality: {assessment}
+    - Potential issues: {list or "none"}
+    ```
+```
+
+##### 5.2 调用 Spec Reviewer Subagent
+
+```markdown
+Task tool (general-purpose):
+  description: "Review spec compliance for {task_name}"
+  prompt: |
+    You are a **Spec Compliance Reviewer**. Your job is to verify that the implementation matches the specification exactly - nothing more, nothing less.
+
+    ## Task Specification
+    {完整任务描述，来自Plan}
+
+    ## Implementation Report
+    {Implementer的完成报告}
+
+    ## Your Mission
+    1. Read the implementation code (DO NOT trust the report alone)
+    2. Compare actual implementation vs specification
+    3. Check for missing requirements
+    4. Check for extra features (YAGNI violations)
+
+    ## Review Criteria
+
+    ### Missing Requirements
+    - Did they implement everything requested?
+    - Are there requirements they skipped or missed?
+    - Did they claim something works but didn't implement it?
+
+    ### Extra/Unneeded Work
+    - Did they build things that weren't requested?
+    - Did they over-engineer or add unnecessary features?
+    - Did they add "nice to haves" that weren't in spec?
+
+    ## Output Format
+    ```
+    ## Spec Compliance Review
+
+    ### Overall Status
+    - [x] PASS - Spec compliant
+    - [ ] ISSUES FOUND - See below
+
+    ### Missing Requirements
+    {list or "None"}
+
+    ### Extra Features (YAGNI Violations)
+    {list or "None"}
+
+    ### Specific Issues
+    - **Missing**: {requirement} (Expected: {what} | Actual: {what})
+    - **Extra**: {feature} at {file:line} - Remove or justify
+    ```
+```
+
+**如果 Spec Review 发现问题，再次调用 Implementer 修复**：
+```markdown
+Task tool (general-purpose):
+  description: "Fix spec review issues for {task_name}"
+  prompt: |
+    Fix the following spec compliance issues:
+    {Spec Reviewer发现的问题列表}
+
+    ## Instructions
+    1. Fix ONLY the issues listed above
+    2. Do NOT add any new features
+    3. Run tests after fixes
+    4. Commit fixes: `fix: address spec review issues`
+
+    ## Output
+    Report what you fixed and re-run the spec review process.
+```
+
+**然后再次调用 Spec Reviewer 验证修复**
+
+##### 5.3 调用 Code Quality Reviewer Subagent
+
+```markdown
+Task tool (general-purpose):
+  description: "Review code quality for {task_name}"
+  prompt: |
+    You are a **Code Quality Reviewer** with expertise in:
+    - Code style and formatting
+    - Security vulnerabilities
+    - Performance issues
+    - Test coverage
+    - Best practices
+
+    ## Git Commit Range
+    - Base SHA: {base_commit}
+    - Head SHA: {head_commit}
+
+    ## Review Dimensions
+
+    ### 1. Strengths (先肯定)
+    What was done well?
+    - Code quality: {assessment}
+    - Test coverage: {assessment}
+    - Documentation: {assessment}
+    - Adherence to specs: {assessment}
+
+    ### 2. Issues by Severity
+
+    #### Critical (Must Fix)
+    Issues that could cause:
+    - Security vulnerabilities
+    - Data loss
+    - Performance degradation
+    - Test failures
+
+    #### Important (Should Fix)
+    Issues that affect:
+    - Code maintainability
+    - Code readability
+    - Best practices violations
+
+    #### Minor (Nice to Fix)
+    Issues that are:
+    - Style preferences
+    - Minor optimizations
+    - Documentation improvements
+
+    ### 3. Automated Checks
+    - Lint results: {pass/fail}
+    - Format results: {pass/fail}
+    - Test coverage: {X}%
+    - Test results: {all pass/failures}
+
+    ## Output Format
+    ```
+    ## Code Quality Review
+
+    ### Overall Status
+    - [x] APPROVED - Ready to proceed
+    - [ ] CHANGES NEEDED - Critical issues found
+
+    ### Strengths
+    {list of strengths}
+
+    ### Issues Found
+
+    #### Critical
+    {list or "None"}
+
+    #### Important
+    {list or "None"}
+
+    #### Minor
+    {list or "None"}
+
+    ### Recommendation
+    {specific recommendation}
+    ```
+```
+
+**如果 Code Quality Review 发现 Critical 问题，再次调用 Implementer 修复**：
+```markdown
+Task tool (general-purpose):
+  description: "Fix critical code quality issues for {task_name}"
+  prompt: |
+    You need to fix the following CRITICAL code quality issues:
+    {Code Quality Reviewer发现的Critical问题列表}
+
+    ## Instructions
+    1. Fix ONLY critical issues
+    2. Run tests after fixes
+    3. Commit: `fix: address critical quality issues`
+```
+
+**然后再次调用 Code Quality Reviewer 验证修复**
+
+**⚠️ 重要：动态调用原则**
+- ✅ 使用 Task tool 动态调用 Subagent
+- ✅ 传递完整的内联 prompt（包含任务描述、上下文、验收标准）
+- ❌ **不要**使用静态配置文件（如 `agents.json`）
+- ❌ **不要**预定义 Subagent 配置
 
 #### 6. **TDD 流程强制执行** ⭐⭐⭐
 - **RED 阶段**：先写失败的测试
@@ -639,13 +890,224 @@ Subagent 开发后：
 | **验收失败** | 0 次 | 未满足所有验收标准 | 提示用户手动处理 |
 | **超时失败** | 0 次 | 执行时间超过预期 | 提示用户是否继续 |
 
-### 人工介入选项
+---
 
-自动重试次数用尽后，提示用户：
-1. **手动修复代码**：用户手动修复代码
-2. **调整验收标准**：用户调整验收标准（可能需求不明确）
-3. **跳过此任务**：跳过当前任务，继续执行其他任务
-4. **重新执行 Subagent**：重新执行当前任务的 Subagent
+### 人工介入流程（完整版）
+
+#### Step 1: 保存进度（创建Checkpoint）
+
+当自动重试次数用尽后，**自动执行**：
+
+```bash
+# 创建Checkpoint文件
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+CHECKPOINT_FILE=".claude/checkpoints/task-${TASK_ID}-${TIMESTAMP}.json"
+
+cat > "$CHECKPOINT_FILE" <<EOF
+{
+  "task_id": "${TASK_ID}",
+  "task_name": "${TASK_NAME}",
+  "status": "failed",
+  "failed_at": "${TIMESTAMP}",
+  "failure_type": "${FAILURE_TYPE}",
+  "failure_reason": "${FAILURE_REASON}",
+  "retry_count": ${RETRY_COUNT},
+  "git_state": {
+    "branch": "$(git branch --show-current)",
+    "commit": "$(git rev-parse HEAD)",
+    "uncommitted_changes": "$(git status --porcelain)"
+  },
+  "files_modified": ${FILES_MODIFIED},
+  "test_results": ${TEST_RESULTS},
+  "review_results": ${REVIEW_RESULTS}
+}
+EOF
+```
+
+#### Step 2: 向用户展示失败信息
+
+```
+🚨 任务执行失败
+
+**任务**: {task_name}
+**失败类型**: {failure_type}
+**失败原因**: {failure_reason}
+**已重试次数**: {retry_count}
+
+**当前状态**:
+- Git分支: {branch}
+- 代码提交: {commit}
+- 未提交修改: {uncommitted_changes}
+
+**进度已保存**: {checkpoint_file}
+```
+
+#### Step 3: 提供用户选择
+
+```
+请选择处理方式：
+
+[1] 手动修复代码
+    → 我会等待你修复，修复完成后输入"继续"
+    → 修复后的代码会自动进入审查流程
+
+[2] 调整验收标准
+    → 重新定义此任务的验收标准
+    → 调整后Subagent会重新执行
+
+[3] 回滚到此任务开始
+    → 撤销此任务的所有修改
+    → 从checkpoint恢复到任务开始状态
+    → 重新执行Subagent
+
+[4] 跳过此任务
+    → 标记为"技术债务"
+    → 记录到technical_debt.md
+    → 继续执行下一个任务
+
+[5] 终止流程
+    → 保存当前进度
+    → 退出开发流程
+    → 稍后可通过 /cadence:resume 恢复
+
+请输入选项编号 [1-5]:
+```
+
+#### Step 4: 执行用户选择
+
+**选项1：手动修复代码**
+```markdown
+等待用户输入"继续"...
+
+用户输入后：
+1. 运行测试验证修复
+2. 运行lint和format检查
+3. 如果通过 → 进入审查流程
+4. 如果失败 → 返回Step 3
+```
+
+**选项2：调整验收标准**
+```markdown
+询问用户：
+"请输入新的验收标准（每行一个）："
+
+用户输入后：
+1. 更新Plan文档中的验收标准
+2. 重新调用Implementer Subagent
+3. 从头执行此任务
+```
+
+**选项3：回滚到此任务开始**
+```bash
+# 从checkpoint读取任务开始时的Git状态
+git reset --hard {checkpoint_commit}
+git clean -fd
+
+# 删除checkpoint文件
+rm {checkpoint_file}
+
+# 重新执行Subagent
+```
+
+**选项4：跳过此任务**
+```markdown
+1. 创建technical_debt.md文件
+2. 记录跳过的任务和原因
+3. 更新TodoWrite状态为"skipped"
+4. 继续执行下一个任务
+```
+
+**选项5：终止流程**
+```markdown
+1. 更新worktree.json状态为"paused"
+2. 创建session checkpoint
+3. 退出流程
+4. 提示用户如何恢复：/cadence:resume
+```
+
+---
+
+### 恢复机制
+
+#### 场景1：任务失败后恢复
+
+**触发条件**：用户选择"选项5：终止流程"
+
+**恢复步骤**：
+```bash
+# 1. 用户输入恢复命令
+/cadence:resume
+
+# 2. 系统读取最近的checkpoint
+LATEST_CHECKPOINT=$(ls -t .claude/checkpoints/*.json | head -1)
+
+# 3. 展示checkpoint信息
+cat "$LATEST_CHECKPOINT"
+
+# 4. 询问用户
+"发现未完成的任务：{task_name}
+是否继续执行？[Y/n]"
+
+# 5. 如果用户选择继续
+# 从checkpoint恢复Git状态
+git checkout {checkpoint_branch}
+git reset --hard {checkpoint_commit}
+
+# 6. 重新执行任务
+```
+
+#### 场景2：会话中断后恢复
+
+**触发条件**：Claude Code会话意外中断
+
+**恢复步骤**：
+```bash
+# 1. 用户启动新会话，输入恢复命令
+/cadence:resume
+
+# 2. 系统读取session checkpoint
+SESSION_CHECKPOINT=".claude/state/session.json"
+
+# 3. 展示会话状态
+cat "$SESSION_CHECKPOINT"
+
+# 4. 恢复工作环境
+cd {worktree_path}
+git checkout {feature_branch}
+
+# 5. 继续执行
+```
+
+#### 场景3：技术债务追踪
+
+**触发条件**：用户选择"选项4：跳过此任务"
+
+**追踪机制**：
+```markdown
+# 创建 .claude/docs/technical_debt.md
+
+## 技术债务记录
+
+### TD-001: {task_name}
+
+**创建日期**: {date}
+**优先级**: {priority}
+**原因**: {skip_reason}
+**影响**: {impact_assessment}
+**关联任务**: {task_id}
+
+**后续处理建议**:
+- [ ] 重新评估验收标准
+- [ ] 分解为更小的任务
+- [ ] 寻求技术支持
+- [ ] 降级为P2任务
+
+**状态**: ⏸️ 待处理
+```
+
+**定期提醒**：
+- 每周提醒用户检查technical_debt.md
+- 在项目完成前提示处理所有技术债务
 
 ## TDD 流程详细说明
 
