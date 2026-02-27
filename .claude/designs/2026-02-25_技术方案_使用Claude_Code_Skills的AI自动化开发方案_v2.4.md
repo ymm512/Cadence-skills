@@ -488,7 +488,6 @@ graph TD
 
 ---
 
-
 ### 4.3 节点3：Requirement（需求分析）
 
 **Skill 文档**：[2026-02-25_Skill_Requirement_v1.0.md](./2026-02-25_Skill_Requirement_v1.0.md)
@@ -930,56 +929,7 @@ description: Use when starting feature work that needs isolation from current wo
 - [ ] Record worktree state to .claude/state/worktree.json
 ```
 
-### 9.2 cadence-test-driven-development
-
-```yaml
----
-name: cadence-test-driven-development
-description: Use when implementing any feature or bugfix, before writing implementation code
----
-
-## Red Flags
-
-| Thought | Reality |
-|---------|---------|
-| "Write code first, then tests" | ❌ Must write tests first (RED phase) |
-| "Implement after tests pass" | ❌ Tests must fail before implementation |
-| "Skip verification" | ❌ Must run tests to verify |
-| "Add unnecessary features" | ❌ GREEN phase: minimal code only |
-
-## TDD Phases
-
-1. **RED**: Write failing tests first
-2. **GREEN**: Implement minimal code to pass
-3. **BLUE**: Refactor while keeping tests green
-```
-
-### 9.3 cadence-requesting-code-review
-
-```yaml
----
-name: cadence-requesting-code-review
-description: Use when completing tasks, implementing major features, or before merging to verify work meets requirements
----
-
-## Red Flags
-
-| Thought | Reality |
-|---------|---------|
-| "Skip code review" | ❌ Must conduct review |
-| "Review own code" | ❌ Must use subagent for review |
-| "Ignore review feedback" | ❌ Must fix issues found |
-| "Skip re-review" | ❌ Must re-review after fixes |
-
-## Review Workflow
-
-1. Trigger Code Quality Review Agent
-2. Wait for review results
-3. Fix critical issues
-4. Re-review until approved
-```
-
-### 9.4 cadence-subagent-development
+### 9.3 cadence-subagent-development
 
 ```yaml
 ---
@@ -1008,7 +958,7 @@ description: Use when executing implementation plans with independent tasks in t
 4. Commit all changes
 ```
 
-### 9.5 cadence-verification-before-completion
+### 9.4 cadence-verification-before-completion
 
 ```yaml
 ---
@@ -1033,7 +983,7 @@ description: Use when about to claim work is complete, fixed, or passing, before
 - [ ] Confirm all ACs are met
 ```
 
-### 9.6 cadence-finishing-a-development-branch
+### 9.5 cadence-finishing-a-development-branch
 
 ```yaml
 ---
@@ -1059,143 +1009,13 @@ description: Use when implementation is complete, all tests pass, and you need t
 
 ---
 
-## 10. Prompt 模板文件（v2.3 优化版）
+## 10. Prompt 模板文件
 
-### 10.1 implementer-prompt.md
-
-```markdown
-# Implementer Subagent Prompt - TDD Workflow (MANDATORY)
-
-Task tool (general-purpose):
-  description: "Implement Task N: [task name]"
-  prompt: |
-    You are implementing Task N: [task name]
-
-    ## Task Description
-
-    [FULL TEXT of task from plan - paste it here]
-
-    ## Context
-
-    [Scene-setting: where this fits, dependencies, architectural context]
-
-    ## TDD Workflow - MANDATORY 🔴
-
-    **You MUST follow this exact sequence for EVERY task:**
-
-    ### Phase 1: RED - Write Tests FIRST (Required)
-    1. Write failing tests that define expected behavior
-    2. Tests should describe WHAT the code should do, not HOW
-    3. Run tests to confirm they fail for the RIGHT reasons
-    4. **DO NOT proceed to implementation until tests are written**
-
-    ### Phase 2: GREEN - Make Tests Pass
-    1. Write the SIMPLEST code that makes tests pass
-    2. Don't add extra features (YAGNI)
-    3. Focus on making tests green, not perfection
-    4. Don't worry about code quality yet
-
-    ### Phase 3: BLUE - Refactor
-    1. Improve code quality while keeping tests green
-    2. Apply design patterns if beneficial
-    3. Remove duplication
-    4. Ensure tests still pass after refactoring
-
-    ### Phase 4: Lint & Format (MANDATORY)
-    Before reporting back, you MUST run:
-    ```bash
-    npm run lint      # Fix all errors
-    npm run format    # Format code
-    ```
-
-    ## Your Job
-
-    1. **Write tests FIRST (red phase)**
-    2. **Implement to make tests pass (green phase)**
-    3. **Refactor if needed (blue phase)**
-    4. **Run linter and formatter**
-    5. **Commit your work**
-    6. **Self-review**
-    7. **Report back**
-
-    ## Report Format
-
-    When done, report:
-    - What you implemented
-    - TDD phases completed: [RED ✅ / GREEN ✅ / BLUE ✅]
-    - Test results: [X tests passed]
-    - Linting: [passed/failed]
-    - Files changed
-```
-
-### 10.2 spec-reviewer-prompt.md
-
-```markdown
-# Spec Reviewer Subagent Prompt
-
-Task tool (feature-dev:code-reviewer):
-  description: "Review Task N spec compliance: [task name]"
-  prompt: |
-    You are reviewing Task N for spec compliance: [task name]
-
-    ## Task Description
-
-    [FULL TEXT of task from plan]
-
-    ## Implementation
-
-    Review the implementation to verify:
-    - All requirements are implemented
-    - Nothing extra was added (YAGNI)
-    - Acceptance criteria are met
-    - Tests cover all cases
-
-    ## Report Format
-
-    ### Spec Compliance Review
-    - ✅ [Requirement 1] - implemented
-    - ❌ [Requirement 2] - missing
-
-    **Conclusion:** ✅ Pass / ❌ Issues Found
-```
-
-### 10.3 code-quality-reviewer-prompt.md
-
-```markdown
-# Code Quality Reviewer Subagent Prompt
-
-Task tool (general-purpose):
-  description: "Review code quality for Task N: [task name]"
-  prompt: |
-    You are reviewing code quality for Task N: [task name]
-
-    ## Files Changed
-
-    [List of files changed in this task]
-
-    ## Review Criteria
-
-    1. **Code Style** - Follows project conventions
-    2. **Security** - No vulnerabilities, proper validation
-    3. **Performance** - No obvious issues, proper caching
-    4. **Testing** - Tests verify actual behavior, good coverage
-    5. **Maintainability** - Clean, readable, no duplication
-    6. **Formatting & Linting**
-       - Run: `npm run lint:check`
-       - Run: `npm run format:check`
-
-    ## Report Format
-
-    ### Strengths
-    - [What was done well]
-
-    ### Issues Found
-    - **[Severity]**: [Issue description]
-      - Location: [file:line]
-      - Fix: [Suggested fix]
-
-    **Conclusion:** ✅ Approved / ❌ Issues Found
-```
+> **详细文档**：所有Prompt模板已在Subagent定义中完整提供
+> 
+> - **Implementer Prompt**: 参见 [8.1_implementer.md](./8.1_implementer.md)
+> - **Spec Reviewer Prompt**: 参见 [8.2_spec-reviewer.md](./8.2_spec-reviewer.md)
+> - **Code Quality Reviewer Prompt**: 参见 [8.3_code-quality-reviewer.md](./8.3_code-quality-reviewer.md)
 
 ---
 
@@ -1274,7 +1094,7 @@ These thoughts mean STOP:
 | "This doesn't need a formal skill" | If a skill exists, use it. |
 | "I remember this skill" | Skills evolve. Read current version. |
 | "This doesn't count as a task" | Action = task. Check for skills. |
-| "The skill is overkill" | Simple things become complex. Use it. |
+| "This skill is overkill" | Simple things become complex. Use it. |
 | "I'll just do this one thing first" | Check BEFORE doing anything. |
 | "This feels productive" | Undisciplined action wastes time. Skills prevent this. |
 | "I know what that means" | Knowing the concept ≠ using the skill. Invoke it. |
