@@ -902,110 +902,38 @@ Cadence 使用三层 Subagent 协作模式，由 `cadence-subagent-development` 
 
 ---
 
-## 9. 独立 Skills 详细设计（v2.3 优化版）
+## 9. 独立 Skills 详细设计
 
-### 9.1 cadence-using-git-worktrees
+> **详细文档**：所有独立Skills已完成详细设计并独立为单独文档
 
-```yaml
----
-name: cadence-using-git-worktrees
-description: Use when starting feature work that needs isolation from current workspace or before executing implementation plans - creates isolated git worktrees with smart directory selection and safety verification
----
+### 9.1 前置Skills（环境准备）
 
-## Red Flags
+#### cadence-using-git-worktrees
+- **文档**：[2026-02-26_Skill_Git_Worktrees_v1.0.md](./2026-02-26_Skill_Git_Worktrees_v1.0.md)
+- **用途**：创建隔离开发环境，- **触发**：Subagent Development的前置Skill
 
-| Thought | Reality |
-|---------|---------|
-| "Working on main branch directly" | ❌ Must use worktree for isolation |
-| "Skip safety check" | ❌ Must verify worktree doesn't exist |
-| "Don't clean up worktree" | ❌ Must clean up after completion |
+### 9.2 核心Skills（代码开发）
 
-## Key Checkpoints
+#### cadence-subagent-development
+- **文档**：[2026-02-26_Skill_Subagent_Development_v1.0.md](./2026-02-26_Skill_Subagent_Development_v1.0.md)
+- **用途**：使用Subagent开发代码（强制TDD + 两阶段审查）
+- **内置流程**：TDD（RED-GREEN-BLUE）+ Spec Review + Code Quality Review
+- **关联Subagent**：
+  - [8.1_implementer.md](./8.1_implementer.md)
+  - [8.2_spec-reviewer.md](./8.2_spec-reviewer.md)
+  - [8.3_code-quality-reviewer.md](./8.3_code-quality-reviewer.md)
 
-- [ ] Verify worktree doesn't already exist
-- [ ] Create new branch from main
-- [ ] Create worktree in ../workspace/ directory
-- [ ] Verify worktree is functional
-- [ ] Record worktree state to .claude/state/worktree.json
-```
+### 9.3 后置Skills（质量保证）
 
-### 9.3 cadence-subagent-development
+#### cadence-verification-before-completion
+- **文档**：[2026-02-26_Skill_Verification_Before_Completion_v1.0.md](./2026-02-26_Skill_Verification_Before_Completion_v1.0.md)
+- **用途**：完成前强制验证（证据优先于断言）
+- **触发**：任何完成、修复、通过的声明之前
 
-```yaml
----
-name: cadence-subagent-development
-description: Use when executing implementation plans with independent tasks in the current session
----
-
-## Red Flags
-
-| Thought | Reality |
-|---------|---------|
-| "Develop on main branch" | ❌ Must use cadence-using-git-worktrees first |
-| "Don't follow TDD" | ❌ Must use cadence-test-driven-development |
-| "Skip review" | ❌ Must use cadence-requesting-code-review |
-| "Launch multiple implementers" | ❌ Must execute sequentially to avoid conflicts |
-| "Let subagent read plan itself" | ❌ Must provide complete task text |
-
-## Workflow
-
-1. Load implementation plan
-2. Create Git Worktree (if not exists)
-3. For each task:
-   a. Run Implementer Agent (TDD)
-   b. Run Spec Reviewer Agent
-   c. Run Code Quality Reviewer Agent
-4. Commit all changes
-```
-
-### 9.4 cadence-verification-before-completion
-
-```yaml
----
-name: cadence-verification-before-completion
-description: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims
----
-
-## Red Flags
-
-| Thought | Reality |
-|---------|---------|
-| "Mark complete without verification" | ❌ Must run verification commands |
-| "Don't check output" | ❌ Must confirm output results |
-| "Assume it's fine" | ❌ Must have evidence to support assertions |
-
-## Verification Checklist
-
-- [ ] Run all tests
-- [ ] Verify lint passes
-- [ ] Verify format passes
-- [ ] Check coverage meets threshold
-- [ ] Confirm all ACs are met
-```
-
-### 9.5 cadence-finishing-a-development-branch
-
-```yaml
----
-name: cadence-finishing-a-development-branch
-description: Use when implementation is complete, all tests pass, and you need to decide how to integrate the work - guides completion of development work by presenting structured options for merge, PR, or cleanup
----
-
-## Options
-
-1. **Create PR**: Push branch and create pull request
-2. **Squash Merge**: Squash commits and merge
-3. **Rebase**: Rebase onto main and fast-forward
-4. **Cleanup**: Delete branch if merged
-
-## Workflow
-
-1. Verify all tests pass
-2. Verify lint/format passes
-3. Present merge options to user
-4. Execute selected option
-5. Cleanup worktree if needed
-```
+#### cadence-finishing-a-development-branch
+- **文档**：[2026-02-27_Skill_Finishing_Development_Branch_v1.0.md](./2026-02-27_Skill_Finishing_Development_Branch_v1.0.md)
+- **用途**：完成分支（合并/PR/清理）
+- **触发**：所有测试通过后准备集成工作时
 
 ---
 
