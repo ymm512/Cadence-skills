@@ -1315,8 +1315,8 @@ Cadence 使用三层 Subagent 协作模式，由 `cadence-subagent-development` 
 
 **多语言支持：**
 - 支持 6 种主流语言（JavaScript/TypeScript、Python、Java、Go、Rust）
-- 三层检测机制（Plan配置 → CLAUDE.md → 自动检测）
-- 自动识别项目类型并使用对应命令
+- 两层配置机制（用户对话指定 → CLAUDE.md配置）
+- 如果缺失配置，提示用户配置CLAUDE.md
 
 **TDD 强制执行：**
 - RED 阶段：先写失败的测试
