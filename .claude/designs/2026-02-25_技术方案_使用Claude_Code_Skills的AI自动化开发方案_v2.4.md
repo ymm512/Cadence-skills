@@ -947,86 +947,74 @@ Cadence 使用三层 Subagent 协作模式，由 `cadence-subagent-development` 
 
 ---
 
-## 11. 元 Skill：using-cadence（v2.3 优化版）
+## 11. 元 Skill：using-cadence
 
-### 11.1 using-cadence/SKILL.md
+> **📄 完整文档**：[11.1_using-cadence.md](./11.1_using-cadence.md)
 
+### 11.1 核心作用
+
+**using-cadence 是 Cadence Skills 系统的"守门员"和"路由器"**，确保 Claude 在处理开发任务时：
+
+- ✅ **强制检查** - 在响应之前检查是否有相关 Skill
+- ✅ **智能路由** - 将用户意图映射到正确的 Skill
+- ✅ **流程保护** - 防止跳跃开发流程的关键步骤
+- ✅ **灵活调用** - 提供双通道调用机制
+
+### 11.2 核心机制
+
+**强制性检查：**
 ```yaml
----
-name: using-cadence
-description: Use when starting any conversation - establishes how to find and use cadence skills, requiring Skill tool invocation before ANY response
----
-
 <EXTREMELY-IMPORTANT>
-If you think there is even a 1% chance a cadence skill might apply to what you are doing, you ABSOLUTELY MUST invoke the skill.
-
-IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
-
-This is not negotiable. This is not optional. You cannot rationalize your way out of this.
+即使只有 1% 的可能性，也必须调用相关 Skill
+YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
 </EXTREMELY-IMPORTANT>
-
-## How to Access Skills
-
-**In Claude Code:** Use the `Skill` tool. When you invoke a skill, its content is loaded and presented to you—follow it directly.
-
-## Dual Invocation Channels
-
-### Channel 1: Command Invocation
-Use commands for quick access to common workflows:
-```bash
-/cadence:full-flow          # 完整流程
-/cadence:quick-flow         # 快速流程
-/cadence:exploration-flow   # 探索流程
-/cadence:status             # 查看进度
-/cadence:resume             # 恢复进度
 ```
 
-### Channel 2: Skill Tool Invocation
-Use Skill tool for full Skill functionality:
-```bash
-Skill tool: cadence-brainstorm
-Skill tool: cadence-analyze
-Skill tool: cadence-design
-# ... etc
+**双通道调用：**
+- **命令调用**：`/cadence:full-flow`, `/cadence:status` 等
+- **Skill Tool 调用**：`Skill tool: cadence-brainstorm` 等
+
+**触发关键词映射：**
+- 14+ 个关键词映射到对应 Skills
+- 例如："需求不明确" → cadence-brainstorm
+
+**Red Flags：**
+- 11 个危险思维模式，防止 Claude 绕过 Skills 系统
+
+### 11.3 Skill 优先级
+
+**P1 - 理解现状类**（优先执行）
+- cadence-analyze, cadence-brainstorm, cadence-requirement
+
+**P2 - 规划设计类**（第二优先）
+- cadence-design, cadence-design-review, cadence-plan
+
+**P3 - 执行实现类**（最后执行）
+- cadence-subagent-development, cadence-test-*, cadence-deliver 等
+
+### 11.4 与 Subagent 的关系
+
+```
+using-cadence（元 Skill）
+    ↓ 路由到
+Cadence Skills（知识层）
+    ↓ 可能调用
+Subagents（执行层）
+    - Implementer Subagent (8.1)
+    - Spec Reviewer Subagent (8.2)
+    - Code Quality Reviewer Subagent (8.3)
 ```
 
-## Trigger Keywords
+### 11.5 v2.4 优化亮点
 
-| Keywords | Skill |
-|----------|-------|
-| "需求不明确", "想做个", "可能需要", "头脑风暴" | cadence-brainstorm |
-| "分析现有代码", "存量代码", "理解现有架构" | cadence-analyze |
-| "需求分析", "详细需求", "业务规则" | cadence-requirement |
-| "技术设计", "技术方案", "架构设计" | cadence-design |
-| "审查设计", "设计审查", "架构审查" | cadence-design-review |
-| "实现计划", "任务分解", "开发计划" | cadence-plan |
-| "隔离环境", "worktree", "分支" | cadence-using-git-worktrees |
-| "写代码", "实现功能", "开发" | cadence-subagent-development |
-| "TDD", "测试驱动", "先写测试" | cadence-test-driven-development |
-| "代码审查", "审查代码" | cadence-requesting-code-review |
-| "集成测试", "测试方案", "端到端测试" | cadence-test-design |
-| "测试", "验证", "集成测试" | cadence-integration |
-| "交付", "部署", "发布" | cadence-deliver |
-| "完成", "可以了吗", "验证" | cadence-verification-before-completion |
+- ✨ **创建独立文档** - 主文档改为引用格式
+- 📊 **增强关键词映射** - 新增 4 个映射（性能优化、安全审查等）
+- 🎯 **明确 Skill 优先级** - P1/P2/P3 三级优先级
+- 🔗 **增加关系说明** - 与 Subagent、superpowers 的关系
+- 📖 **增加不适用场景** - 明确何时不需要使用 Skills
+- 📝 **增加示例工作流** - 新功能开发、存量代码重构示例
 
-## Red Flags
-
-These thoughts mean STOP:
-
-| Thought | Reality |
-|---------|---------|
-| "This is just a simple question" | Questions are tasks. Check for skills. |
-| "I need more context first" | Skill check comes BEFORE clarifying questions. |
-| "Let me explore the codebase first" | Skills tell you HOW to explore. Check first. |
-| "I can check git/files quickly" | Files lack conversation context. Check for skills. |
-| "This doesn't need a formal skill" | If a skill exists, use it. |
-| "I remember this skill" | Skills evolve. Read current version. |
-| "This doesn't count as a task" | Action = task. Check for skills. |
-| "This skill is overkill" | Simple things become complex. Use it. |
-| "I'll just do this one thing first" | Check BEFORE doing anything. |
-| "This feels productive" | Undisciplined action wastes time. Skills prevent this. |
-| "I know what that means" | Knowing the concept ≠ using the skill. Invoke it. |
-```
+> **📌 详细内容**：请查看 [11.1_using-cadence.md](./11.1_using-cadence.md)
 
 ---
 
@@ -1037,3 +1025,11 @@ These thoughts mean STOP:
 - v2.1：TDD独立 + 审查独立 + Git Worktrees独立 + Red Flags + Prompt外置 + TodoWrite追踪
 - v2.2：双通道调用 + Plugin配置 + Agents目录 + Red Flags英文 + 文档路径统一
 - v2.3：完整v2.3优化版，包含所有11个章节
+- v2.4（当前）：
+  - ✨ **using-cadence 独立优化** - 创建独立文档 `11.1_using-cadence.md`
+  - 📊 **增强关键词映射** - 新增 4 个映射（性能优化、安全审查、自动化测试、CI/CD）
+  - 🎯 **明确 Skill 优先级** - P1（理解现状）/ P2（规划设计）/ P3（执行实现）三级优先级
+  - 🔗 **增加关系说明** - 与 Subagent (8.1/8.2/8.3)、superpowers:using-superpowers 的关系
+  - 📖 **增加不适用场景** - 明确何时不需要使用 Skills
+  - 📝 **增加示例工作流** - 新功能开发、存量代码重构示例
+  - 📄 **主文档优化** - 第11部分改为引用格式，减少重复，提高可维护性
