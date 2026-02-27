@@ -859,7 +859,7 @@ Skill: cadence-deliver
 
 ## 8. Subagent 定义
 
-> **详细文档**：[2026-02-26_技术方案_Subagent定义_v1.0.md](./2026-02-26_技术方案_Subagent定义_v1.0.md)
+> **详细文档**：[2026-02-26_技术方案_Subagent定义_v1.1.md](./2026-02-26_技术方案_Subagent定义_v1.1.md)
 
 ### 8.1 架构概览
 
@@ -887,11 +887,19 @@ Cadence 使用三层 Subagent 协作模式，由 `cadence-subagent-development` 
 - Spec Review：验证符合需求（不多不少）
 - Code Quality Review：审查质量、安全、性能
 
+**v1.1 新增特性** ⭐：
+- ✨ Before You Begin 提问机制（避免方向性错误）
+- ✨ Self-Review 自检机制增强（5个维度完整性检查）
+- ✨ 审查循环机制（发现→修复→再审查）
+- ✨ Git SHA 范围指定（精确审查变更）
+- ✨ 并发 Subagent 管理（支持并行任务）
+- ✨ 失败处理机制（3种失败场景）
+
 ### 8.3 使用方式
 
 详细的 Subagent 定义、Prompt 模板、多语言配置和使用示例请参考：
 
-**👉[2026-02-26_技术方案_Subagent定义_v1.0.md](./2026-02-26_技术方案_Subagent定义_v1.0.md)**
+**👉[2026-02-26_技术方案_Subagent定义_v1.1.md](./2026-02-26_技术方案_Subagent定义_v1.1.md)**
 
 ---
 
