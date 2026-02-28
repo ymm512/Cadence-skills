@@ -951,7 +951,7 @@ graph TD
 
 **Skill 文档**：[2026-02-26_Skill_Subagent_Development_v1.0.md](./2026-02-26_Skill_Subagent_Development_v1.0.md)
 
-**简要说明**：使用 Subagent 开发代码，强制遵循 TDD 流程（RED-GREEN-BLUE），同时编写单元测试，并进行代码质量审查。支持并行执行（最多 49 个并发）、自动审查、覆盖率检查（P0 ≥ 80%）、验收标准验证。不可跳过此节点。
+**简要说明**：使用 Subagent 开发代码，强制遵循 TDD 流程（RED-GREEN-BLUE），同时编写单元测试，并进行代码质量审查。支持并行执行（支持并发 Subagent 执行）、自动审查、覆盖率检查（P0 ≥ 80%）、验收标准验证。不可跳过此节点。
 
 #### 📋 节点依赖关系
 

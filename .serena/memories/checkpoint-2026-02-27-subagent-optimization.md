@@ -71,7 +71,7 @@ git log --oneline -1  # 应该看到 019baee
 
 **项目类型**：纯文档项目（Markdown）  
 **主要工具**：Claude Code、Serena MCP  
-**参考项目**：superpowers（https://github.com/anthropics/superpowers）
+**参考项目**：superpowers（https://github.com/obra/superpowers）
 
 ## 版本信息
 

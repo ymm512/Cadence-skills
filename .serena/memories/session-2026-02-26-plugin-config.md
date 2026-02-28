@@ -29,9 +29,9 @@
   "author": {
     "name": "Cadence Team",
     "email": "cadence@example.com",
-    "url": "https://github.com/cadence-skills"
+    "url": "https://github.com/michaelChe956"
   },
-  "homepage": "https://github.com/cadence-skills/cadence",
+  "homepage": "https://github.com/michaelChe956/Cadence-skills",
   "repository": {...},
   "bugs": {...},
   "license": "MIT",
@@ -349,6 +349,6 @@
 - 🟢 准备进入下一部分优化
 
 ## 参考资源
-- superpowers 项目：https://github.com/anthropics/superpowers
+- superpowers 项目：https://github.com/obra/superpowers
 - Claude Code Plugin 文档：https://docs.claude.com/claude-code/plugins
 - Serena MCP：https://github.com/anthropics/serena-mcp

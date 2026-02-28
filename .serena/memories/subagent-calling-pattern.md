@@ -104,7 +104,7 @@ HEAD_SHA=$(git rev-parse HEAD)
 
 ## 参考资源
 
-- superpowers项目: https://github.com/anthropics/superpowers
+- superpowers项目: https://github.com/obra/superpowers
 - 本项目Subagent定义: `.claude/designs/8.1_implementer.md`
 - Subagent Development Skill: `.claude/designs/2026-02-26_Skill_Subagent_Development_v1.0.md`
 
@@ -112,5 +112,5 @@ HEAD_SHA=$(git rev-parse HEAD)
 
 - cadence-subagent-development Skill
 - 任何需要独立AI Agent执行任务的场景
-- 并发任务执行（最多49个并发）
+- 并发任务执行
 - 需要独立上下文的任务

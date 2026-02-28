@@ -470,7 +470,7 @@ NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
 
 ## 参考
 
-- **Superpowers Project**: [verification-before-completion](https://github.com/jessev/superpowers/blob/main/skills/verification-before-completion/SKILL.md)
+- **Superpowers Project**: [verification-before-completion](https://github.com/obra/superpowers/blob/main/skills/verification-before-completion/SKILL.md)
 - **设计灵感**: 基于 superpowers 项目的验证机制，针对 Cadence 流程优化
 
 ---

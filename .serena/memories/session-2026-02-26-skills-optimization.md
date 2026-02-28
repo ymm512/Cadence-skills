@@ -164,6 +164,6 @@ Skills目录结构设计文档/
 - 🟢 准备进入下一部分优化
 
 ## 参考资源
-- superpowers 项目：https://github.com/anthropics/superpowers
+- superpowers 项目：https://github.com/obra/superpowers
 - Claude Code Skills 文档：https://docs.claude.com/claude-code/skills
 - Claude Code Subagent 文档：https://docs.claude.com/claude-code/subagents

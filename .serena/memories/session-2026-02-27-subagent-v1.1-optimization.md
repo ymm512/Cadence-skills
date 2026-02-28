@@ -295,7 +295,7 @@ name: cadence-implementer
 ## 参考资料
 
 ### 参考项目
-- **superpowers**: https://github.com/anthropics/superpowers
+- **superpowers**: https://github.com/obra/superpowers
   - `skills/subagent-driven-development/SKILL.md`
   - `skills/requesting-code-review/SKILL.md`
   - `agents/code-reviewer.md`
