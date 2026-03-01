@@ -45,17 +45,27 @@ YYYY-MM-DD_文档类型_文档名称_v版本号.扩展名
 ## 项目状态
 
 - Serena: 已激活（markdown 语言）
-- Onboarding: 待完成
+- Onboarding: 已完成
 - 当前版本: v2.4 MVP
-- 总体进度: 方案实施阶段（2/7 完成）
+- 总体进度: 方案实施阶段（2/7 完成，28.6%）
+- Git 状态: 已提交并推送（分支：recreate-cadence-skills，Commit：5b74f7a）
 
 ## 最新进展（2026-03-01）
 
 ### 方案实施进度
 
 **已完成（2/7）**：
-- ✅ 方案1：基础架构 + 配置 + Hooks
-- ✅ 方案2：元 Skill + Init Skill（using-cadence + cadence:init）
+- ✅ 方案1：基础架构 + 配置 + Hooks（已实施）
+- ✅ 方案2：元 Skill + Init Skill（已实施）
+
+**实施详情（2026-03-01 会话）**：
+- ✅ 创建7个目录结构（.claude-plugin, skills, hooks, docs, tests, agents, commands）
+- ✅ 创建2个配置文件（plugin.json, marketplace.json）
+- ✅ 创建2个 Hooks 文件（hooks.json, session-start）
+- ✅ 复制2个 Skills（using-cadence, init）
+- ✅ 复制1个 Command（init.md）
+- ✅ 创建1个文档（hooks-reference.md）
+- ✅ Git 提交并推送（Commit: 5b74f7a）
 
 **Skills 优化完成**：
 - ✅ init Skill：967行 → 155行（减少84%）
@@ -72,6 +82,11 @@ YYYY-MM-DD_文档类型_文档名称_v版本号.扩展名
 - ⏳ 方案4-6：节点 Skill（3组）
 - ⏳ 方案7：流程 Skill + 进度追踪
 
+**待测试功能**：
+- [ ] SessionStart Hook 自动注入
+- [ ] `/cadence:init` 命令
+- [ ] 创建 PR（已准备内容，待手动创建）
+
 ### 关键文件位置
 
 **方案文档**：
@@ -79,7 +94,16 @@ YYYY-MM-DD_文档类型_文档名称_v版本号.扩展名
 - 方案1：`.claude/designs/next/方案1_基础架构_配置_Hooks.md`
 - 方案2：`.claude/designs/next/方案2_元Skill_InitSkill.md`
 
-**已完成 Skills**：
-- using-cadence：`.claude/designs/next/skills/using-cadence/SKILL.md`（140行）
-- init：`.claude/designs/next/skills/init/SKILL.md`（155行）
-- init Command：`.claude/designs/next/commands/init.md`
+**已实施 Skills**（在工作目录）：
+- using-cadence：`skills/using-cadence/SKILL.md`（140行）
+- init：`skills/init/SKILL.md`（155行）
+- init Command：`commands/init.md`
+
+**设计文档**（在 .claude/designs/next/）：
+- using-cadence 设计：`.claude/designs/next/skills/using-cadence/SKILL.md`
+- init 设计：`.claude/designs/next/skills/init/SKILL.md`
+- init Command 设计：`.claude/designs/next/commands/init.md`
+
+**会话记录**：
+- 会话详情：`.serena/memories/session-2026-03-01-implementation-phase1-phase2`
+- 检查点：`.serena/memories/checkpoint-2026-03-01-phase1-phase2-complete`
