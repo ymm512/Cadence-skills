@@ -48,22 +48,18 @@ YYYY-MM-DD_文档类型_文档名称_v版本号.扩展名
 - Onboarding: 已完成
 - 当前版本: v2.4 MVP
 - **设计进度**: 4/7 (57%)
-- **实施进度**: 3/7 (43%)
-- Git 状态: 最新提交（6002c8c - 方案3实施完成）
+- **实施进度**: 4/7 (57%)
+- Git 状态: 最新提交（50da68d - 方案4实施完成）
 
 ## 最新进展（2026-03-01）
 
 ### 方案实施进度
 
-**已完成（3/7）**：
+**已完成（4/7）**：
 - ✅ 方案1：基础架构 + 配置 + Hooks（已实施）
 - ✅ 方案2：元 Skill + Init Skill（已实施）
-- ✅ **方案3：质量保证 Skills**（已实施，Commit: 6002c8c）
-
-**设计完成（4/7）**：
-- ✅ 方案1-3：已实施
-- ✅ **方案4：节点 Skill 第1组**（设计完成，待实施）
-- ⏳ 方案5-7：待设计
+- ✅ 方案3：质量保证 Skills（已实施，Commit: 6002c8c）
+- ✅ **方案4：节点 Skill 第1组**（已实施，Commit: 50da68d）
 
 **方案3 实施详情**（2026-03-01）：
 - ✅ 5个质量保证 Skills（test-driven-development, requesting-code-review, receiving-code-review, verification-before-completion, finishing-a-development-branch）
@@ -71,15 +67,17 @@ YYYY-MM-DD_文档类型_文档名称_v版本号.扩展名
 - ✅ Git 提交并推送（Commit: 6002c8c）
 - ✅ 所有 Skills 直接复制自 superpowers，未做修改
 
-**方案4 设计详情**（2026-03-01）：
-- ✅ 总体设计文档完成
-- ✅ 3个 Skills 设计完成（Brainstorming、Analyze、Requirement）
-- ✅ 3个 Commands 设计完成（/brainstorm, /analyze, /requirement）
-- ⏳ 待实施（预估 35-45 分钟）
+**方案4 实施详情**（2026-03-01）：
+- ✅ 3个节点 Skills（Brainstorming、Analyze、Requirement）
+- ✅ 3个 Commands（/brainstorm, /analyze, /requirement）
+- ✅ Git 提交并推送（Commit: 50da68d）
+- ✅ Brainstorming 来自 superpowers（96行）
+- ✅ Analyze 全新设计，Serena MCP集成（495行）
+- ✅ Requirement 全新设计，支持存量复用（746行）
 
-**待实施（4/7）**：
-- ⏳ 方案4：节点 Skill 第1组（需求阶段）
-- ⏳ 方案5-6：节点 Skill 第2-3组（设计+开发阶段）
+**待实施（3/7）**：
+- ⏳ 方案5：节点 Skill 第2组（设计阶段）
+- ⏳ 方案6：节点 Skill 第3组（开发阶段）
 - ⏳ 方案7：流程 Skill + 进度追踪
 
 **待测试功能**：
@@ -105,11 +103,17 @@ YYYY-MM-DD_文档类型_文档名称_v版本号.扩展名
   - receiving-code-review（213行）
   - verification-before-completion（139行）
   - finishing-a-development-branch（144行）
+- **3个节点 Skills**（方案4）：
+  - brainstorming（96行）- 来自superpowers
+  - analyze（495行）- Serena MCP集成
+  - requirement（746行）- 支持存量复用
 
 **已实施 Commands**（在工作目录 commands/）：
 - cadencing.md
 - **5个质量保证 Commands**（方案3）：
   - tdd.md, request-review.md, receive-review.md, verify.md, finish.md
+- **3个节点 Commands**（方案4）：
+  - brainstorm.md, analyze.md, requirement.md
 
 **设计文档**（在 .claude/designs/next/）：
 - using-cadence 设计：`.claude/designs/next/skills/using-cadence/SKILL.md`
@@ -124,7 +128,9 @@ YYYY-MM-DD_文档类型_文档名称_v版本号.扩展名
 **会话记录**：
 - 方案1-2 实施详情：`session-2026-03-01-implementation-phase1-phase2`
 - 方案1-2 检查点：`checkpoint-2026-03-01-phase1-phase2-complete`
-- **方案3 实施详情**：`session-2026-03-01-scheme3-qa-skills-complete`
-- **方案3 检查点**：`checkpoint-2026-03-01-scheme3-complete`
+- 方案3 实施详情：`session-2026-03-01-scheme3-qa-skills-complete`
+- 方案3 检查点：`checkpoint-2026-03-01-scheme3-complete`
 - **方案4 设计详情**：`session-2026-03-01-scheme4-design-complete`
-- **方案4 检查点**：`checkpoint-2026-03-01-scheme4-design-complete`
+- **方案4 设计检查点**：`checkpoint-2026-03-01-scheme4-design-complete`
+- **方案4 实施详情**：`session-2026-03-01-scheme4-implementation-complete`
+- **方案4 实施检查点**：`checkpoint-2026-03-01-scheme4-implementation-complete`
