@@ -47,19 +47,21 @@ YYYY-MM-DD_文档类型_文档名称_v版本号.扩展名
 - Serena: 已激活（markdown 语言）
 - Onboarding: 已完成
 - 当前版本: v2.4 MVP
-- **设计进度**: 4/7 (57%)
-- **实施进度**: 4/7 (57%)
-- Git 状态: 最新提交（50da68d - 方案4实施完成）
+- **设计进度**: 6/7 (86%)
+- **实施进度**: 6/7 (86%)
+- Git 状态: 最新提交（124f631 - 方案6实施完成）
 
-## 最新进展（2026-03-01）
+## 最新进展（2026-03-02）
 
 ### 方案实施进度
 
-**已完成（4/7）**：
+**已完成（6/7）**：
 - ✅ 方案1：基础架构 + 配置 + Hooks（已实施）
 - ✅ 方案2：元 Skill + Init Skill（已实施）
 - ✅ 方案3：质量保证 Skills（已实施，Commit: 6002c8c）
-- ✅ **方案4：节点 Skill 第1组**（已实施，Commit: 50da68d）
+- ✅ 方案4：节点 Skill 第1组（已实施，Commit: 50da68d）
+- ✅ 方案5：节点 Skill 第2组（已实施，Commit: 8921df2）
+- ✅ **方案6：节点 Skill 第3组**（已实施，Commit: 124f631）
 
 **方案3 实施详情**（2026-03-01）：
 - ✅ 5个质量保证 Skills（test-driven-development, requesting-code-review, receiving-code-review, verification-before-completion, finishing-a-development-branch）
@@ -75,9 +77,23 @@ YYYY-MM-DD_文档类型_文档名称_v版本号.扩展名
 - ✅ Analyze 全新设计，Serena MCP集成（495行）
 - ✅ Requirement 全新设计，支持存量复用（746行）
 
-**待实施（3/7）**：
-- ⏳ 方案5：节点 Skill 第2组（设计阶段）
-- ⏳ 方案6：节点 Skill 第3组（开发阶段）
+**方案5 实施详情**（2026-03-02）：
+- ✅ 3个节点 Skills（Design、Design Review、Plan）
+- ✅ 3个 Commands（/design, /design-review, /plan）
+- ✅ Git 提交并推送（Commit: 8921df2）
+- ✅ Design 全新设计，支持带着审查报告重新设计
+- ✅ Design Review 全新设计，8个维度系统性审查
+- ✅ Plan 全新设计，支持CLAUDE.md技术栈配置读取
+
+**方案6 实施详情**（2026-03-02）：
+- ✅ 2个核心 Skills（using-git-worktrees, subagent-development）
+- ✅ 3个 Subagent Prompts（8.1/8.2/8.3）
+- ✅ 2个 Commands（/worktree, /develop）
+- ✅ Git 提交并推送（Commit: 124f631）
+- ✅ using-git-worktrees：智能目录选择、安全验证、自动初始化
+- ✅ subagent-development：两阶段审查、TDD强制执行、并行执行支持
+
+**待实施（1/7）**：
 - ⏳ 方案7：流程 Skill + 进度追踪
 
 **待测试功能**：
