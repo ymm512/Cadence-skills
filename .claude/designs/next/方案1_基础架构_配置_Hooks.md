@@ -67,20 +67,41 @@ Cadence-skills/
 
 **文件路径**: `.claude-plugin/marketplace.json`
 
+> **重要**：marketplace.json 是一个市场清单文件，必须包含 `plugins` 数组。
+
 ```json
 {
-  "name": "Cadence-skills",
-  "displayName": "Cadence - AI自动化开发流程",
-  "description": "基于Claude Code Skills的完整开发流程自动化框架，包含需求探索、技术设计、TDD开发、代码审查等8个核心节点",
-  "version": "2.4.0",
-  "author": "Cadence Team",
-  "tags": ["development", "tdd", "code-review", "automation"],
-  "logo": "logo.png",
-  "readme": "README.md",
-  "homepage": "https://github.com/michaelChe956/Cadence-skills",
-  "repository": "https://github.com/michaelChe956/Cadence-skills"
+  "name": "cadence-skills-marketplace",
+  "description": "Cadence AI自动化开发流程 - 基于Claude Code Skills的多Agent协作系统",
+  "owner": {
+    "name": "Cadence Team",
+    "email": "cadence@example.com"
+  },
+  "plugins": [
+    {
+      "name": "Cadence-skills",
+      "description": "基于Claude Code Skills的完整开发流程自动化框架，包含需求探索、技术设计、TDD开发、代码审查等8个核心节点",
+      "version": "2.4.0",
+      "source": "./",
+      "author": {
+        "name": "Cadence Team",
+        "email": "cadence@example.com"
+      }
+    }
+  ]
 }
 ```
+
+**字段说明**：
+- `name`: 市场名称
+- `description`: 市场描述
+- `owner`: 市场所有者信息
+- `plugins`: 插件数组（包含一个或多个插件）
+  - `name`: 插件名称
+  - `description`: 插件描述
+  - `version`: 插件版本
+  - `source`: 插件源路径（`./` 表示当前目录）
+  - `author`: 插件作者信息
 
 ---
 
@@ -285,16 +306,24 @@ EOF
 # 创建 marketplace.json
 cat > .claude-plugin/marketplace.json << 'EOF'
 {
-  "name": "Cadence-skills",
-  "displayName": "Cadence - AI自动化开发流程",
-  "description": "基于Claude Code Skills的完整开发流程自动化框架，包含需求探索、技术设计、TDD开发、代码审查等8个核心节点",
-  "version": "2.4.0",
-  "author": "Cadence Team",
-  "tags": ["development", "tdd", "code-review", "automation"],
-  "logo": "logo.png",
-  "readme": "README.md",
-  "homepage": "https://github.com/michaelChe956/Cadence-skills",
-  "repository": "https://github.com/michaelChe956/Cadence-skills"
+  "name": "cadence-skills-marketplace",
+  "description": "Cadence AI自动化开发流程 - 基于Claude Code Skills的多Agent协作系统",
+  "owner": {
+    "name": "Cadence Team",
+    "email": "cadence@example.com"
+  },
+  "plugins": [
+    {
+      "name": "Cadence-skills",
+      "description": "基于Claude Code Skills的完整开发流程自动化框架，包含需求探索、技术设计、TDD开发、代码审查等8个核心节点",
+      "version": "2.4.0",
+      "source": "./",
+      "author": {
+        "name": "Cadence Team",
+        "email": "cadence@example.com"
+      }
+    }
+  ]
 }
 EOF
 ```
