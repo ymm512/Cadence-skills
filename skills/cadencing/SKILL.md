@@ -1,5 +1,5 @@
 ---
-name: cadence:cadencing
+name: cadencing
 description: "Initialize an existing project as a Cadence-managed project with automatic configuration of environment, rules, documentation structure, and tech stack."
 ---
 
