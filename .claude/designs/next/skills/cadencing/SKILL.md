@@ -17,7 +17,7 @@ Do NOT skip any of the checklist items. Each step must be completed and verified
 
 You MUST create a task for each of these items and complete them in order:
 
-1. **Claude Code initialization** — invoke `/cadencing` command, verify CLAUDE.md created
+1. **Claude Code initialization** — invoke `/init` command, verify CLAUDE.md created
 2. **Add language rules** — configure mandatory Chinese responses
 3. **Add documentation rules** — configure `.claude` directory structure and naming conventions
 4. **Detect project type** — identify frontend/backend/fullstack, get user confirmation
@@ -32,7 +32,7 @@ You MUST create a task for each of these items and complete them in order:
 
 ```dot
 digraph cadencing {
-    "Invoke /cadencing" [shape=box];
+    "Invoke /init" [shape=box];
     "Add mandatory rules" [shape=box];
     "Detect project type" [shape=box];
     "User confirms type?" [shape=diamond];
@@ -44,7 +44,7 @@ digraph cadencing {
     "Create checkpoint" [shape=box];
     "Initialization complete" [shape=doublecircle];
 
-    "Invoke /cadencing" -> "Add mandatory rules";
+    "Invoke /init" -> "Add mandatory rules";
     "Add mandatory rules" -> "Detect project type";
     "Detect project type" -> "User confirms type?";
     "User confirms type?" -> "Detect project type" [label="no, modify"];
@@ -148,7 +148,7 @@ Suggest three workflow options:
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `--skip-cadencing` | flag | Skip `/cadencing` command invocation |
+| `--skip-init` | flag | Skip `/init` command invocation |
 | `--skip-tech-stack` | flag | Skip tech stack detection and configuration |
 | `--skip-mcp` | flag | Skip MCP configuration |
 | `--chinese` | flag | Force Chinese localization of CLAUDE.md |
