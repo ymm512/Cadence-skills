@@ -32,7 +32,7 @@
 ## 待办事项
 
 - [ ] 测试 SessionStart Hook
-- [ ] 测试 /cadence:init 命令
+- [ ] 测试 /cadence:cadencing 命令
 - [ ] 创建 PR
 - [ ] 实施方案3
 

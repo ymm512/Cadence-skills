@@ -75,8 +75,8 @@
 
 **Skill 目录命名**：
 - 使用小写 + 连字符（不使用冒号）
-- 示例：`init/` 而不是 `cadence:init/`
-- Skill 名称（frontmatter）可以使用冒号：`name: cadence:init`
+- 示例：`init/` 而不是 `cadence:cadencing/`
+- Skill 名称（frontmatter）可以使用冒号：`name: cadence:cadencing`
 
 **调用机制**：
 - Skills 通过 `name` 字段匹配，不依赖目录名
@@ -136,16 +136,16 @@
    ```bash
    # 复制方案1文件
    cp -r .claude/designs/next/skills/using-cadence skills/
-   cp -r .claude/designs/next/skills/init skills/
-   cp .claude/designs/next/commands/init.md commands/
+   cp -r .claude/designs/next/skills/cadencing skills/
+   cp .claude/designs/next/commands/cadencing.md commands/
    
    # 验证 SessionStart hook
-   # 测试 /cadence:init 命令
+   # 测试 /cadence:cadencing 命令
    ```
 
 2. **验证功能**
    - 启动新会话，确认 using-cadence 自动注入
-   - 测试 `/cadence:init` 命令
+   - 测试 `/cadence:cadencing` 命令
    - 验证 Skill 优先级规则
 
 ### 后续规划
@@ -172,12 +172,12 @@
 ### 已完成 Skills
 
 - **using-cadence**：`.claude/designs/next/skills/using-cadence/SKILL.md`（140行）
-- **init**：`.claude/designs/next/skills/init/SKILL.md`（155行）
-- **init Command**：`.claude/designs/next/commands/init.md`
+- **init**：`.claude/designs/next/skills/cadencing/SKILL.md`（155行）
+- **init Command**：`.claude/designs/next/commands/cadencing.md`
 
 ### 优化日志
 
-- **init 优化**：`.claude/designs/next/skills/init/REFACTOR_LOG.md`
+- **init 优化**：`.claude/designs/next/skills/cadencing/REFACTOR_LOG.md`
 - **using-cadence 优化**：`.claude/designs/next/skills/using-cadence/OPTIMIZATION_LOG.md`
 
 ## 关键学习

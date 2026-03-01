@@ -92,7 +92,7 @@ When multiple skills could apply, use this order:
 - cadence:verification-before-completion - Completion verification
 
 **Project Initialization:**
-- cadence:init - Initialize project as Cadence-managed
+- cadence:cadencing - Initialize project as Cadence-managed
 
 ## Skill Types
 

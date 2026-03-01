@@ -84,11 +84,11 @@ description: Use when starting any Cadence-related conversation - establishes ho
 **Skill 目录**：
 - 使用小写 + 连字符
 - 示例：`init/`、`using-cadence/`
-- 不使用冒号：❌ `cadence:init/`
+- 不使用冒号：❌ `cadence:cadencing/`
 
 **Skill 名称**（frontmatter）：
 - 可以使用冒号
-- 示例：`name: cadence:init`
+- 示例：`name: cadence:cadencing`
 
 **调用机制**：
 - Skills 通过 `name` 字段匹配
@@ -218,7 +218,7 @@ description: Use when starting any Cadence-related conversation - establishes ho
 ## 相关文档
 
 - **标准化检查报告**：`.claude/designs/next/STANDARDIZATION_CHECK.md`
-- **init 优化日志**：`.claude/designs/next/skills/init/REFACTOR_LOG.md`
+- **init 优化日志**：`.claude/designs/next/skills/cadencing/REFACTOR_LOG.md`
 - **using-cadence 优化日志**：`.claude/designs/next/skills/using-cadence/OPTIMIZATION_LOG.md`
 - **superpowers 参考**：`/home/michael/workspace/github/superpowers`
 

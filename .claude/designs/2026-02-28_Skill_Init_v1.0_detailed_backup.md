@@ -1,4 +1,4 @@
-# Skill: /cadence:init - 项目初始化
+# Skill: /cadence:cadencing - 项目初始化
 
 **版本**: v1.0
 **创建日期**: 2026-02-28
@@ -13,7 +13,7 @@
 将已有项目初始化为 Cadence 管理的项目，自动配置项目环境、规则、文档结构和技术栈。
 
 ### 触发方式
-- **命令调用**: `/cadence:init`
+- **命令调用**: `/cadence:cadencing`
 - **触发词**: `init`、`初始化`、`initialize`、`项目初始化`
 
 ### 使用场景
@@ -55,7 +55,7 @@
 
 **执行逻辑**：
 ```
-调用 /init 命令
+调用 /cadencing 命令
 ↓
 等待初始化完成
 ↓
@@ -631,7 +631,7 @@ project_tech_stack:
 ## ✅ 完成的工作
 
 ### 1. Claude Code 初始化
-- ✅ 调用 /init 命令
+- ✅ 调用 /cadencing 命令
 - ✅ 创建 CLAUDE.md 文件
 
 ### 2. 语言规则配置
@@ -783,8 +783,8 @@ project_tech_stack:
 
 ```mermaid
 graph TD
-    A[开始 /cadence:init] --> B{CLAUDE.md 存在?}
-    B -->|否| C[调用 /init 命令]
+    A[开始 /cadence:cadencing] --> B{CLAUDE.md 存在?}
+    B -->|否| C[调用 /cadencing 命令]
     B -->|是| D[读取现有配置]
 
     C --> E[创建基础 CLAUDE.md]
@@ -844,7 +844,7 @@ graph TD
 
 | 参数 | 类型 | 必需 | 说明 |
 |------|------|------|------|
-| `--skip-init` | flag | 否 | 跳过 /init 命令调用 |
+| `--skip-cadencing` | flag | 否 | 跳过 /cadencing 命令调用 |
 | `--skip-tech-stack` | flag | 否 | 跳过技术栈检测和配置 |
 | `--skip-mcp` | flag | 否 | 跳过 MCP 配置 |
 | `--chinese` | flag | 否 | 强制中文化 CLAUDE.md |
@@ -905,7 +905,7 @@ graph TD
 
 ## 重试
 
-请修复上述问题后，重新运行 `/cadence:init`
+请修复上述问题后，重新运行 `/cadence:cadencing`
 ```
 
 ---
@@ -933,7 +933,7 @@ graph TD
    - 提供修复建议
 
 5. **幂等性**
-   - 重复执行 `/cadence:init` 应该是安全的
+   - 重复执行 `/cadence:cadencing` 应该是安全的
    - 不应该重复添加已存在的配置
    - 应该检测并跳过已完成的步骤
 

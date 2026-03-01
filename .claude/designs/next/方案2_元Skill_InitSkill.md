@@ -10,15 +10,15 @@
 
 ## 📋 概述
 
-**目标**：实现 Cadence 的入口机制，包括元 Skill（using-cadence）和项目初始化 Skill（cadence:init）。
+**目标**：实现 Cadence 的入口机制，包括元 Skill（using-cadence）和项目初始化 Skill（cadence:cadencing）。
 
 **核心价值**：
 - **using-cadence**：Cadence Skills 系统的"守门员"和"路由器"
-- **cadence:init**：项目初始化为 Cadence 管理的标准化流程
+- **cadence:cadencing**：项目初始化为 Cadence 管理的标准化流程
 
 **适用场景**：
 - 所有使用 Cadence 的会话（自动注入 using-cadence）
-- 将现有项目转换为 Cadence 项目（使用 cadence:init）
+- 将现有项目转换为 Cadence 项目（使用 cadence:cadencing）
 
 ---
 
@@ -71,7 +71,7 @@ IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
 | 存量代码 | "存量"、"现有代码"、"重构" | cadence-analyze |
 | 需求分析 | "需求"、"PRD"、"产品需求" | cadence-requirement |
 | 技术设计 | "设计"、"架构"、"方案" | cadence-design |
-| 项目初始化 | "初始化"、"init"、"新项目" | cadence:init |
+| 项目初始化 | "初始化"、"init"、"新项目" | cadence:cadencing |
 | ... | ... | ... |
 
 #### 1.4 Red Flags（11 个危险思维模式）
@@ -98,13 +98,13 @@ Claude 内部流程:
 
 ---
 
-### 2. Init Skill：cadence:init
+### 2. Init Skill：cadence:cadencing
 
 **核心作用**：
 - 将已有项目初始化为 Cadence 管理的项目
 - 自动配置项目环境、规则、文档结构和技术栈
 
-**文件位置**：`.claude/designs/skills/cadence:init/SKILL.md`
+**文件位置**：`.claude/designs/skills/cadence:cadencing/SKILL.md`
 
 **关键特性**：
 
@@ -150,7 +150,7 @@ Claude 内部流程:
 
 ### 3. Command 映射：init
 
-**核心作用**：提供 `/cadence:init` 命令的快捷调用
+**核心作用**：提供 `/cadence:cadencing` 命令的快捷调用
 
 **文件位置**：`.claude/designs/commands/init.md`
 
@@ -161,7 +161,7 @@ description: "Initialize project as Cadence-managed with automatic configuration
 disable-model-invocation: true
 ---
 
-Invoke the cadence:init skill and follow it exactly as presented to you
+Invoke the cadence:cadencing skill and follow it exactly as presented to you
 ```
 
 ---
@@ -177,9 +177,9 @@ Invoke the cadence:init skill and follow it exactly as presented to you
 mkdir -p skills/using-cadence
 cp .claude/designs/skills/using-cadence/SKILL.md skills/using-cadence/
 
-# 复制 cadence:init Skill
-mkdir -p skills/cadence:init
-cp .claude/designs/skills/cadence:init/SKILL.md skills/cadence:init/
+# 复制 cadence:cadencing Skill
+mkdir -p skills/cadence:cadencing
+cp .claude/designs/skills/cadence:cadencing/SKILL.md skills/cadence:cadencing/
 
 # 复制 init Command
 cp .claude/designs/commands/init.md commands/
@@ -194,7 +194,7 @@ Cadence-skills/
 ├── skills/
 │   ├── using-cadence/
 │   │   └── SKILL.md          ✅
-│   └── cadence:init/
+│   └── cadence:cadencing/
 │       └── SKILL.md          ✅
 └── commands/
     └── init.md               ✅
@@ -213,14 +213,14 @@ Cadence-skills/
 # </EXTREMELY_IMPORTANT>
 ```
 
-### Step 4：测试 cadence:init
+### Step 4：测试 cadence:cadencing
 
 ```bash
 # 在 Claude Code 中执行
-/cadence:init
+/cadence:cadencing
 
 # 预期行为：
-# 1. 调用 /init 命令
+# 1. 调用 /cadencing 命令
 # 2. 配置强制规则
 # 3. 检测技术栈
 # 4. 用户确认
@@ -239,8 +239,8 @@ Cadence-skills/
 - [ ] 触发关键词映射准确
 - [ ] Red Flags 清晰明确
 
-### cadence:init Skill
-- [ ] 文件路径正确（`skills/cadence:init/SKILL.md`）
+### cadence:cadencing Skill
+- [ ] 文件路径正确（`skills/cadence:cadencing/SKILL.md`）
 - [ ] 内容完整（12 个功能全部定义）
 - [ ] 技术栈检测逻辑清晰
 - [ ] 用户确认流程完整
@@ -249,10 +249,10 @@ Cadence-skills/
 ### init Command
 - [ ] 文件路径正确（`commands/init.md`）
 - [ ] frontmatter 格式正确
-- [ ] 可以正常触发 cadence:init Skill
+- [ ] 可以正常触发 cadence:cadencing Skill
 
 ### 功能验证
-- [ ] `/cadence:init` 命令可以正常执行
+- [ ] `/cadence:cadencing` 命令可以正常执行
 - [ ] 技术栈检测准确
 - [ ] 目录结构创建正确
 - [ ] MCP 配置成功
@@ -262,7 +262,7 @@ Cadence-skills/
 ## 📊 输出产物
 
 1. **using-cadence Skill**：1个文件（SKILL.md）
-2. **cadence:init Skill**：1个文件（SKILL.md）
+2. **cadence:cadencing Skill**：1个文件（SKILL.md）
 3. **init Command**：1个文件（init.md）
 4. **文档**：1个文件（README.md）
 
@@ -290,7 +290,7 @@ using-cadence Skill 需要 SessionStart hook 才能自动注入。
 ### 3. 测试顺序
 
 1. 先测试 SessionStart hook（启动新会话）
-2. 再测试 `/cadence:init` 命令
+2. 再测试 `/cadence:cadencing` 命令
 
 ---
 
@@ -314,7 +314,7 @@ using-cadence Skill 需要 SessionStart hook 才能自动注入。
 
 ### 实施文件
 - **using-cadence Skill**: `.claude/designs/skills/using-cadence/SKILL.md`
-- **cadence:init Skill**: `.claude/designs/skills/cadence:init/SKILL.md`
+- **cadence:cadencing Skill**: `.claude/designs/skills/cadence:cadencing/SKILL.md`
 - **init Command**: `.claude/designs/commands/init.md`
 - **使用说明**: `.claude/designs/skills/README.md`
 
@@ -327,7 +327,7 @@ using-cadence Skill 需要 SessionStart hook 才能自动注入。
 
 | 版本 | 日期 | 变更内容 |
 |------|------|---------|
-| v1.0 | 2026-03-01 | 初始版本，包含 using-cadence 和 cadence:init 两个 Skill |
+| v1.0 | 2026-03-01 | 初始版本，包含 using-cadence 和 cadence:cadencing 两个 Skill |
 
 ---
 
@@ -346,7 +346,7 @@ using-cadence Skill 需要 SessionStart hook 才能自动注入。
 ### 与 superpowers 无 Init Skill 的差异
 
 superpowers 没有项目初始化 Skill，Cadence 新增了：
-- **cadence:init** - 12个核心功能
+- **cadence:cadencing** - 12个核心功能
 - **自动配置** - 技术栈检测、MCP配置、目录创建
 - **跨平台兼容** - macOS/Linux/Windows
 

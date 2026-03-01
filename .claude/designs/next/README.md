@@ -12,7 +12,7 @@
 | 方案 | 名称 | 核心内容 | 预估工作量 | 状态 | 文档 |
 |------|------|---------|-----------|------|------|
 | **1** | 基础架构 + 配置 + Hooks | 目录结构、配置文件、SessionStart Hook | 2-3小时 | ✅ 设计完成 | [查看](./方案1_基础架构_配置_Hooks.md) |
-| **2** | 元 Skill + Init Skill | using-cadence、cadence:init | 2-3小时 | ✅ 设计完成 | [查看](./方案2_元Skill_InitSkill.md) |
+| **2** | 元 Skill + Init Skill | using-cadence、cadence:cadencing | 2-3小时 | ✅ 设计完成 | [查看](./方案2_元Skill_InitSkill.md) |
 | **3** | 前置 Skill + 支持 Skill | 5个前置 + 1个支持 | 3-4小时 | ⏳ 待设计 | - |
 | **4** | 节点 Skill 第1组 | Brainstorm、Analyze、Requirement | 3-4小时 | ⏳ 待设计 | - |
 | **5** | 节点 Skill 第2组 | Design、Design Review、Plan | 3-4小时 | ⏳ 待设计 | - |
@@ -76,21 +76,21 @@ graph TD
 
 **核心产出**：
 - ✅ 1个元 Skill（using-cadence/SKILL.md）
-- ✅ 1个 Init Skill（cadence:init/SKILL.md）
+- ✅ 1个 Init Skill（cadence:cadencing/SKILL.md）
 - ✅ 1个 Command 映射（commands/init.md）
 - ✅ 1个说明文档（skills/README.md）
 
 **实施文件**：
 - [方案2_元Skill_InitSkill.md](./方案2_元Skill_InitSkill.md)
 - [using-cadence Skill](./skills/using-cadence/SKILL.md)
-- [cadence:init Skill](./skills/init/SKILL.md)
+- [cadence:cadencing Skill](./skills/cadencing/SKILL.md)
 - [init Command](./commands/init.md)
 
 **验收标准**：
 - [ ] using-cadence Skill 可以正常加载
 - [ ] SessionStart hook 可以注入 using-cadence 内容
-- [ ] cadence:init Skill 可以正常调用
-- [ ] `/cadence:init` 命令可以正常触发
+- [ ] cadence:cadencing Skill 可以正常调用
+- [ ] `/cadence:cadencing` 命令可以正常触发
 
 ---
 
@@ -256,7 +256,7 @@ graph TD
 2. **实施方案2**
    - 复制 Skill 文件到项目
    - 测试 using-cadence 注入
-   - 测试 `/cadence:init` 命令
+   - 测试 `/cadence:cadencing` 命令
 
 ### 后续规划
 

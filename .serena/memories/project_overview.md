@@ -84,7 +84,7 @@ YYYY-MM-DD_文档类型_文档名称_v版本号.扩展名
 
 **待测试功能**：
 - [ ] SessionStart Hook 自动注入
-- [ ] `/cadence:init` 命令
+- [ ] `/cadence:cadencing` 命令
 - [ ] 创建 PR（已准备内容，待手动创建）
 
 ### 关键文件位置
@@ -96,13 +96,13 @@ YYYY-MM-DD_文档类型_文档名称_v版本号.扩展名
 
 **已实施 Skills**（在工作目录）：
 - using-cadence：`skills/using-cadence/SKILL.md`（140行）
-- init：`skills/init/SKILL.md`（155行）
-- init Command：`commands/init.md`
+- init：`skills/cadencing/SKILL.md`（155行）
+- init Command：`commands/cadencing.md`
 
 **设计文档**（在 .claude/designs/next/）：
 - using-cadence 设计：`.claude/designs/next/skills/using-cadence/SKILL.md`
-- init 设计：`.claude/designs/next/skills/init/SKILL.md`
-- init Command 设计：`.claude/designs/next/commands/init.md`
+- init 设计：`.claude/designs/next/skills/cadencing/SKILL.md`
+- init Command 设计：`.claude/designs/next/commands/cadencing.md`
 
 **会话记录**：
 - 会话详情：`.serena/memories/session-2026-03-01-implementation-phase1-phase2`

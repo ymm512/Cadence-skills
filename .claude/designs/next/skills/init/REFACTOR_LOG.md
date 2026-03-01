@@ -24,7 +24,7 @@
 **修改前**：
 ```yaml
 ---
-name: cadence:init
+name: cadence:cadencing
 description: |
   Initialize an existing project...
   Use when: ...
@@ -35,7 +35,7 @@ description: |
 **修改后**：
 ```yaml
 ---
-name: cadence:init
+name: cadence:cadencing
 description: "Initialize an existing project as a Cadence-managed project..."
 ---
 ```
@@ -95,7 +95,7 @@ digraph init {
 
 ### 标准版本（可直接使用）
 
-**文件**: `.claude/designs/next/skills/init/SKILL.md`
+**文件**: `.claude/designs/next/skills/cadencing/SKILL.md`
 - **行数**: 155行
 - **用途**: 实际使用的 Skill 文件
 - **状态**: ✅ 符合标准，可直接使用
@@ -129,7 +129,7 @@ digraph init {
 ### 可直接使用
 
 - [x] 格式符合 Claude Code 标准
-- [x] 可以通过 `/cadence:init` 调用
+- [x] 可以通过 `/cadence:cadencing` 调用
 - [x] 可以通过 Skill tool 调用
 - [x] 内容清晰易懂
 
@@ -141,12 +141,12 @@ digraph init {
 
 1. **复制标准版本**：
    ```bash
-   cp .claude/designs/next/skills/init/SKILL.md skills/init/
+   cp .claude/designs/next/skills/cadencing/SKILL.md skills/cadencing/
    ```
 
 2. **测试调用**：
    ```bash
-   /cadence:init
+   /cadence:cadencing
    ```
 
 3. **参考详细设计**（如需要）：

@@ -1,4 +1,4 @@
-# Checkpoint: /cadence:init Skill 方案设计完成
+# Checkpoint: /cadence:cadencing Skill 方案设计完成
 
 **创建时间**: 2026-02-28
 **会话ID**: session-2026-02-28-cadence-init-skill-design
@@ -8,7 +8,7 @@
 
 ## 🎯 会话目标
 
-设计 `/cadence:init` skill 的完整方案，将已有项目初始化为 Cadence 管理的项目。
+设计 `/cadence:cadencing` skill 的完整方案，将已有项目初始化为 Cadence 管理的项目。
 
 ---
 
@@ -144,7 +144,7 @@
 
 ### 立即可做
 1. **验证方案** - 与用户确认方案是否满足需求
-2. **实现 Skill** - 开始编写 `/cadence:init` skill 代码
+2. **实现 Skill** - 开始编写 `/cadence:cadencing` skill 代码
 3. **编写测试** - 为 init skill 编写测试用例
 
 ### 后续工作

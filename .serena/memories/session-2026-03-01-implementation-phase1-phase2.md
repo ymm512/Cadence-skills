@@ -33,10 +33,10 @@
 
 #### 复制 Skills（2个）
 - `skills/using-cadence/SKILL.md` - Cadence 入口 Skill（5.4K，140行）
-- `skills/init/SKILL.md` - 项目初始化 Skill（6.3K，155行）
+- `skills/cadencing/SKILL.md` - 项目初始化 Skill（6.3K，155行）
 
 #### 复制 Commands（1个）
-- `commands/init.md` - `/cadence:init` 命令定义（232 bytes）
+- `commands/cadencing.md` - `/cadence:cadencing` 命令定义（232 bytes）
 
 ### 3. Git 提交和推送 ✅
 
@@ -168,8 +168,8 @@ Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 - Claude Code 扫描所有 `skills/*/SKILL.md` 文件
 
 **示例**:
-- 目录名: `skills/init/`（不使用 `cadence:init/`）
-- Skill 名称: `name: cadence:init`（frontmatter中使用）
+- 目录名: `skills/cadencing/`（不使用 `cadence:cadencing/`）
+- Skill 名称: `name: cadence:cadencing`（frontmatter中使用）
 
 ### 2. Hooks 脚本实现
 
@@ -249,7 +249,7 @@ EOF
 1. **测试功能**（5-10分钟）
    - 重启 Claude Code 会话
    - 验证 SessionStart hook
-   - 测试 `/cadence:init` 命令
+   - 测试 `/cadence:cadencing` 命令
 
 2. **创建 PR**（2分钟）
    - 点击提供的链接
@@ -334,7 +334,7 @@ EOF
 
 ### Skills 文件
 - **using-cadence**: `skills/using-cadence/SKILL.md`（140行）
-- **init**: `skills/init/SKILL.md`（155行）
+- **init**: `skills/cadencing/SKILL.md`（155行）
 
 ### 配置文件
 - **plugin.json**: `.claude-plugin/plugin.json`
@@ -348,7 +348,7 @@ EOF
 ## 待办事项
 
 - [ ] 测试 SessionStart Hook 功能
-- [ ] 测试 `/cadence:init` 命令
+- [ ] 测试 `/cadence:cadencing` 命令
 - [ ] 手动创建 PR（或更新 token 权限）
 - [ ] 开始方案3实施
 - [ ] 继续方案4-7

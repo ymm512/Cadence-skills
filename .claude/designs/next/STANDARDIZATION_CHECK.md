@@ -153,7 +153,7 @@ description: "Initialize project as Cadence-managed..."
 disable-model-invocation: true
 ---
 
-Invoke the cadence:init skill and follow it exactly as presented to you
+Invoke the cadence:cadencing skill and follow it exactly as presented to you
 ```
 
 **结论**: ✅ 完全符合标准

@@ -1,5 +1,5 @@
 ---
-name: cadence:init
+name: cadence:cadencing
 description: "Initialize an existing project as a Cadence-managed project with automatic configuration of environment, rules, documentation structure, and tech stack."
 ---
 
@@ -17,7 +17,7 @@ Do NOT skip any of the checklist items. Each step must be completed and verified
 
 You MUST create a task for each of these items and complete them in order:
 
-1. **Claude Code initialization** — invoke `/init` command, verify CLAUDE.md created
+1. **Claude Code initialization** — invoke `/cadencing` command, verify CLAUDE.md created
 2. **Add language rules** — configure mandatory Chinese responses
 3. **Add documentation rules** — configure `.claude` directory structure and naming conventions
 4. **Detect project type** — identify frontend/backend/fullstack, get user confirmation
@@ -31,8 +31,8 @@ You MUST create a task for each of these items and complete them in order:
 ## Process Flow
 
 ```dot
-digraph init {
-    "Invoke /init" [shape=box];
+digraph cadencing {
+    "Invoke /cadencing" [shape=box];
     "Add mandatory rules" [shape=box];
     "Detect project type" [shape=box];
     "User confirms type?" [shape=diamond];
@@ -44,7 +44,7 @@ digraph init {
     "Create checkpoint" [shape=box];
     "Initialization complete" [shape=doublecircle];
 
-    "Invoke /init" -> "Add mandatory rules";
+    "Invoke /cadencing" -> "Add mandatory rules";
     "Add mandatory rules" -> "Detect project type";
     "Detect project type" -> "User confirms type?";
     "User confirms type?" -> "Detect project type" [label="no, modify"];
@@ -104,8 +104,8 @@ digraph init {
 ```
 
 **Progress tracking initialization:**
-- Create checkpoint: `checkpoint-{date}-init`
-- Create session summary: `session-{date}-init`
+- Create checkpoint: `checkpoint-{date}-cadencing`
+- Create session summary: `session-{date}-cadencing`
 - Save to Serena MCP memory
 
 ## After Initialization
@@ -148,7 +148,7 @@ Suggest three workflow options:
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `--skip-init` | flag | Skip `/init` command invocation |
+| `--skip-cadencing` | flag | Skip `/cadencing` command invocation |
 | `--skip-tech-stack` | flag | Skip tech stack detection and configuration |
 | `--skip-mcp` | flag | Skip MCP configuration |
 | `--chinese` | flag | Force Chinese localization of CLAUDE.md |

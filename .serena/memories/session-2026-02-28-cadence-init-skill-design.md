@@ -1,8 +1,8 @@
-# 会话总结：/cadence:init Skill 方案设计
+# 会话总结：/cadence:cadencing Skill 方案设计
 
 ## 会话概览
 - **日期**: 2026-02-28
-- **任务**: 设计 `/cadence:init` skill 的完整方案
+- **任务**: 设计 `/cadence:cadencing` skill 的完整方案
 - **状态**: ✅ 完成
 
 ---
@@ -317,7 +317,7 @@ project_tech_stack:
 
 ### 立即可做
 1. **验证方案** - 与用户确认方案是否满足需求
-2. **实现 Skill** - 开始编写 `/cadence:init` skill 代码
+2. **实现 Skill** - 开始编写 `/cadence:cadencing` skill 代码
 3. **编写测试** - 为 init skill 编写测试用例
 
 ### 后续工作

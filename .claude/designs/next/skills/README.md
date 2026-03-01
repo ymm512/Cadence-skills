@@ -23,9 +23,9 @@
 - ✅ 示例工作流（3 个场景）
 - ✅ 不适用场景说明
 
-### 2. Init Skill：cadence:init
+### 2. Init Skill：cadence:cadencing
 
-**文件位置**: `skills/init/SKILL.md`
+**文件位置**: `skills/cadencing/SKILL.md`
 
 **核心作用**：
 - 将已有项目初始化为 Cadence 管理的项目
@@ -51,7 +51,7 @@
 **文件位置**: `commands/init.md`
 
 **核心作用**：
-- 提供 `/cadence:init` 命令的快捷调用
+- 提供 `/cadence:cadencing` 命令的快捷调用
 - 通过 `disable-model-invocation: true` 直接调用 Skill
 
 ## 🔧 使用方式
@@ -64,8 +64,8 @@
 # 复制 using-cadence
 cp -r .claude/designs/next/skills/using-cadence /path/to/Cadence-skills/skills/
 
-# 复制 cadence:init
-cp -r .claude/designs/next/skills/init /path/to/Cadence-skills/skills/
+# 复制 cadence:cadencing
+cp -r .claude/designs/next/skills/cadencing /path/to/Cadence-skills/skills/
 
 # 复制 command
 cp .claude/designs/next/commands/init.md /path/to/Cadence-skills/commands/
@@ -90,8 +90,8 @@ Cadence-skills/
 # 测试 using-cadence（通过 SessionStart hook 自动注入）
 # 启动新的 Claude Code 会话
 
-# 测试 cadence:init
-/cadence:init
+# 测试 cadence:cadencing
+/cadence:cadencing
 ```
 
 ## 📋 验收标准
@@ -103,8 +103,8 @@ Cadence-skills/
 - [ ] 触发关键词映射准确
 - [ ] Red Flags 清晰明确
 
-### cadence:init Skill
-- [ ] 文件路径正确（`skills/init/SKILL.md`）
+### cadence:cadencing Skill
+- [ ] 文件路径正确（`skills/cadencing/SKILL.md`）
 - [ ] 内容完整（12 个功能全部定义）
 - [ ] 技术栈检测逻辑清晰
 - [ ] 用户确认流程完整
@@ -113,7 +113,7 @@ Cadence-skills/
 ### init Command
 - [ ] 文件路径正确（`commands/init.md`）
 - [ ] frontmatter 格式正确
-- [ ] 可以正常触发 cadence:init Skill
+- [ ] 可以正常触发 cadence:cadencing Skill
 
 ## 🚀 后续步骤
 
@@ -143,7 +143,7 @@ Cadence-skills/
 | 任务 | 状态 | 完成日期 |
 |------|------|---------|
 | 创建 using-cadence Skill | ✅ 完成 | 2026-03-01 |
-| 创建 cadence:init Skill | ✅ 完成 | 2026-03-01 |
+| 创建 cadence:cadencing Skill | ✅ 完成 | 2026-03-01 |
 | 创建 init Command | ✅ 完成 | 2026-03-01 |
 | 验证 Skill 可用性 | ⏳ 待验证 | - |
 | 集成到主项目 | ⏳ 待实施 | - |
