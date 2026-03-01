@@ -1,0 +1,13 @@
+{
+  "name": "Cadence-skills",
+  "description": "AI自动化开发流程 - 基于Claude Code Skills的多Agent协作系统",
+  "version": "2.4.0",
+  "author": {
+    "name": "Cadence Team",
+    "email": "cadence@example.com"
+  },
+  "homepage": "https://github.com/michaelChe956/Cadence-skills",
+  "repository": "https://github.com/michaelChe956/Cadence-skills",
+  "license": "MIT",
+  "keywords": ["cadence", "skills", "tdd", "ai-development", "multi-agent"]
+}

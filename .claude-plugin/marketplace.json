@@ -1,0 +1,12 @@
+{
+  "name": "Cadence-skills",
+  "displayName": "Cadence - AI自动化开发流程",
+  "description": "基于Claude Code Skills的完整开发流程自动化框架，包含需求探索、技术设计、TDD开发、代码审查等8个核心节点",
+  "version": "2.4.0",
+  "author": "Cadence Team",
+  "tags": ["development", "tdd", "code-review", "automation"],
+  "logo": "logo.png",
+  "readme": "README.md",
+  "homepage": "https://github.com/michaelChe956/Cadence-skills",
+  "repository": "https://github.com/michaelChe956/Cadence-skills"
+}
