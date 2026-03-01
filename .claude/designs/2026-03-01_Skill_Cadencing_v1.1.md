@@ -1,23 +1,37 @@
+# Skill: /cadence:cadencing - 项目初始化
+
+**版本**: v1.1
+**创建日期**: 2026-02-28
+**更新日期**: 2026-03-01
+**适用范围**: Cadence v2.4+
+**Skill 类型**: 节点 Skill（项目初始化）
+**实现状态**: ✅ 已实现并测试完成
+
 ---
-name: cadence:cadencing
-description: "Initialize an existing project as a Cadence-managed project with automatic configuration of environment, rules, documentation structure, and tech stack."
+
+## 📋 概述
+
+### 目的
+将已有项目初始化为 Cadence 管理的项目，自动配置项目环境、规则、文档结构和技术栈。
+
+### 触发方式
+- **命令调用**: `/cadence:cadencing`
+- **Skill 工具**: `cadence:cadencing`
+- **触发词**: `初始化`、`项目初始化`、`cadencing`
+
+### 使用场景
+- ✅ 已有项目需要引入 Cadence 工作流
+- ✅ 新项目需要标准化配置
+- ✅ 项目重构需要规范化管理
+- ✅ 团队协作需要统一标准
+
 ---
 
-# Project Initialization
+## 🎯 核心功能
 
-## Overview
+### Checklist（必须完成）
 
-Initialize an existing project as a Cadence-managed project with automatic configuration of environment, rules, documentation structure, and tech stack.
-
-<HARD-GATE>
-Do NOT skip any of the checklist items. Each step must be completed and verified before moving to the next. User confirmation is REQUIRED for tech stack detection and project type detection.
-</HARD-GATE>
-
-## Checklist
-
-You MUST create a task for each of these items and complete them in order:
-
-1. **Claude Code initialization** — invoke `/init` command, verify CLAUDE.md created
+1. **Claude Code 初始化** — invoke `/cadencing` command, verify CLAUDE.md created
 2. **Add language rules** — configure mandatory Chinese responses
 3. **Add documentation rules** — configure `.claude` directory structure and naming conventions
 4. **Detect project type** — identify frontend/backend/fullstack, get user confirmation
@@ -28,11 +42,13 @@ You MUST create a task for each of these items and complete them in order:
 9. **Create directory structure** — create `.claude/` subdirectories
 10. **Initialize progress tracking** — create checkpoint and session summary
 
-## Process Flow
+---
+
+## 🔄 执行流程
 
 ```dot
-digraph init {
-    "Invoke /init" [shape=box];
+digraph cadencing {
+    "Invoke /cadencing" [shape=box];
     "Add mandatory rules" [shape=box];
     "Detect project type" [shape=box];
     "User confirms type?" [shape=diamond];
@@ -44,7 +60,7 @@ digraph init {
     "Create checkpoint" [shape=box];
     "Initialization complete" [shape=doublecircle];
 
-    "Invoke /init" -> "Add mandatory rules";
+    "Invoke /cadencing" -> "Add mandatory rules";
     "Add mandatory rules" -> "Detect project type";
     "Detect project type" -> "User confirms type?";
     "User confirms type?" -> "Detect project type" [label="no, modify"];
@@ -61,22 +77,30 @@ digraph init {
 
 **The terminal state is initialization complete.** Present a summary of what was configured and suggest next steps (quick-flow, full-flow, or exploration-flow).
 
-## The Process
+---
 
-**Mandatory rules configuration:**
+## 🔧 详细配置
+
+### 强制规则配置
+
+**语言规则**:
 - Add language rule: must respond in Chinese
 - Add documentation storage rule: all docs in `.claude/` directory
 - Add documentation naming rule: `YYYY-MM-DD_类型_名称_v版本.扩展名`
 - Add Time MCP rule: must use time MCP for date retrieval
 
-**Project type detection:**
+### 项目类型检测
+
+**检测逻辑**:
 - Frontend: `package.json` + frontend framework config
 - Backend: backend language files + framework
 - Fullstack: both frontend and backend
 - Other: documentation, config, or tool projects
 - Always get user confirmation before proceeding
 
-**Tech stack detection:**
+### 技术栈检测
+
+**支持的语言**:
 - Language: JavaScript/TypeScript, Python, Java, Go, Rust
 - Test command: `pnpm test`, `pytest tests/`, `mvn test`, etc.
 - Lint command: `pnpm lint`, `flake8`, `mvn checkstyle:check`, etc.
@@ -84,12 +108,15 @@ digraph init {
 - Coverage threshold: 80% (configurable)
 - Always get user confirmation before writing to CLAUDE.md
 
-**MCP configuration:**
+### MCP 配置
+
+**配置内容**:
 - Add time MCP: `uvx mcp-server-time`
 - Add serena MCP: `uvx serena-mcp`
 - Configure in `.claude/settings.local.json` or Claude Desktop config
 
-**Directory structure creation:**
+### 目录结构创建
+
 ```
 .claude/
 ├── docs/           # Requirements documents
@@ -103,29 +130,43 @@ digraph init {
 └── logs/           # Development logs
 ```
 
-**Progress tracking initialization:**
-- Create checkpoint: `checkpoint-{date}-init`
-- Create session summary: `session-{date}-init`
-- Save to Serena MCP memory
+---
 
-## After Initialization
+## 📊 输出示例
 
-**Summary presentation:**
-Show what was configured:
-- Project type
-- Programming language
-- Package manager
-- Test/lint/format commands
-- MCP servers added
-- Directories created
+### 成功输出
 
-**Next steps:**
-Suggest three workflow options:
-1. **Quick flow** — `/cadence:quick-flow` for fast development (4 steps)
-2. **Full flow** — `/cadence:full-flow` for complete process (8 steps)
-3. **Exploration flow** — `/cadence:exploration-flow` for technical exploration (4 steps)
+```
+✅ 项目初始化完成！
 
-## Key Principles
+## 配置摘要
+
+- **项目类型**: {project_type}
+- **编程语言**: {language}
+- **包管理器**: {package_manager}
+
+## 已完成的配置
+
+1. ✅ Claude Code 基础初始化
+2. ✅ 强制规则配置（中文回答、文档存储、命名规范）
+3. ✅ 包管理器规则（{package_manager}）
+4. ✅ Time MCP 规则
+5. ✅ 技术栈配置
+6. ✅ MCP 配置（time、serena）
+7. ✅ 目录结构创建
+8. ✅ 进度追踪初始化
+
+## 下一步建议
+
+1. **快速开始**: 使用 `/cadence:quick-flow` 进行快速开发
+2. **完整流程**: 使用 `/cadence:full-flow` 进行完整开发
+3. **技术探索**: 使用 `/cadence:exploration-flow` 进行技术探索
+4. **查看状态**: 使用 `/cadence:status` 查看项目状态
+```
+
+---
+
+## ⚠️ 关键原则
 
 - **User confirmation required** — tech stack and project type detection MUST be confirmed
 - **Cross-platform compatibility** — adapt paths and commands for macOS/Linux/Windows
@@ -133,23 +174,26 @@ Suggest three workflow options:
 - **Error handling** — each step should have clear error messages and recovery suggestions
 - **No skipping** — all checklist items must be completed in order
 
-## Error Recovery
+---
 
-**Common issues:**
+## 🔗 相关文档
 
-| Issue | Recovery |
-|-------|----------|
-| CLAUDE.md already exists | Ask: overwrite, merge, or cancel |
-| Tech stack detection inaccurate | Allow manual specification via `--project-type` |
-| MCP configuration fails | Provide manual configuration instructions |
-| Project type detection fails | Default to "other" and ask for manual specification |
+- **当前实现**: `skills/cadencing/SKILL.md`
+- **主方案文档**: `.claude/designs/2026-02-25_技术方案_使用Claude_Code_Skills的AI自动化开发方案_v2.4.md`
+- **技术栈配置**: `.serena/memories/cadence-skills/patterns/tech-stack-configuration.md`
+- **进度追踪**: `.claude/designs/2026-02-26_进度追踪与状态管理_v1.0.md`
 
-## Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `--skip-init` | flag | Skip `/init` command invocation |
-| `--skip-tech-stack` | flag | Skip tech stack detection and configuration |
-| `--skip-mcp` | flag | Skip MCP configuration |
-| `--chinese` | flag | Force Chinese localization of CLAUDE.md |
-| `--project-type` | string | Manually specify project type (frontend/backend/fullstack/other) |
+## 📝 版本历史
+
+| 版本 | 日期 | 变更内容 |
+|------|------|---------|
+| v1.0 | 2026-02-28 | 初始版本，包含 12 个核心功能 |
+| v1.1 | 2026-03-01 | 简化为 10 个 checklist，与当前实现保持一致，移除过时内容 |
+
+---
+
+**文档状态**: ✅ 已更新
+**验证状态**: ✅ 已测试
+**实现状态**: ✅ 已完成

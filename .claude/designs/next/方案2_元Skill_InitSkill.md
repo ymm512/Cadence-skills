@@ -1,10 +1,27 @@
-# 方案2：元 Skill + Init Skill
+# 方案2：元 Skill + Init Skill（已实现）
+
+> ⚠️ **状态说明**
+>
+> 此方案已**完成实现**，但命名有变化：
+> - **Init Skill → Cadencing Skill**（避免与 Claude Code 的 `/init` 冲突）
+>
+> **实际实现**:
+> - 元 Skill: `skills/using-cadence/SKILL.md` ✅
+> - 项目初始化: `skills/cadencing/SKILL.md` ✅
+> - SessionStart Hook: `hooks/session-start` ✅
+>
+> **更新后的文档**:
+> - using-cadence: `.claude/designs/11.1_using-cadence.md`
+> - cadencing: `.claude/designs/2026-03-01_Skill_Cadencing_v1.1.md`
+> - 更新总结: `.claude/designs/2026-03-01_方案文档更新总结.md`
+
+---
 
 **版本**: v1.0
 **创建日期**: 2026-03-01
-**预估工作量**: 2-3小时
-**状态**: ✅ 设计完成，⏳ 待实施
-**前置依赖**: 方案1（基础架构）
+**完成日期**: 2026-03-01
+**状态**: ✅ 已完成实现
+**前置依赖**: 方案1（基础架构）✅
 
 ---
 
@@ -16,26 +33,55 @@
 - **using-cadence**：Cadence Skills 系统的"守门员"和"路由器"
 - **cadence:cadencing**：项目初始化为 Cadence 管理的标准化流程
 
-**适用场景**：
-- 所有使用 Cadence 的会话（自动注入 using-cadence）
-- 将现有项目转换为 Cadence 项目（使用 cadence:cadencing）
+**实现状态**：
+- ✅ using-cadence Skill 已实现
+- ✅ cadencing Skill 已实现（原名为 init，后重命名）
+- ✅ SessionStart Hook 已实现（自动注入 using-cadence）
 
 ---
 
-## 🎯 包含内容
+## 🎯 实现内容
 
-### 1. 元 Skill：using-cadence
+### 1. 元 Skill：using-cadence ✅
+
+**实际位置**：`skills/using-cadence/SKILL.md`
 
 **核心作用**：
 - 确保Claude在处理开发任务时强制检查是否有相关Skill
 - 智能路由用户意图到正确的Skill
 - 防止跳跃开发流程的关键步骤
+- 通过 SessionStart hook 自动加载
 
-**文件位置**：`.claude/designs/skills/using-cadence/SKILL.md`
+**实现特性**：
 
-**关键特性**：
+#### 1.1 自动加载机制 ✅
 
-#### 1.1 强制性检查机制
+**Hook 配置** (`hooks/hooks.json`):
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'${CLAUDE_PLUGIN_ROOT}/hooks/session-start'",
+            "async": false
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Hook 脚本** (`hooks/session-start`):
+- 读取 `skills/using-cadence/SKILL.md` 内容
+- 转义 JSON 特殊字符
+- 注入到会话上下文中
+
+#### 1.2 强制性检查机制 ✅
 
 ```markdown
 <EXTREMELY-IMPORTANT>
@@ -45,313 +91,123 @@ IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
 </EXTREMELY-IMPORTANT>
 ```
 
-#### 1.2 Skill 优先级
+#### 1.3 Red Flags 表格 ✅
 
-**P1 - 理解现状类**（优先执行）
-- cadence-analyze - 存量代码分析
-- cadence-brainstorm - 需求探索
-- cadence-requirement - 需求分析
-
-**P2 - 规划设计类**（第二优先）
-- cadence-design - 技术设计
-- cadence-design-review - 设计审查
-- cadence-plan - 实现计划
-
-**P3 - 执行实现类**（最后执行）
-- cadence-using-git-worktrees - 隔离环境
-- cadence-subagent-development - 代码实现
-- cadence-verification-before-completion - 完成验证
-- cadence-finishing-a-development-branch - 完成分支
-
-#### 1.3 触发关键词映射（14+ 个）
-
-| 用户意图 | 触发词 | 推荐Skill |
-|---------|--------|----------|
-| 需求不明确 | "需求探索"、"不明确"、"讨论" | cadence-brainstorm |
-| 存量代码 | "存量"、"现有代码"、"重构" | cadence-analyze |
-| 需求分析 | "需求"、"PRD"、"产品需求" | cadence-requirement |
-| 技术设计 | "设计"、"架构"、"方案" | cadence-design |
-| 项目初始化 | "初始化"、"init"、"新项目" | cadence:cadencing |
-| ... | ... | ... |
-
-#### 1.4 Red Flags（11 个危险思维模式）
-
-| Thought | Reality |
-|---------|---------|
-| "This is just a simple question" | Questions are tasks. Check for skills. |
-| "I need more context first" | Skill check comes BEFORE clarifying questions. |
-| ... | ... |
-
-#### 1.5 示例工作流
-
-**场景1：新功能开发**
-```
-用户: "帮我实现用户认证功能"
-
-Claude 内部流程:
-1. 检测到"实现" → 可能需要 cadence-brainstorm
-2. 调用 Skill tool: cadence-brainstorm
-3. Brainstorm 引导探索需求
-4. 生成 PRD 文档
-5. 用户确认后 → 自动建议下一步
-```
+12 个危险思维模式，防止绕过 Skill 检查。
 
 ---
 
-### 2. Init Skill：cadence:cadencing
+### 2. 项目初始化 Skill：cadence:cadencing ✅
+
+**实际位置**：`skills/cadencing/SKILL.md`
 
 **核心作用**：
-- 将已有项目初始化为 Cadence 管理的项目
-- 自动配置项目环境、规则、文档结构和技术栈
+将已有项目初始化为 Cadence 管理的项目，自动配置项目环境、规则、文档结构和技术栈。
 
-**文件位置**：`.claude/designs/skills/cadence:cadencing/SKILL.md`
+**实现的 Checklist**（10 项）:
+
+1. ✅ Claude Code initialization — invoke `/cadencing` command
+2. ✅ Add language rules — configure mandatory Chinese responses
+3. ✅ Add documentation rules — configure `.claude` directory structure
+4. ✅ Detect project type — identify frontend/backend/fullstack
+5. ✅ Add package manager rules — pnpm for frontend, uv for Python
+6. ✅ Add Time MCP rules — mandatory use of time MCP
+7. ✅ Detect tech stack — auto-detect language, test/lint/format commands
+8. ✅ Add MCP configuration — configure time and serena MCP servers
+9. ✅ Create directory structure — create `.claude/` subdirectories
+10. ✅ Initialize progress tracking — create checkpoint and session summary
 
 **关键特性**：
-
-#### 2.1 12 个核心功能
-
-| 序号 | 功能模块 | 说明 | 必需性 |
-|------|---------|------|--------|
-| 1 | Claude Code 初始化 | 调用 `/init` 命令 | ✅ 必须 |
-| 2 | 语言规则配置 | 强制中文回答 | ✅ 必须 |
-| 3 | 文档存储规则 | 配置 `.claude` 目录结构 | ✅ 必须 |
-| 4 | 文档命名规范 | 标准化命名格式 | ✅ 必须 |
-| 5 | 包管理器规则 | 前端 pnpm / Python uv | ⭐ 推荐 |
-| 6 | Time MCP 规则 | 强制使用 time MCP 获取日期 | ✅ 必须 |
-| 7 | 技术栈配置 | 生成 tech_stack 配置 | ✅ 必须 |
-| 8 | MCP 配置 | 添加 time 和 serena MCP | ✅ 必须 |
-| 9 | 目录结构创建 | 创建必要的目录结构 | ✅ 必须 |
-| 10 | CLAUDE.md 中文化 | 使用中文重写 CLAUDE.md | ⭐ 推荐 |
-| 11 | 项目类型检测 | 检测前端/后端/全栈 | ✅ 必须 |
-| 12 | 进度追踪初始化 | 创建初始 checkpoint | ⭐ 推荐 |
-
-#### 2.2 技术栈检测（支持 6 种语言）
-
-- JavaScript/TypeScript
-- Python
-- Java (Maven/Gradle)
-- Go
-- Rust
-
-#### 2.3 执行流程
-
-```
-1. 调用 /init
-2. 添加强制规则（语言、文档存储、命名规范）
-3. 检测项目类型 → 添加包管理器规则
-4. 检测技术栈 → 用户确认 → 写入配置
-5. 添加 MCP 配置（time、serena）
-6. 创建目录结构
-7. 创建 Checkpoint 和 Session Summary
-8. 完成
-```
+- ✅ 用户确认机制（项目类型、技术栈）
+- ✅ 跨平台兼容性（macOS/Linux/Windows）
+- ✅ 幂等性（重复执行安全）
+- ✅ 错误处理和恢复建议
 
 ---
 
-### 3. Command 映射：init
+## 📊 实现对比
 
-**核心作用**：提供 `/cadence:cadencing` 命令的快捷调用
-
-**文件位置**：`.claude/designs/commands/init.md`
-
-**内容**：
-```markdown
----
-description: "Initialize project as Cadence-managed with automatic configuration of environment, rules, and tech stack"
-disable-model-invocation: true
----
-
-Invoke the cadence:cadencing skill and follow it exactly as presented to you
-```
+| 组件 | 原方案 | 实际实现 | 状态 |
+|------|--------|---------|------|
+| **元 Skill** | using-cadence | using-cadence | ✅ 已实现 |
+| **初始化 Skill** | Init | Cadencing（重命名） | ✅ 已实现 |
+| **自动加载** | 未规划 | SessionStart Hook | ✅ 已实现 |
+| **Hook 配置** | 未规划 | hooks/hooks.json | ✅ 已实现 |
 
 ---
 
-## 📋 实施步骤
+## 🔄 关键变更
 
-### Step 1：复制 Skill 文件到项目
+### 1. 命名变更
 
-```bash
-# 在 Cadence-skills 项目根目录执行
+**Init → Cadencing**:
+- **原因**: 避免与 Claude Code 的 `/init` 命令冲突
+- **影响**: 命令从 `/cadence:init` 改为 `/cadence:cadencing`
+- **文档**: 所有相关文档已更新
 
-# 复制 using-cadence Skill
-mkdir -p skills/using-cadence
-cp .claude/designs/skills/using-cadence/SKILL.md skills/using-cadence/
+### 2. 新增 SessionStart Hook
 
-# 复制 cadence:cadencing Skill
-mkdir -p skills/cadence:cadencing
-cp .claude/designs/skills/cadence:cadencing/SKILL.md skills/cadence:cadencing/
-
-# 复制 init Command
-cp .claude/designs/commands/init.md commands/
-```
-
-### Step 2：验证文件结构
-
-确保文件结构如下：
-
-```
-Cadence-skills/
-├── skills/
-│   ├── using-cadence/
-│   │   └── SKILL.md          ✅
-│   └── cadence:cadencing/
-│       └── SKILL.md          ✅
-└── commands/
-    └── init.md               ✅
-```
-
-### Step 3：测试 SessionStart Hook
-
-```bash
-# 启动新的 Claude Code 会话
-# 检查是否看到 using-cadence 的注入内容
-
-# 预期看到：
-# <EXTREMELY_IMPORTANT>
-# 你拥有 Cadence 能力。
-# ...
-# </EXTREMELY_IMPORTANT>
-```
-
-### Step 4：测试 cadence:cadencing
-
-```bash
-# 在 Claude Code 中执行
-/cadence:cadencing
-
-# 预期行为：
-# 1. 调用 /cadencing 命令
-# 2. 配置强制规则
-# 3. 检测技术栈
-# 4. 用户确认
-# 5. 创建目录结构
-# 6. 完成
-```
+**原方案**: 未规划自动加载机制
+**实际实现**: 通过 SessionStart hook 自动注入 using-cadence 内容
+**优势**: 确保 Claude 在任何响应前就知道如何使用 Cadence Skills
 
 ---
 
-## ✅ 验收标准
+## ✅ 验证状态
 
-### using-cadence Skill
-- [ ] 文件路径正确（`skills/using-cadence/SKILL.md`）
-- [ ] 内容完整（包含所有必要部分）
-- [ ] SessionStart hook 可以正常注入
-- [ ] 触发关键词映射准确
-- [ ] Red Flags 清晰明确
+### 功能测试 ✅
 
-### cadence:cadencing Skill
-- [ ] 文件路径正确（`skills/cadence:cadencing/SKILL.md`）
-- [ ] 内容完整（12 个功能全部定义）
-- [ ] 技术栈检测逻辑清晰
-- [ ] 用户确认流程完整
-- [ ] 跨平台兼容性考虑周全
+**using-cadence**:
+- ✅ SessionStart hook 正确执行
+- ✅ 内容正确注入到会话上下文
+- ✅ JSON 转义正确
+- ✅ 路径引用正确
 
-### init Command
-- [ ] 文件路径正确（`commands/init.md`）
-- [ ] frontmatter 格式正确
-- [ ] 可以正常触发 cadence:cadencing Skill
+**cadencing**:
+- ✅ 所有 10 个 checklist 可执行
+- ✅ 用户确认机制工作正常
+- ✅ 跨平台路径处理正确
+- ✅ 错误处理完善
 
-### 功能验证
-- [ ] `/cadence:cadencing` 命令可以正常执行
-- [ ] 技术栈检测准确
-- [ ] 目录结构创建正确
-- [ ] MCP 配置成功
+### 文档测试 ✅
 
----
-
-## 📊 输出产物
-
-1. **using-cadence Skill**：1个文件（SKILL.md）
-2. **cadence:cadencing Skill**：1个文件（SKILL.md）
-3. **init Command**：1个文件（init.md）
-4. **文档**：1个文件（README.md）
-
-**总计**：4个文件
-
----
-
-## ⚠️ 注意事项
-
-### 1. SessionStart Hook 依赖
-
-using-cadence Skill 需要 SessionStart hook 才能自动注入。
-
-**确保**：
-- 方案1已实施
-- `hooks/session-start` 脚本有执行权限
-- `skills/using-cadence/SKILL.md` 文件存在
-
-### 2. 文件完整性
-
-确保复制时保持目录结构：
-- Skill 必须在 `skills/` 目录下
-- Command 必须在 `commands/` 目录下
-
-### 3. 测试顺序
-
-1. 先测试 SessionStart hook（启动新会话）
-2. 再测试 `/cadence:cadencing` 命令
-
----
-
-## 🔄 后续步骤
-
-完成方案2后，可以继续：
-
-1. **方案3**：前置 Skill + 支持 Skill
-2. **方案4**：节点 Skill 第1组（需求阶段）
-3. **方案5**：节点 Skill 第2组（设计阶段）
-4. **方案6**：节点 Skill 第3组（开发阶段）
-5. **方案7**：流程 Skill + 进度追踪
+- ✅ 所有文档引用正确
+- ✅ 实现与文档一致
+- ✅ 版本号已更新
 
 ---
 
 ## 📚 相关文档
 
-### 设计文档
-- **主方案**: `.claude/designs/2026-02-25_技术方案_使用Claude_Code_Skills的AI自动化开发方案_v2.4.md`
-- **Init Skill 原始设计**: `.claude/designs/2026-02-28_Skill_Init_v1.0.md`
+### 当前有效文档
 
-### 实施文件
-- **using-cadence Skill**: `.claude/designs/skills/using-cadence/SKILL.md`
-- **cadence:cadencing Skill**: `.claude/designs/skills/cadence:cadencing/SKILL.md`
-- **init Command**: `.claude/designs/commands/init.md`
-- **使用说明**: `.claude/designs/skills/README.md`
+1. **using-cadence 实现**: `skills/using-cadence/SKILL.md`
+2. **cadencing 实现**: `skills/cadencing/SKILL.md`
+3. **using-cadence 设计**: `.claude/designs/11.1_using-cadence.md`
+4. **cadencing 设计**: `.claude/designs/2026-03-01_Skill_Cadencing_v1.1.md`
+5. **更新总结**: `.claude/designs/2026-03-01_方案文档更新总结.md`
 
-### 参考资料
-- **superpowers 参考**: `/home/michael/workspace/github/superpowers`
+### 历史文档（已废弃）
 
----
-
-## 📝 版本历史
-
-| 版本 | 日期 | 变更内容 |
-|------|------|---------|
-| v1.0 | 2026-03-01 | 初始版本，包含 using-cadence 和 cadence:cadencing 两个 Skill |
+1. ~~`next/skills/init/SKILL.md`~~ → 被 `skills/cadencing/SKILL.md` 替代
+2. ~~`next/commands/init.md`~~ → 被实际命令替代
+3. ~~`next/方案2_元Skill_InitSkill.md`~~ → 本文档（标记为已完成）
 
 ---
 
-## 🎯 关键差异点
+## 🎉 总结
 
-### 与 superpowers:using-superpowers 的差异
+**方案2 已完成实现**，核心成果：
 
-| 维度 | superpowers | Cadence |
-|------|------------|---------|
-| **触发范围** | 通用开发任务 | 结构化开发流程 |
-| **Skill 数量** | 15个通用Skills | 22个专业Skills |
-| **流程模式** | 单一模式 | 3种模式（完整/快速/探索） |
-| **节点概念** | 无 | 8个核心节点（v2.4） |
-| **优先级** | 无明确分级 | P1/P2/P3 三级 |
+1. ✅ **using-cadence Skill** - Cadence 框架入口，通过 SessionStart hook 自动加载
+2. ✅ **cadencing Skill** - 项目初始化，10 个标准化 checklist
+3. ✅ **SessionStart Hook** - 自动注入机制，确保框架立即可用
+4. ✅ **完整文档** - 实现文档和设计文档保持一致
 
-### 与 superpowers 无 Init Skill 的差异
-
-superpowers 没有项目初始化 Skill，Cadence 新增了：
-- **cadence:cadencing** - 12个核心功能
-- **自动配置** - 技术栈检测、MCP配置、目录创建
-- **跨平台兼容** - macOS/Linux/Windows
+**下一步工作**：实现其他 MVP 节点 Skills（brainstorm, analyze, requirement, design 等）
 
 ---
 
-**创建日期**: 2026-03-01
-**状态**: ✅ 设计完成
-**下一步**: 方案3 - 前置 Skill + 支持 Skill
+**文档状态**: ✅ 已更新
+**实现状态**: ✅ 已完成
+**验证状态**: ✅ 已测试
