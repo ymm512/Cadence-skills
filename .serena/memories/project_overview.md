@@ -47,39 +47,39 @@ YYYY-MM-DD_文档类型_文档名称_v版本号.扩展名
 - Serena: 已激活（markdown 语言）
 - Onboarding: 已完成
 - 当前版本: v2.4 MVP
-- 总体进度: 方案实施阶段（2/7 完成，28.6%）
-- Git 状态: 已提交并推送（分支：recreate-cadence-skills，Commit：5b74f7a）
+- **设计进度**: 4/7 (57%)
+- **实施进度**: 3/7 (43%)
+- Git 状态: 最新提交（6002c8c - 方案3实施完成）
 
 ## 最新进展（2026-03-01）
 
 ### 方案实施进度
 
-**已完成（2/7）**：
+**已完成（3/7）**：
 - ✅ 方案1：基础架构 + 配置 + Hooks（已实施）
 - ✅ 方案2：元 Skill + Init Skill（已实施）
+- ✅ **方案3：质量保证 Skills**（已实施，Commit: 6002c8c）
 
-**实施详情（2026-03-01 会话）**：
-- ✅ 创建7个目录结构（.claude-plugin, skills, hooks, docs, tests, agents, commands）
-- ✅ 创建2个配置文件（plugin.json, marketplace.json）
-- ✅ 创建2个 Hooks 文件（hooks.json, session-start）
-- ✅ 复制2个 Skills（using-cadence, init）
-- ✅ 复制1个 Command（init.md）
-- ✅ 创建1个文档（hooks-reference.md）
-- ✅ Git 提交并推送（Commit: 5b74f7a）
+**设计完成（4/7）**：
+- ✅ 方案1-3：已实施
+- ✅ **方案4：节点 Skill 第1组**（设计完成，待实施）
+- ⏳ 方案5-7：待设计
 
-**Skills 优化完成**：
-- ✅ init Skill：967行 → 155行（减少84%）
-- ✅ using-cadence Skill：269行 → 140行（减少48%）
-- ✅ 所有 Skills 完全符合 superpowers 标准
+**方案3 实施详情**（2026-03-01）：
+- ✅ 5个质量保证 Skills（test-driven-development, requesting-code-review, receiving-code-review, verification-before-completion, finishing-a-development-branch）
+- ✅ 5个 Commands（/tdd, /request-review, /receive-review, /verify, /finish）
+- ✅ Git 提交并推送（Commit: 6002c8c）
+- ✅ 所有 Skills 直接复制自 superpowers，未做修改
 
-**标准化检查**：
-- ✅ 所有已完成工作通过标准化检查
-- ✅ 无冲突，无问题，可直接使用
-- ✅ 文档位置：`.claude/designs/next/STANDARDIZATION_CHECK.md`
+**方案4 设计详情**（2026-03-01）：
+- ✅ 总体设计文档完成
+- ✅ 3个 Skills 设计完成（Brainstorming、Analyze、Requirement）
+- ✅ 3个 Commands 设计完成（/brainstorm, /analyze, /requirement）
+- ⏳ 待实施（预估 35-45 分钟）
 
-**待实施（5/7）**：
-- ⏳ 方案3：前置 Skill + 支持 Skill
-- ⏳ 方案4-6：节点 Skill（3组）
+**待实施（4/7）**：
+- ⏳ 方案4：节点 Skill 第1组（需求阶段）
+- ⏳ 方案5-6：节点 Skill 第2-3组（设计+开发阶段）
 - ⏳ 方案7：流程 Skill + 进度追踪
 
 **待测试功能**：
@@ -93,17 +93,38 @@ YYYY-MM-DD_文档类型_文档名称_v版本号.扩展名
 - 总览：`.claude/designs/next/README.md`
 - 方案1：`.claude/designs/next/方案1_基础架构_配置_Hooks.md`
 - 方案2：`.claude/designs/next/方案2_元Skill_InitSkill.md`
+- 方案3：`.claude/designs/next/方案3_前置Skill_支持Skill.md`
+- **方案4：`.claude/designs/next/方案4_节点Skill_第1组.md`**
 
-**已实施 Skills**（在工作目录）：
+**已实施 Skills**（在工作目录 skills/）：
 - using-cadence：`skills/using-cadence/SKILL.md`（140行）
-- init：`skills/cadencing/SKILL.md`（155行）
-- init Command：`commands/cadencing.md`
+- cadencing：`skills/cadencing/SKILL.md`（155行）
+- **5个质量保证 Skills**（方案3）：
+  - test-driven-development（371行）
+  - requesting-code-review（105行）
+  - receiving-code-review（213行）
+  - verification-before-completion（139行）
+  - finishing-a-development-branch（144行）
+
+**已实施 Commands**（在工作目录 commands/）：
+- cadencing.md
+- **5个质量保证 Commands**（方案3）：
+  - tdd.md, request-review.md, receive-review.md, verify.md, finish.md
 
 **设计文档**（在 .claude/designs/next/）：
 - using-cadence 设计：`.claude/designs/next/skills/using-cadence/SKILL.md`
-- init 设计：`.claude/designs/next/skills/cadencing/SKILL.md`
-- init Command 设计：`.claude/designs/next/commands/cadencing.md`
+- cadencing 设计：`.claude/designs/next/skills/cadencing/SKILL.md`
+- **方案4 Skills 设计**：
+  - brainstorming/SKILL.md
+  - analyze/SKILL.md
+  - requirement/SKILL.md
+- **方案4 Commands 设计**：
+  - brainstorm.md, analyze.md, requirement.md
 
 **会话记录**：
-- 会话详情：`.serena/memories/session-2026-03-01-implementation-phase1-phase2`
-- 检查点：`.serena/memories/checkpoint-2026-03-01-phase1-phase2-complete`
+- 方案1-2 实施详情：`session-2026-03-01-implementation-phase1-phase2`
+- 方案1-2 检查点：`checkpoint-2026-03-01-phase1-phase2-complete`
+- **方案3 实施详情**：`session-2026-03-01-scheme3-qa-skills-complete`
+- **方案3 检查点**：`checkpoint-2026-03-01-scheme3-complete`
+- **方案4 设计详情**：`session-2026-03-01-scheme4-design-complete`
+- **方案4 检查点**：`checkpoint-2026-03-01-scheme4-design-complete`
