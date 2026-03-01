@@ -1,20 +1,12 @@
 {
-  "name": "cadence-ai-development",
-  "description": "Cadence AI 自动化开发系统 - 从 PRD 到代码的端到端开发工作流",
-  "owner": {
-    "name": "Cadence Team",
-    "email": "cadence@example.com"
-  },
-  "plugins": [
-    {
-      "name": "cadence-full",
-      "description": "端到端自动化开发 (需求→设计→代码→测试)，支持完整流程或独立子流程",
-      "version": "1.3.0",
-      "source": "./",
-      "author": {
-        "name": "Cadence Team",
-        "email": "cadence@example.com"
-      }
-    }
-  ]
+  "name": "Cadence-skills",
+  "displayName": "Cadence - AI自动化开发流程",
+  "description": "基于Claude Code Skills的完整开发流程自动化框架，包含需求探索、技术设计、TDD开发、代码审查等8个核心节点",
+  "version": "2.4.0",
+  "author": "Cadence Team",
+  "tags": ["development", "tdd", "code-review", "automation"],
+  "logo": "logo.png",
+  "readme": "README.md",
+  "homepage": "https://github.com/michaelChe956/Cadence-skills",
+  "repository": "https://github.com/michaelChe956/Cadence-skills"
 }
