@@ -202,5 +202,5 @@
 
 ## 获取帮助
 
-- **问题反馈**: https://github.com/michaelche/Cadence-skills/issues
+- **问题反馈**: https://github.com/michaelChe956/Cadence-skills/issues
 - **文档问题**: 提交 Issue 或 PR
