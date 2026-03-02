@@ -86,12 +86,14 @@
 ### Skills 统计
 - **核心节点 Skills**: 8个（Brainstorm, Analyze, Requirement, Design, Design Review, Plan, Git Worktrees, Subagent Development）
 - **流程 Skills**: 3个（Full Flow, Quick Flow, Exploration Flow）
-- **总计**: 11个 Skills
+- **元 Skills**: 1个（cad-load - 项目上下文加载）
+- **总计**: 12个 Skills
 
 ### Commands 统计
 - **节点 Commands**: 7个（/brainstorm, /analyze, /requirement, /design, /design-review, /plan, /develop）
-- **流程 Commands**: 2个（/worktree, /status, /resume, /checkpoint, /report, /monitor）
-- **总计**: 9个 Commands
+- **流程 Commands**: 6个（/worktree, /status, /resume, /checkpoint, /report, /monitor）
+- **元 Commands**: 1个（/cad-load - 项目上下文加载）
+- **总计**: 10个 Commands
 
 ### Subagent Prompts 统计
 - **实现类**: 1个（Implementer）
@@ -137,6 +139,12 @@
 #### 5. 两阶段审查机制
 - [x] Spec Review - 验证规范符合性（4个维度）
 - [x] Code Quality Review - 验证代码质量（5个维度）
+
+#### 6. 项目上下文管理（2026-03-02 新增）
+- [x] cad-load - 项目上下文加载（替代 SuperClaude /sc:load）
+- [x] 三种加载模式（quick/standard/full）
+- [x] 记忆优先级系统（P0/P1/P2）
+- [x] 自动 Git 状态检查
 
 ### ⏳ 待实现功能（v2.5+）
 

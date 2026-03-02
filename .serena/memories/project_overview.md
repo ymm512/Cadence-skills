@@ -46,10 +46,11 @@ YYYY-MM-DD_文档类型_文档名称_v版本号.扩展名
 
 - Serena: 已激活（markdown 语言）
 - Onboarding: 已完成
-- 当前版本: v2.4 MVP
-- **设计进度**: 6/7 (86%)
-- **实施进度**: 6/7 (86%)
-- Git 状态: 最新提交（124f631 - 方案6实施完成）
+- 当前版本: v2.4 MVP（已完成 100%）
+- **设计进度**: 7/7 (100%) ✅
+- **实施进度**: 7/7 (100%) ✅
+- Git 状态: 最新提交（b239cec - 创建 cad-load skill）
+- **最新增强**: cad-load skill（项目上下文加载）
 
 ## 最新进展（2026-03-02）
 
@@ -93,13 +94,23 @@ YYYY-MM-DD_文档类型_文档名称_v版本号.扩展名
 - ✅ using-git-worktrees：智能目录选择、安全验证、自动初始化
 - ✅ subagent-development：两阶段审查、TDD强制执行、并行执行支持
 
-**待实施（1/7）**：
-- ⏳ 方案7：流程 Skill + 进度追踪
+**方案7 实施详情**（2026-03-02）：
+- ✅ 3个流程 Skills（full-flow, quick-flow, exploration-flow）
+- ✅ 5个进度追踪 Commands（/status, /resume, /checkpoint, /report, /monitor）
+- ✅ Git 提交并推送（Commit: 2f1b155）
+- ✅ full-flow：完整流程（8节点），每个节点人工确认
+- ✅ quick-flow：快速流程（4节点），适合小功能开发
+- ✅ exploration-flow：探索流程（4节点+迭代），适合技术调研
 
-**待测试功能**：
-- [ ] SessionStart Hook 自动注入
-- [ ] `/cadence:cadencing` 命令
-- [ ] 创建 PR（已准备内容，待手动创建）
+**新增功能**（2026-03-02）：
+- ✅ **cad-load skill**（Commit: b239cec）
+- ✅ 项目上下文加载，替代 SuperClaude 的 /sc:load
+- ✅ 三种加载模式（quick/standard/full）
+- ✅ 记忆优先级系统（P0/P1/P2）
+- ✅ 自动 Git 状态检查
+- ✅ 与 full-flow/quick-flow 深度集成
+
+**v2.4 MVP 已完成** (7/7 schemes, 100%) ✅
 
 ### 关键文件位置
 
@@ -113,23 +124,38 @@ YYYY-MM-DD_文档类型_文档名称_v版本号.扩展名
 **已实施 Skills**（在工作目录 skills/）：
 - using-cadence：`skills/using-cadence/SKILL.md`（140行）
 - cadencing：`skills/cadencing/SKILL.md`（155行）
+- **cad-load**：`skills/cad-load/SKILL.md`（约 20KB）- 项目上下文加载 ⭐ 新增
 - **5个质量保证 Skills**（方案3）：
   - test-driven-development（371行）
   - requesting-code-review（105行）
   - receiving-code-review（213行）
   - verification-before-completion（139行）
   - finishing-a-development-branch（144行）
-- **3个节点 Skills**（方案4）：
+- **8个节点 Skills**（方案4-6）：
   - brainstorming（96行）- 来自superpowers
   - analyze（495行）- Serena MCP集成
   - requirement（746行）- 支持存量复用
+  - design（约 20KB）- 技术设计
+  - design-review（约 15KB）- 设计审查
+  - plan（约 12KB）- 实现计划
+  - using-git-worktrees（8.4KB）- 创建隔离环境
+  - subagent-development（14KB）- 代码实现+单元测试
+- **3个流程 Skills**（方案7）：
+  - full-flow（约 20KB）- 完整流程（8节点）
+  - quick-flow（约 13KB）- 快速流程（4节点）
+  - exploration-flow（约 16KB）- 探索流程（4节点+迭代）
 
 **已实施 Commands**（在工作目录 commands/）：
 - cadencing.md
+- **cad-load.md** - 项目上下文加载 ⭐ 新增
 - **5个质量保证 Commands**（方案3）：
   - tdd.md, request-review.md, receive-review.md, verify.md, finish.md
-- **3个节点 Commands**（方案4）：
+- **7个节点 Commands**（方案4-6）：
   - brainstorm.md, analyze.md, requirement.md
+  - design.md, design-review.md, plan.md
+  - worktree.md, develop.md
+- **5个进度追踪 Commands**（方案7）：
+  - status.md, resume.md, checkpoint.md, report.md, monitor.md
 
 **设计文档**（在 .claude/designs/next/）：
 - using-cadence 设计：`.claude/designs/next/skills/using-cadence/SKILL.md`
@@ -146,7 +172,11 @@ YYYY-MM-DD_文档类型_文档名称_v版本号.扩展名
 - 方案1-2 检查点：`checkpoint-2026-03-01-phase1-phase2-complete`
 - 方案3 实施详情：`session-2026-03-01-scheme3-qa-skills-complete`
 - 方案3 检查点：`checkpoint-2026-03-01-scheme3-complete`
-- **方案4 设计详情**：`session-2026-03-01-scheme4-design-complete`
-- **方案4 设计检查点**：`checkpoint-2026-03-01-scheme4-design-complete`
-- **方案4 实施详情**：`session-2026-03-01-scheme4-implementation-complete`
-- **方案4 实施检查点**：`checkpoint-2026-03-01-scheme4-implementation-complete`
+- 方案4 设计详情：`session-2026-03-01-scheme4-design-complete`
+- 方案4 设计检查点：`checkpoint-2026-03-01-scheme4-design-complete`
+- 方案4 实施详情：`session-2026-03-01-scheme4-implementation-complete`
+- 方案4 实施检查点：`checkpoint-2026-03-01-scheme4-implementation-complete`
+- 方案5-6 实施详情：`sessions/2026-03-02_scheme5_completion`, `sessions/2026-03-02_scheme6_implementation_complete`
+- 方案7 实施详情：`sessions/2026-03-02_scheme7_completion`
+- **cad-load 创建详情**：`sessions/2026-03-02_cad-load_creation` ⭐ 新增
+- **cad-load 创建检查点**：`checkpoint-2026-03-02-cad-load-creation-complete` ⭐ 新增
