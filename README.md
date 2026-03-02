@@ -21,7 +21,7 @@ Cadence 从你启动编码助手的那一刻开始工作。当它发现你正在
 在 Claude Code 中，首先注册市场：
 
 ```bash
-/plugin marketplace add michaelChe956/cadence-skills-marketplace
+/plugin marketplace add michaelChe956/Cadence-skills
 ```
 
 然后从这个市场安装插件：
