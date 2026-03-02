@@ -21,13 +21,13 @@ Cadence 从你启动编码助手的那一刻开始工作。当它发现你正在
 在 Claude Code 中，首先注册市场：
 
 ```bash
-/plugin marketplace add michaelChe956/Cadence-skills-marketplace
+/plugin marketplace add michaelChe956/cadence-skills-marketplace
 ```
 
 然后从这个市场安装插件：
 
 ```bash
-/plugin install cadence@Cadence-skills-marketplace
+/plugin install cadence@cadence-skills-marketplace
 ```
 
 ### 验证安装
