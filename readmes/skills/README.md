@@ -29,7 +29,7 @@
 ### 元 Skills（3个）
 
 - [using-cadence](using-cadence.md) - Cadence Skills 系统使用指南
-- [cadencing](cadencing.md) - 项目初始化
+- [cadencing](cadencing.md) - 项目初始化，配置环境、规则、文档结构和技术栈
 - [cad-load](cad-load.md) - 项目上下文加载
 
 ## 快速导航
@@ -70,7 +70,7 @@
 ### 场景 1：新项目开发
 
 ```
-1. /cadencing          # 初始化项目
+1. /cadencing          # 初始化项目（检查前置条件、配置 MCP、创建目录）
 2. /full-flow          # 使用完整流程
 3. 依次完成 8 个节点
 4. /status             # 查看进度

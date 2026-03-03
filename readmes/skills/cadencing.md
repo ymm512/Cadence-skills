@@ -2,9 +2,49 @@
 
 ## 概述
 
-`cadencing` 是项目初始化 Skill，用于将现有项目配置为 Cadence 管理的项目，包括环境配置、规则、文档结构和技术栈检测。
+`cadencing` 是项目初始化 Skill，用于将现有项目配置为 Cadence 管理的项目。
 
-## 如何单独使用
+**主要功能：**
+- 检查前置条件（npx、uvx、serena）
+- 配置 MCP 服务器（time、context7、sequential-thinking、serena）
+- 创建 `.claude/` 文档目录结构
+- 配置 CLAUDE.md 规则（语言、文档、MCP 使用）
+- 检测项目类型和技术栈
+
+## 前置条件
+
+使用 cadencing 前，需要确保以下工具已安装：
+
+### 1. npx（Node.js 包管理器）
+
+```bash
+npx --version
+```
+
+**安装方式：**
+- **macOS/Linux**: 安装 Node.js（包含 npm/npx）
+- **Windows**: 安装 Node.js
+
+### 2. uvx（Python 包管理器）
+
+```bash
+uvx --version
+```
+
+**安装方式：**
+- **macOS/Linux**: `curl -LsSf https://astral.sh/uv/install.sh | sh`
+- **Windows**: `powershell -c "irm https://astral.sh/uv/install.ps1 | iex"`
+
+### 3. Serena 本地仓库
+
+需要本地克隆 Serena 仓库，用于启动 serena MCP 服务器。
+
+**克隆命令：**
+```bash
+git clone https://github.com/orisenbazuru/serena.git
+```
+
+## 如何使用
 
 ### 命令调用
 
@@ -15,125 +55,89 @@
 ### 带参数调用
 
 ```bash
-/cadencing --project-type frontend
+# 跳过前置条件检查
+/cadencing --skip-checks
+
+# 跳过 /init 命令
 /cadencing --skip-init
+
+# 跳过技术栈检测
 /cadencing --skip-tech-stack
+
+# 跳过 MCP 配置
 /cadencing --skip-mcp
+
+# 手动指定项目类型
+/cadencing --project-type frontend
+
+# 手动指定 Serena 路径
+/cadencing --serena-path ~/projects/serena
 ```
 
 ## 参数说明
 
 | 参数 | 类型 | 描述 |
 |------|------|------|
+| `--skip-checks` | flag | 跳过前置条件检查 |
 | `--skip-init` | flag | 跳过 `/init` 命令调用 |
 | `--skip-tech-stack` | flag | 跳过技术栈检测和配置 |
 | `--skip-mcp` | flag | 跳过 MCP 配置 |
 | `--chinese` | flag | 强制 CLAUDE.md 中文化 |
 | `--project-type` | string | 手动指定项目类型（frontend/backend/fullstack/other） |
-
-## 具体使用案例
-
-### 案例 1：初始化新项目
-
-**场景**：你刚创建了一个新的前端项目，想使用 Cadence 工作流程。
-
-**操作**：
-```bash
-/cadencing
-```
-
-**执行流程**：
-1. ✅ 调用 `/init` 创建 CLAUDE.md
-2. ✅ 添加语言规则（中文响应）
-3. ✅ 添加文档存储规则（`.claude/` 目录）
-4. ✅ 检测项目类型（自动识别为 frontend）
-5. ✅ 用户确认项目类型
-6. ✅ 添加包管理器规则（pnpm）
-7. ✅ 检测技术栈（JavaScript/TypeScript, pnpm test, pnpm lint 等）
-8. ✅ 用户确认技术栈
-9. ✅ 配置 MCP 服务器（time, serena）
-10. ✅ 创建目录结构
-11. ✅ 创建进度追踪
-
-**输出示例**：
-```
-✅ 项目初始化完成！
-
-项目类型：Frontend
-编程语言：TypeScript
-包管理器：pnpm
-测试命令：pnpm test
-Lint命令：pnpm lint
-格式化命令：pnpm format
-MCP服务器：time, serena
-目录结构：已创建 .claude/ 子目录
-
-建议下一步：
-1. 快速流程：/quick-flow（4步，1-2小时）
-2. 完整流程：/full-flow（8步，1-2天）
-3. 探索流程：/exploration-flow（4步，2-4小时）
-```
-
-### 案例 2：已有 CLAUDE.md 的项目
-
-**场景**：项目已经有 CLAUDE.md，想添加 Cadence 配置。
-
-**操作**：
-```bash
-/cadencing --skip-init
-```
-
-**执行流程**：
-- 跳过 `/init` 步骤
-- 直接添加 Cadence 规则到现有 CLAUDE.md
-- 检测技术栈并配置
-
-**输出示例**：
-```
-检测到已有 CLAUDE.md，跳过初始化。
-正在添加 Cadence 配置...
-
-✅ Cadence 配置添加完成！
-
-已添加：
-- 中文响应规则
-- 文档存储规则
-- 技术栈配置（Python, pytest）
-- MCP 服务器配置
-```
-
-### 案例 3：手动指定项目类型
-
-**场景**：自动检测不准确，需要手动指定。
-
-**操作**：
-```bash
-/cadencing --project-type fullstack
-```
-
-**执行流程**：
-- 跳过项目类型检测
-- 直接使用指定的 fullstack 类型
-- 继续其他配置步骤
+| `--serena-path` | string | 手动指定 Serena 本地路径 |
 
 ## 检查清单
 
-初始化过程会按顺序完成以下任务（不可跳过）：
+cadencing 会按顺序完成以下 10 个步骤：
 
-1. ✅ **Claude Code 初始化** — 调用 `/init` 命令，验证 CLAUDE.md 创建
-2. ✅ **添加语言规则** — 配置强制中文响应
-3. ✅ **添加文档规则** — 配置 `.claude` 目录结构和命名规范
-4. ✅ **检测项目类型** — 识别 frontend/backend/fullstack，获取用户确认
-5. ✅ **添加包管理器规则** — pnpm 用于前端，uv 用于 Python（如适用）
-6. ✅ **添加 Time MCP 规则** — 强制使用 time MCP 获取日期
-7. ✅ **检测技术栈** — 自动检测语言、测试/lint/格式化命令，获取用户确认
-8. ✅ **添加 MCP 配置** — 配置 time 和 serena MCP 服务器
-9. ✅ **创建目录结构** — 创建 `.claude/` 子目录
-10. ✅ **初始化进度追踪** — 创建检查点和会话摘要
+1. ✅ **前置条件检查** — 检查 npx、uvx 是否可用，获取 serena 路径
+2. ✅ **Claude Code 初始化** — 调用 `/init` 命令，创建 CLAUDE.md
+3. ✅ **添加语言规则** — 配置强制中文响应
+4. ✅ **添加文档规则** — 配置 `.claude/` 目录结构和命名规范
+5. ✅ **检测项目类型** — 识别 frontend/backend/fullstack/other，获取用户确认
+6. ✅ **添加包管理器规则** — pnpm 用于前端，uv 用于 Python
+7. ✅ **添加 MCP 使用规则** — 添加各 MCP server 的使用规则到 CLAUDE.md
+8. ✅ **检测技术栈** — 自动检测语言、测试/lint/格式化命令，获取用户确认
+9. ✅ **添加 MCP 配置** — 在项目根目录创建 `.mcp.json`
+10. ✅ **创建目录结构** — 创建 `.claude/` 子目录
 
-## 目录结构
+## 创建的配置文件
 
-初始化会创建以下目录结构：
+### 1. `.mcp.json`（项目根目录）
+
+项目级别的 MCP 配置文件：
+
+```json
+{
+  "mcpServers": {
+    "time": {
+      "command": "uvx",
+      "args": ["mcp-server-time", "--local-timezone=Asia/Shanghai"]
+    },
+    "context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "sequential-thinking": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    },
+    "serena": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from", "{{SERENA_PATH}}",
+        "serena", "start-mcp-server",
+        "--context", "ide-assistant"
+      ]
+    }
+  }
+}
+```
+
+### 2. `.claude/` 目录结构
 
 ```
 .claude/
@@ -148,9 +152,93 @@ MCP服务器：time, serena
 └── logs/           # 开发日志
 ```
 
-## 项目类型检测
+### 3. CLAUDE.md 更新
 
-自动检测规则：
+添加以下内容到 CLAUDE.md：
+- 语言规则（强制中文响应）
+- 文档存储规则（`.claude/` 目录）
+- 文档命名规则（`YYYY-MM-DD_类型_名称_v版本.md`）
+- MCP Server 使用规则（time、context7、sequential-thinking、serena）
+
+## 使用案例
+
+### 案例 1：初始化新项目
+
+**场景**：刚创建新前端项目，想使用 Cadence 工作流程。
+
+**操作**：
+```bash
+/cadencing
+```
+
+**执行流程**：
+1. ✅ 检查 npx 可用
+2. ✅ 检查 uvx 可用
+3. ✅ 询问 Serena 路径并验证
+4. ✅ 调用 `/init` 创建 CLAUDE.md
+5. ✅ 添加语言规则（中文响应）
+6. ✅ 添加文档存储规则
+7. ✅ 检测项目类型（自动识别为 frontend）
+8. ✅ 用户确认项目类型
+9. ✅ 添加包管理器规则（pnpm）
+10. ✅ 添加 MCP 使用规则到 CLAUDE.md
+11. ✅ 检测技术栈（JavaScript/TypeScript, pnpm test 等）
+12. ✅ 用户确认技术栈
+13. ✅ 创建 `.mcp.json` 配置文件
+14. ✅ 创建 `.claude/` 目录结构
+
+**输出示例**：
+```
+✅ 项目初始化完成！
+
+项目类型：Frontend
+编程语言：TypeScript
+包管理器：pnpm
+测试命令：pnpm test
+Lint命令：pnpm lint
+格式化命令：pnpm format
+MCP服务器：time, context7, sequential-thinking, serena
+MCP配置：.mcp.json（项目级别）
+目录结构：已创建 .claude/ 子目录
+
+建议下一步：
+1. 快速流程：/quick-flow（4步，1-2小时）
+2. 完整流程：/full-flow（8步，1-2天）
+3. 探索流程：/exploration-flow（4步，2-4小时）
+```
+
+### 案例 2：已有 CLAUDE.md 的项目
+
+**场景**：项目已有 CLAUDE.md，想添加 Cadence 配置。
+
+**操作**：
+```bash
+/cadencing --skip-init
+```
+
+### 案例 3：手动指定 Serena 路径
+
+**场景**：Serena 在非默认位置。
+
+**操作**：
+```bash
+# macOS/Linux
+/cadencing --serena-path ~/Documents/serena
+
+# Windows
+/cadencing --serena-path "C:\Users\name\Documents\serena"
+```
+
+### 案例 4：跳过前置条件检查
+
+**场景**：已经确认前置条件满足。
+
+**操作**：
+```bash
+/cadencing --skip-checks
+```
+
+## 项目类型检测
 
 | 项目类型 | 检测条件 |
 |---------|---------|
@@ -175,10 +263,21 @@ MCP服务器：time, serena
 
 | 问题 | 恢复方法 |
 |------|---------|
+| npx 未找到 | 安装 Node.js：`https://nodejs.org/` |
+| uvx 未找到 | 安装 uv：`curl -LsSf https://astral.sh/uv/install.sh \| sh` |
+| Serena 路径不存在 | 克隆仓库：`git clone https://github.com/orisenbazuru/serena.git` |
 | CLAUDE.md 已存在 | 询问：覆盖、合并或取消 |
+| .mcp.json 已存在 | 询问：覆盖、合并或取消 |
 | 技术栈检测不准确 | 使用 `--project-type` 手动指定 |
-| MCP 配置失败 | 提供手动配置说明 |
 | 项目类型检测失败 | 默认为 "other" 并请求手动指定 |
+
+## 跨平台支持
+
+| 系统 | Serena 路径示例 | 说明 |
+|------|----------------|------|
+| **macOS** | `/Users/name/serena` | 支持 `~` 展开 |
+| **Linux** | `/home/name/serena` | 支持 `~` 展开 |
+| **Windows** | `C:\Users\name\serena` | 使用双反斜杠 `\\` |
 
 ## 最佳实践
 
@@ -190,21 +289,21 @@ MCP服务器：time, serena
 
 技术栈和项目类型检测后，务必检查并确认结果是否正确。
 
-### 3. 跨平台兼容
+### 3. 准备好 Serena
 
-初始化会自动适配不同平台（macOS/Linux/Windows）。
+在使用 cadencing 前，确保 Serena 已克隆到本地并知道其路径。
 
-### 4. 幂等性
+### 4. 不要跳过检查（除非必要）
 
-重复运行 `/cadencing` 是安全的，不会重复配置。
+除非有特殊需求，否则不要跳过前置条件检查。
 
-### 5. 完整流程
+### 5. 项目级别 MCP 配置
 
-除非有特殊需求，否则不要跳过任何检查清单项。
+cadencing 创建的 `.mcp.json` 是项目级别的配置，不影响其他项目。
 
 ## 初始化后
 
-初始化完成后，建议选择以下工作流程：
+初始化完成后，建议使用以下工作流程：
 
 1. **快速流程** — `/quick-flow`
    - 4 个步骤

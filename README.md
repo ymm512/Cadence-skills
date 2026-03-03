@@ -128,7 +128,7 @@ Cadence 提供 3 种流程模式，适应不同的开发场景：
 ### 元 Skills（3个）
 
 - **using-cadence** - Cadence Skills 系统使用指南 [📖 详细指南](readmes/skills/using-cadence.md)
-- **cadencing** - 项目初始化，将现有项目配置为 Cadence 管理的项目 [📖 详细指南](readmes/skills/cadencing.md)
+- **cadencing** - 项目初始化，配置环境、规则、文档结构和技术栈 [📖 详细指南](readmes/skills/cadencing.md)
 - **cad-load** - 项目上下文加载 [📖 详细指南](readmes/skills/cad-load.md)
 
 **📖 [查看所有 Skills 详细指南](readmes/skills/README.md)**
@@ -201,7 +201,9 @@ Cadence 提供 3 种流程模式，适应不同的开发场景：
 ### 6. 新项目先初始化
 
 - 使用 `cadencing` Skill 初始化项目
-- 自动配置环境、规则、文档结构和技术栈
+- 自动检查前置条件（npx、uvx、serena）
+- 配置环境、规则、文档结构和技术栈
+- 创建项目级别的 `.mcp.json` MCP 配置
 - 确保 Cadence 工作流程正常运行
 
 ## 技术亮点
