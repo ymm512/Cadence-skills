@@ -70,6 +70,8 @@ uvx --version
 9. **添加 MCP 配置** — 在项目根目录创建 `.mcp.json` 配置
 10. **创建目录结构** — 创建 `.claude/` 子目录
 
+**下一步（必须）**：执行 `/cad-load` 加载项目上下文和记忆
+
 ## 流程图
 
 ```dot
@@ -103,7 +105,7 @@ digraph cadencing {
 }
 ```
 
-**终端状态是初始化完成。** 展示已配置内容的摘要，并建议下一步（quick-flow、full-flow 或 exploration-flow）。
+**终端状态是初始化完成。** 展示已配置内容的摘要，并建议下一步：必须先执行 `/cad-load` 加载项目上下文，然后选择工作流程（quick-flow、full-flow 或 exploration-flow）。
 
 ## 处理流程
 
@@ -329,8 +331,23 @@ uvx --version
 - `.mcp.json` 配置路径
 - 已创建的目录
 
-**下一步：**
-建议三个工作流选项：
+**下一步（必须）：**
+
+### 1. 加载项目上下文 — `/cad-load`（必须）
+
+`/cadencing` 完成后，**必须先执行 `/cad-load`** 来加载项目上下文和记忆：
+
+- 恢复项目会话状态
+- 加载 Serena MCP 记忆
+- 激活项目配置
+- 准备开发环境
+
+> **注意**：`/cad-load` 是 `/cadencing` 后的必需步骤，不加载上下文将无法使用 Cadence 的完整功能。
+
+### 2. 选择工作流程
+
+加载完成后，可以选择以下工作流程：
+
 1. **Quick flow** — `/cadence:quick-flow` 快速开发（4 步）
 2. **Full flow** — `/cadence:full-flow` 完整流程（8 步）
 3. **Exploration flow** — `/cadence:exploration-flow` 技术探索（4 步）

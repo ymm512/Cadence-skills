@@ -283,11 +283,77 @@ uvx --version
 
 ---
 
+### 8. 更新初始化完成后的下一步指引
+
+**修改前：**
+- 初始化完成后直接建议三个工作流选项（quick-flow、full-flow、exploration-flow）
+
+**修改后：**
+- `/cadencing` 完成后，**必须先执行 `/cad-load`** 来加载项目上下文和记忆
+- 然后再选择工作流程
+
+**详细说明：**
+
+#### 8.1 `/cad-load` 的作用
+
+`/cad-load` 是 `/cadencing` 后的必需步骤，用于：
+
+- 恢复项目会话状态
+- 加载 Serena MCP 记忆
+- 激活项目配置
+- 准备开发环境
+
+> **注意**：不加载上下文将无法使用 Cadence 的完整功能。
+
+#### 8.2 两阶段流程
+
+**第一阶段：加载项目上下文（必须）**
+```
+/cadencing 完成 → /cad-load → 加载上下文和记忆
+```
+
+**第二阶段：选择工作流程**
+- **Quick flow** — `/cadence:quick-flow` 快速开发（4 步）
+- **Full flow** — `/cadence:full-flow` 完整流程（8 步）
+- **Exploration flow** — `/cadence:exploration-flow` 技术探索（4 步）
+
+#### 8.3 检查清单更新
+
+在 10 个步骤后添加明确提示：
+```
+**下一步（必须）**：执行 `/cad-load` 加载项目上下文和记忆
+```
+
+#### 8.4 输出示例更新
+
+```
+✅ 项目初始化完成！
+
+项目类型：Frontend
+编程语言：TypeScript
+包管理器：pnpm
+测试命令：pnpm test
+Lint命令：pnpm lint
+格式化命令：pnpm format
+MCP服务器：time, context7, sequential-thinking, serena
+MCP配置：.mcp.json（项目级别）
+目录结构：已创建 .claude/ 子目录
+
+建议下一步：
+1. 加载项目上下文：/cad-load（恢复会话、加载记忆）
+2. 快速流程：/quick-flow（4步，1-2小时）
+3. 完整流程：/full-flow（8步，1-2天）
+4. 探索流程：/exploration-flow（4步，2-4小时）
+```
+
+---
+
 ## 核心原则补充
 
 - **前置条件检查** — 必须先验证 npx、uvx、serena 路径
 - **cadencing 阶段不使用 Serena** — 虽然配置 Serena MCP，但不使用 Serena 记录内存或检查点
 - **项目级别 MCP 配置** — 使用 `.mcp.json` 而非全局配置
+- **`/cadencing` 后必须 `/cad-load`** — 加载项目上下文是初始化流程的必要步骤
 
 ---
 
