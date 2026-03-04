@@ -106,25 +106,17 @@ graph TB
 | `patterns/*` | P2 | 项目模式和最佳实践 |
 
 **加载策略**:
-```javascript
-// 1. 列出所有可用记忆
-memories = list_memories()
 
-// 2. 按优先级读取关键记忆
-read_memory("project_overview")
-read_memory("progress/cadence-skills-v2.4-mvp")
+1. **列出所有可用记忆**：使用 `list_memories()` 获取记忆列表
 
-// 3. 读取最新的 checkpoint（按时间排序）
-latest_checkpoints = memories.filter(m => m.startsWith("checkpoint-"))
-                             .sort()
-                             .slice(0, 3)
-latest_checkpoints.forEach(cp => read_memory(cp))
+2. **按优先级读取关键记忆**：
+   - P0 必读：`project_overview`、`progress/cadence-skills-v2.4-mvp`
+   - P1 推荐：最新的 3 个 `checkpoint-*` 记忆（按时间倒序）
+   - P2 可选：最新的 2 个 `sessions/*` 记忆
 
-// 4. 可选：读取最新的会话记录
-latest_sessions = memories.filter(m => m.startsWith("sessions/"))
-                         .sort()
-                         .slice(0, 2)
-```
+3. **过滤规则**：
+   - Checkpoint：筛选以 `checkpoint-` 开头的记忆，按名称排序，取前 3 个
+   - Sessions：筛选以 `sessions/` 开头的记忆，按名称排序，取前 2 个
 
 **输出**:
 ```
@@ -173,30 +165,22 @@ git status --short
 3. 显示项目状态摘要
 
 **保存会话记录**:
-```javascript
-write_memory({
-  memory_name: `sessions/${date}_session_loaded`,
-  content: {
-    loaded_at: new Date().toISOString(),
-    project: "Cadence-skills",
-    version: "v2.4 MVP",
-    status: "100% (7/7 schemes)",
-    git_branch: "main",
-    latest_commit: "95e29d5",
-    loaded_memories: [
-      "project_overview",
-      "progress/cadence-skills-v2.4-mvp",
-      "checkpoint-2026-03-02-scheme6-implementation-complete",
-      "sessions/2026-03-02_scheme7_completion"
-    ],
-    next_steps: [
-      "整体测试所有 Skills 和 Commands",
-      "文档完善",
-      "发布 v2.4 MVP"
-    ]
-  }
-})
-```
+
+使用 Serena `write_memory` 保存会话加载记录：
+
+- **记忆名称**：`sessions/${date}_session_loaded`
+- **内容结构**：
+
+| 字段 | 类型 | 示例值 | 说明 |
+|------|------|--------|------|
+| loaded_at | string | 2026-03-04T10:30:00Z | 加载时间戳（ISO 8601） |
+| project | string | "Cadence-skills" | 项目名称 |
+| version | string | "v2.4 MVP" | 项目版本 |
+| status | string | "100% (7/7 schemes)" | 完成状态 |
+| git_branch | string | "main" | 当前 Git 分支 |
+| latest_commit | string | "95e29d5" | 最新提交 hash |
+| loaded_memories | array | ["project_overview", ...] | 已加载的记忆列表 |
+| next_steps | array | ["整体测试...", ...] | 下一步计划 |
 
 **项目状态摘要**:
 ```

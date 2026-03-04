@@ -120,19 +120,19 @@ graph TB
 
 ##### 保存 Checkpoint
 
-```javascript
-write_memory({
-  memory_name: `checkpoint-exploration-flow-brainstorm-${timestamp}`,
-  content: {
-    phase: "brainstorm",
-    flow: "exploration-flow",
-    iteration: 1,
-    status: "completed",
-    output: "探索PRD路径",
-    timestamp: new Date().toISOString()
-  }
-})
-```
+使用 Serena `write_memory` 保存检查点：
+
+- **记忆名称**：`checkpoint-exploration-flow-brainstorm-${timestamp}`
+- **内容结构**：
+
+| 字段 | 类型 | 示例值 | 说明 |
+|------|------|--------|------|
+| phase | string | "brainstorm" | 当前阶段 |
+| flow | string | "exploration-flow" | 流程类型 |
+| iteration | number | 1 | 迭代次数 |
+| status | string | "completed" | 完成状态 |
+| output | string | "探索PRD路径" | 产物路径 |
+| timestamp | string | ISO 8601 | 时间戳（自动生成） |
 
 ---
 
@@ -377,17 +377,18 @@ graph TD
    - 返回 Phase 4
 
 3. 保存迭代记录
-   ```javascript
-   write_memory({
-     memory_name: `exploration-iteration-${timestamp}`,
-     content: {
-       iteration: N,
-       adjustments: ["调整1", "调整2"],
-       next_goals: ["目标1", "目标2"],
-       timestamp: new Date().toISOString()
-     }
-   })
-   ```
+
+   使用 Serena `write_memory` 保存迭代信息：
+
+   - **记忆名称**：`exploration-iteration-${timestamp}`
+   - **内容结构**：
+
+   | 字段 | 类型 | 示例值 | 说明 |
+   |------|------|--------|------|
+   | iteration | number | N | 当前迭代次数 |
+   | adjustments | array | ["调整1", "调整2"] | 本次调整内容 |
+   | next_goals | array | ["目标1", "目标2"] | 下次目标 |
+   | timestamp | string | ISO 8601 | 时间戳（自动生成） |
 
 ---
 

@@ -132,18 +132,18 @@ graph TB
 
 ##### 保存 Checkpoint
 
-```javascript
-write_memory({
-  memory_name: `checkpoint-quick-flow-requirement-${timestamp}`,
-  content: {
-    phase: "requirement",
-    flow: "quick-flow",
-    status: "completed",
-    output: "需求文档路径",
-    timestamp: new Date().toISOString()
-  }
-})
-```
+使用 Serena `write_memory` 保存检查点：
+
+- **记忆名称**：`checkpoint-quick-flow-requirement-${timestamp}`
+- **内容结构**：
+
+| 字段 | 类型 | 示例值 | 说明 |
+|------|------|--------|------|
+| phase | string | "requirement" | 当前阶段 |
+| flow | string | "quick-flow" | 流程类型 |
+| status | string | "completed" | 完成状态 |
+| output | string | "需求文档路径" | 产物路径 |
+| timestamp | string | ISO 8601 | 时间戳（自动生成） |
 
 ---
 

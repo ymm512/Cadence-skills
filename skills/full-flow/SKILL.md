@@ -119,17 +119,17 @@ PRD 已生成：
 
 ##### 保存 Checkpoint
 
-```javascript
-write_memory({
-  memory_name: `checkpoint-full-flow-brainstorm-${timestamp}`,
-  content: {
-    phase: "brainstorm",
-    status: "completed",
-    output: "PRD文档路径",
-    timestamp: new Date().toISOString()
-  }
-})
-```
+使用 Serena `write_memory` 保存检查点：
+
+- **记忆名称**：`checkpoint-full-flow-brainstorm-${timestamp}`
+- **内容结构**：
+
+| 字段 | 类型 | 示例值 | 说明 |
+|------|------|--------|------|
+| phase | string | "brainstorm" | 当前阶段 |
+| status | string | "completed" | 完成状态 |
+| output | string | "PRD文档路径" | 产物路径 |
+| timestamp | string | ISO 8601 | 时间戳（自动生成） |
 
 ---
 
