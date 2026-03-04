@@ -150,6 +150,13 @@ Cadence 提供 3 种流程模式，适应不同的开发场景：
 - **using-git-worktrees** - 创建隔离环境，避免冲突
 - **subagent-development** - 代码实现 + 单元测试（3 个 Subagent 角色）
 
+**进度追踪阶段**
+- **status** - 查看项目进度，计算完成百分比，显示时间统计 [📖 详细指南](readmes/skills/status.md)
+- **checkpoint** - 创建检查点，保存完整上下文，支持恢复 [📖 详细指南](readmes/skills/checkpoint.md)
+- **resume** - 恢复中断的工作流程，重建上下文 [📖 详细指南](readmes/skills/resume.md)
+- **report** - 生成进度报告，支持日报和周报 [📖 详细指南](readmes/skills/report.md)
+- **monitor** - 查看状态快照（一次性，非实时）[📖 详细指南](readmes/skills/monitor.md)
+
 **📖 [查看所有 Skills 详细指南](readmes/skills/README.md)**
 
 ### 流程 Skills（3个）
@@ -187,13 +194,13 @@ Cadence 提供 3 种流程模式，适应不同的开发场景：
 ### 流程 Commands（6个）
 
 - `/worktree` - 创建 Git Worktree 隔离环境
-- `/status` - 查看当前进度 [📖 详细指南](readmes/commands/status.md)
-- `/resume` - 恢复之前的进度 [📖 详细指南](readmes/commands/resume.md)
-- `/checkpoint` - 创建检查点
-- `/report` - 生成进度报告
-- `/monitor` - 实时监控进度
+- `/status` - 查看当前进度 [📖 详细指南](readmes/skills/status.md)
+- `/resume` - 恢复之前的进度 [📖 详细指南](readmes/skills/resume.md)
+- `/checkpoint` - 创建检查点 [📖 详细指南](readmes/skills/checkpoint.md)
+- `/report` - 生成进度报告 [📖 详细指南](readmes/skills/report.md)
+- `/monitor` - 状态快照（非实时）[📖 详细指南](readmes/skills/monitor.md)
 
-**📖 [查看所有 Commands 详细指南](readmes/commands/README.md)**
+**📖 [查看所有 Commands 详细指南](readmes/skills/README.md)**
 
 ### 元 Commands（1个）
 
