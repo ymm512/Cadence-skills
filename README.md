@@ -16,7 +16,7 @@ Cadence 从你启动编码助手的那一刻开始工作。当它发现你正在
 
 ## 安装
 
-### Claude Code（通过插件市场）
+### 方式 1: 通过插件市场安装（推荐）
 
 在 Claude Code 中，首先注册市场：
 
@@ -29,6 +29,41 @@ Cadence 从你启动编码助手的那一刻开始工作。当它发现你正在
 ```bash
 /plugin install cadence@cadence-skills-marketplace
 ```
+
+### 方式 2: 通过 Git 代码直接安装
+
+如果你想直接从源代码安装，或者需要自定义修改，可以使用以下方式：
+
+1. **克隆仓库到本地**：
+
+```bash
+# 克隆到任意目录（推荐）
+git clone https://github.com/michaelChe956/Cadence-skills.git /path/to/Cadence-skills
+
+# 或者克隆到 Claude Code 的 skills 目录
+git clone https://github.com/michaelChe956/Cadence-skills.git ~/.claude/skills/Cadence-skills
+```
+
+2. **在 Claude Code 中安装**：
+
+```bash
+# 使用本地路径安装
+/plugin install /path/to/Cadence-skills
+
+# 或者如果克隆到 skills 目录
+/plugin install ~/.claude/skills/Cadence-skills
+```
+
+3. **更新方式**：
+
+当你需要更新时，只需在克隆的目录中拉取最新代码：
+
+```bash
+cd /path/to/Cadence-skills
+git pull origin main
+```
+
+然后重启 Claude Code 即可生效。
 
 ### 验证安装
 
