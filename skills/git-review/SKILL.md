@@ -1,6 +1,6 @@
 ---
 name: git-review
-description: Use when reviewing git commits for code quality, security, performance, or standards compliance on demand
+description: Use when reviewing git commits on demand - call /git-review command or manually apply 5-step workflow to check code quality, security, performance, and standards compliance
 ---
 
 # Git Review Skill
@@ -10,6 +10,35 @@ description: Use when reviewing git commits for code quality, security, performa
 按需审查 Git 提交记录，使用静态规则 + AI 深度分析的混合模式。
 
 **核心原则**: 静态规则快速检测常见问题，AI 深度分析复杂场景，生成可执行的结构化报告。
+
+## Quick Start
+
+**方法 1: 使用命令（推荐）**
+
+如果 `/git-review` 命令可用，直接调用：
+
+```bash
+# 审查最近 10 个提交
+/git-review -n 10
+
+# 审查指定日期范围
+/git-review --since "2026-03-01" --until "2026-03-04"
+
+# 审查某个分支
+/git-review --branch main -n 20
+```
+
+**方法 2: 手动执行（fallback）**
+
+如果命令不可用，手动执行 **5 步审查流程**：
+
+1. **获取提交**: `git log -n 10 --pretty=format:"%H|%an|%ad|%s" --date=short`
+2. **获取差异**: `git diff <base-sha>..<head-sha>`
+3. **静态规则**: 应用 `analyzers/static-rules.md` 中的 23 条规则
+4. **AI 分析**: 参考 `analyzers/ai-prompts.md` 进行深度分析
+5. **生成报告**: 使用 `templates/review-report.md` 模板
+
+**重要**: 手动审查消耗更多 tokens (~55,000) 和时间 (~7 分钟)，建议优先使用命令。
 
 ## When to Use
 
@@ -182,7 +211,32 @@ git diff {commit_sha}^ {commit_sha}
 
 ## Common Mistakes
 
-### 1. 不指定审查范围
+### 1. 不使用命令而手动审查
+
+❌ **错误**:
+- 知道有 `/git-review` 命令但不用
+- 手动执行 `git log` 和 `git diff`
+- 花费大量 tokens 和时间手动审查
+
+✅ **正确**:
+```bash
+# 如果命令可用，直接使用
+/git-review -n 10
+
+# 如果命令不可用，再手动执行 5 步流程
+```
+
+**原因**:
+- 手动审查消耗 ~55,000 tokens，使用命令预计仅需 ~10,000 tokens（-82%）
+- 手动审查花费 ~7 分钟，使用命令预计仅需 ~10 秒（-96%）
+- 命令保证规则覆盖一致性，手动审查依赖经验
+
+**何时手动审查**:
+- `/git-review` 命令不可用
+- 需要深度定制审查流程
+- 学习和理解审查机制
+
+### 2. 不指定审查范围
 
 ❌ **错误**:
 ```bash
