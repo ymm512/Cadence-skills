@@ -1,6 +1,6 @@
 ---
 name: git-review
-description: Use when reviewing git commits for code quality, security vulnerabilities, performance issues, or project standards compliance in on-demand scenarios
+description: Use when reviewing git commits for code quality, security, performance, or standards compliance on demand
 ---
 
 # Git Review Skill
@@ -88,6 +88,32 @@ git diff {commit_sha}^ {commit_sha}
 
 ## Usage Examples
 
+### Quick Reference
+
+**命令选项**:
+
+| 选项 | 简写 | 说明 | 示例 |
+|------|------|------|------|
+| `--since <date>` | - | 审查从指定日期开始 | `--since "2026-03-01"` |
+| `--until <date>` | - | 审查到指定日期结束 | `--until "2026-03-04"` |
+| `--number <count>` | `-n` | 审查最近 N 个提交 | `-n 10` |
+| `--author <name>` | - | 仅审查指定作者 | `--author "Alice"` |
+| `--branch <name>` | - | 仅审查指定分支 | `--branch main` |
+
+**常见场景**:
+- 每日审查: `/git-review --since "yesterday"`
+- 发布前审查: `/git-review -n 50`
+- 分支审查: `/git-review --branch feature-xyz --since "2026-03-01"`
+- 作者审查: `/git-review --author "Alice" --since "today"`
+
+**问题严重级别**:
+
+| 级别 | 图标 | 处理优先级 | 典型类型 |
+|------|------|----------|---------|
+| Critical | 🔴 | 立即修复，阻止合并 | 安全漏洞、严重 Bug |
+| Important | 🟡 | 优先修复，建议合并前完成 | 性能问题、代码质量 |
+| Minor | 🟢 | 可延后到后续迭代 | 规范问题、建议改进 |
+
 ### Example 1: Review Last 10 Commits
 
 ```bash
@@ -153,6 +179,81 @@ git diff {commit_sha}^ {commit_sha}
 ### Report Template
 
 自定义报告格式: `skills/git-review/templates/review-report.md`
+
+## Common Mistakes
+
+### 1. 不指定审查范围
+
+❌ **错误**:
+```bash
+/git-review  # 无参数
+```
+
+✅ **正确**:
+```bash
+/git-review -n 10
+# 或
+/git-review --since "2026-03-01"
+```
+
+**原因**: 必须指定 `--since` 或 `-n` 中的至少一个，否则无法确定审查范围。
+
+### 2. 日期格式错误
+
+❌ **错误**:
+```bash
+/git-review --since "03/01/2026"  # 错误格式
+/git-review --since "March 1"     # 错误格式
+```
+
+✅ **正确**:
+```bash
+/git-review --since "2026-03-01"  # YYYY-MM-DD
+```
+
+**原因**: Git log 命令要求 ISO 8601 日期格式（YYYY-MM-DD）。
+
+### 3. 忽略 Critical Issues
+
+❌ **错误**:
+- 只看问题数量，不修复 Critical Issues
+- 认为 "稍后再修复" Critical Issues
+- 在 Critical Issues 未修复的情况下合并代码
+
+✅ **正确**:
+- Critical Issues **必须立即修复**
+- Critical Issues **阻止合并**
+- 无法修复时，应该回滚代码或寻求帮助
+
+**原因**: Critical Issues 通常是安全漏洞（SQL 注入、XSS）或严重 Bug，可能导致数据泄露或系统崩溃。
+
+### 4. 过度依赖 AI 分析
+
+❌ **错误**:
+- 认为 AI 会捕获所有问题
+- 忽略静态规则的结果
+- AI 不可用时放弃审查
+
+✅ **正确**:
+- 静态规则 + AI 是互补的
+- AI 不可用时，静态规则仍然有效
+- AI 有调用次数限制（10 次/审查），优先用于复杂问题
+
+**原因**: 静态规则快速但深度有限，AI 深度强但有成本限制，混合模式才能达到最佳效果。
+
+### 5. 不处理 Minor Issues
+
+❌ **错误**:
+- 认为 Minor Issues 不重要
+- 长期忽略 Minor Issues
+- 让 Minor Issues 累积成技术债
+
+✅ **正确**:
+- Minor Issues 虽然不紧急，但应该计划修复
+- 定期审查和清理 Minor Issues
+- Minor Issues 累积会影响代码可维护性
+
+**原因**: Minor Issues 通常是命名规范、注释缺失等，虽然不紧急，但长期累积会降低代码质量。
 
 ## Integration Points
 
