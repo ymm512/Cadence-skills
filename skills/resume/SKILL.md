@@ -85,7 +85,7 @@ for memory_name in memories:
 
 **Format session list:**
 ```markdown
-## 可恢复的会话
+## Resumable Sessions
 
 {for i, session in enumerate(incomplete_sessions, 1)}
 {i}. **{session['project_name']}** ({session['flow_type']})
@@ -101,7 +101,7 @@ for memory_name in memories:
 
 **Example output:**
 ```
-## 可恢复的会话
+## Resumable Sessions
 
 1. **User Authentication System** (full-flow)
    - 当前进度: 37.5% (3/8 节点)
@@ -224,19 +224,19 @@ if next_phase:
 ```markdown
 ✅ 会话已恢复!
 
-## 恢复信息
+## Recovery Information
 - **项目**: {project_name}
 - **流程**: {flow_type}
 - **恢复点**: {current_phase} ({checkpoint_timestamp})
 - **Git 分支**: {git_branch}
 - **下次行动**: {next_phase}
 
-## 上下文状态
+## Context Status
 - ✅ Git 分支已切换
 - ✅ TodoWrite 任务已恢复 ({task_count} 个任务)
 - ✅ 项目上下文已加载
 
-## 继续执行
+## Continue Execution
 准备继续 **{next_phase}** 阶段...
 ```
 
@@ -315,7 +315,7 @@ def scan_incomplete_sessions() -> List[Dict]:
 def display_sessions(sessions: List[Dict]) -> None:
     """Display resumable sessions to user."""
 
-    print("## 可恢复的会话\n")
+    print("## Resumable Sessions\n")
 
     for i, session in enumerate(sessions, 1):
         print(f"{i}. **{session['project_name']}** ({session['flow_type']})")
