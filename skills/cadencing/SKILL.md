@@ -45,7 +45,7 @@ uvx --version
 **验证路径：**
 - 检查路径是否存在
 - 检查路径下是否有 `pyproject.toml` 或 `setup.py`
-- 如果路径不存在，提示用户先克隆 Serena：`git clone https://github.com/orisenbazuru/serena.git`
+- 如果路径不存在，提示用户先克隆 Serena：`git clone https://github.com/oraios/serena.git`
 
 ### 4. 跨平台路径处理
 
@@ -369,7 +369,7 @@ uvx --version
 |------|----------|
 | npx 未找到 | 提示安装 Node.js：`https://nodejs.org/` |
 | uvx 未找到 | 提示安装 uv：`curl -LsSf https://astral.sh/uv/install.sh \| sh` |
-| Serena 路径不存在 | 提示克隆仓库：`git clone https://github.com/orisenbazuru/serena.git` |
+| Serena 路径不存在 | 提示克隆仓库：`git clone https://github.com/oraios/serena.git` |
 | CLAUDE.md 已存在 | 询问：覆盖、合并或取消 |
 | 技术栈检测不准确 | 通过 `--project-type` 允许手动指定 |
 | .mcp.json 已存在 | 询问：覆盖、合并或取消 |

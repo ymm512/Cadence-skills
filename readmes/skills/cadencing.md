@@ -41,7 +41,7 @@ uvx --version
 
 **克隆命令：**
 ```bash
-git clone https://github.com/orisenbazuru/serena.git
+git clone https://github.com/oraios/serena.git
 ```
 
 ## 如何使用
@@ -268,7 +268,7 @@ MCP配置：.mcp.json（项目级别）
 |------|---------|
 | npx 未找到 | 安装 Node.js：`https://nodejs.org/` |
 | uvx 未找到 | 安装 uv：`curl -LsSf https://astral.sh/uv/install.sh \| sh` |
-| Serena 路径不存在 | 克隆仓库：`git clone https://github.com/orisenbazuru/serena.git` |
+| Serena 路径不存在 | 克隆仓库：`git clone https://github.com/oraios/serena.git` |
 | CLAUDE.md 已存在 | 询问：覆盖、合并或取消 |
 | .mcp.json 已存在 | 询问：覆盖、合并或取消 |
 | 技术栈检测不准确 | 使用 `--project-type` 手动指定 |
