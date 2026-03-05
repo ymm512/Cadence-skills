@@ -69,6 +69,132 @@ description: "快速开发流程 - 包含4个核心节点的精简流程（v2.4 
 
 ## The Process
 
+### 流程初始化（开始前自动执行）
+
+**重要**: 流程开始前，自动执行以下初始化，无需用户干预：
+
+#### Step 1: 获取项目信息
+
+- 使用 `git rev-parse --show-toplevel` 获取项目根目录
+- 使用 `git rev-parse --abbrev-ref HEAD` 获取当前分支
+- 使用 `basename $(git rev-parse --show-toplevel)` 获取项目名称
+- 生成 project_id（使用项目名称的 hash 或简化版本）
+
+#### Step 2: 创建 Progress 记录
+
+使用 Serena `write_memory` 创建初始进度记录：
+
+- **记忆名称**: `progress-quick-flow-{feature_name}`
+- **内容结构**:
+  ```json
+  {
+    "metadata": {
+      "version": "1.0",
+      "project_id": "{project_id}",
+      "project_name": "{project_name}",
+      "flow_type": "quick-flow",
+      "feature_name": "{feature_name}",
+      "start_time": "{ISO8601_timestamp}",
+      "git_branch": "{current_branch}"
+    },
+    "phases": [
+      {
+        "phase_name": "requirement",
+        "status": "pending",
+        "start_time": null,
+        "end_time": null,
+        "duration_minutes": 0,
+        "output": null
+      },
+      {
+        "phase_name": "plan",
+        "status": "pending",
+        "start_time": null,
+        "end_time": null,
+        "duration_minutes": 0,
+        "output": null
+      },
+      {
+        "phase_name": "git-worktrees",
+        "status": "pending",
+        "start_time": null,
+        "end_time": null,
+        "duration_minutes": 0,
+        "output": null
+      },
+      {
+        "phase_name": "subagent-development",
+        "status": "pending",
+        "start_time": null,
+        "end_time": null,
+        "duration_minutes": 0,
+        "output": null
+      }
+    ],
+    "overall_progress": {
+      "percentage": 0,
+      "completed_phases": 0,
+      "total_phases": 4
+    },
+    "time_stats": {
+      "start_time": "{ISO8601_timestamp}",
+      "estimated_duration_minutes": 75,
+      "elapsed_minutes": 0,
+      "estimated_remaining_minutes": 75
+    }
+  }
+  ```
+
+#### Step 3: 创建查询索引
+
+使用 Serena `write_memory` 创建查询索引：
+
+- **记忆名称**: `index-quick-flow`
+- **内容结构**:
+  ```json
+  {
+    "flow_type": "quick-flow",
+    "active_sessions": [
+      {
+        "project_id": "{project_id}",
+        "feature_name": "{feature_name}",
+        "current_phase": "none",
+        "progress": 0,
+        "start_time": "{ISO8601_timestamp}",
+        "last_update": "{ISO8601_timestamp}",
+        "resume_command": "/resume quick-flow-{feature_name}"
+      }
+    ]
+  }
+  ```
+
+#### Step 4: 显示初始化完成
+
+向用户展示初始化结果：
+
+```
+✅ Quick Flow 初始化完成
+
+📋 项目信息:
+- 项目名称: {project_name}
+- 项目ID: {project_id}
+- Git分支: {current_branch}
+- 功能名称: {feature_name}
+
+📊 流程信息:
+- 流程类型: quick-flow
+- 总节点数: 4
+- 预估时间: 45-140分钟
+
+💾 初始化记录:
+- Progress: progress-quick-flow-{feature_name}
+- 索引: index-quick-flow
+
+🚀 准备开始 Phase 1: Requirement（需求分析）
+```
+
+---
+
 ```mermaid
 graph TB
     A[开始] --> B[Phase 1: 需求分析]
@@ -130,21 +256,6 @@ graph TB
 └── ❌ 不满意 → 重新 Requirement
 ```
 
-##### 保存 Checkpoint
-
-使用 Serena `write_memory` 保存检查点：
-
-- **记忆名称**：`checkpoint-quick-flow-requirement-${timestamp}`
-- **内容结构**：
-
-| 字段 | 类型 | 示例值 | 说明 |
-|------|------|--------|------|
-| phase | string | "requirement" | 当前阶段 |
-| flow | string | "quick-flow" | 流程类型 |
-| status | string | "completed" | 完成状态 |
-| output | string | "需求文档路径" | 产物路径 |
-| timestamp | string | ISO 8601 | 时间戳（自动生成） |
-
 ---
 
 #### Phase 2: 实现计划（5-10分钟）
@@ -177,8 +288,6 @@ graph TB
 └── ❌ 不满意 → 重新 Plan
 ```
 
-##### 保存 Checkpoint
-
 ---
 
 #### Phase 3: 环境准备（5分钟）
@@ -207,8 +316,6 @@ Worktree 已创建：
 ├── ⚠️ 需要调整 → 重新 Git Worktrees
 └── ❌ 不满意 → 重新 Git Worktrees
 ```
-
-##### 保存 Checkpoint
 
 ---
 
@@ -248,7 +355,121 @@ Worktree 已创建：
 └── ❌ 不满意 → 继续修复
 ```
 
-##### 保存最终 Checkpoint
+##### 保存最终 Checkpoint（自动触发4步流程）
+
+**Step 1: 调用 checkpoint skill 保存检查点**
+
+使用 Skill tool，调用 checkpoint skill：
+
+- **Skill 名称**：`checkpoint`
+- **参数**：
+  ```json
+  {
+    "flow": "quick-flow",
+    "phase": "subagent-development",
+    "status": "completed",
+    "output": "代码实现路径（如：src/features/avatar-upload/）"
+  }
+  ```
+- **说明**：明确告诉 Claude 调用 Skill tool，skill='checkpoint'，传入必需参数
+
+**Step 2: 更新 Progress 记录**
+
+使用 Serena `write_memory` 更新进度记录：
+
+- **记忆名称**：`progress/quick-flow-{feature-name}`
+- **更新内容**：
+  ```json
+  {
+    "current_phase": "subagent-development",
+    "completed_phases": ["requirement", "plan", "git-worktrees", "subagent-development"],
+    "phase_details": {
+      "subagent-development": {
+        "status": "completed",
+        "start_time": "2026-03-05T10:35:00Z",
+        "end_time": "2026-03-05T11:25:00Z",
+        "duration_minutes": 50,
+        "tasks_completed": 3,
+        "tasks_total": 3,
+        "test_coverage": "85%",
+        "spec_review_passed": true,
+        "code_quality_review_passed": true,
+        "commits": [
+          "feat: implement avatar upload API",
+          "feat: add unit tests for avatar upload",
+          "feat: integrate avatar upload with user profile"
+        ]
+      }
+    },
+    "overall_progress": "100%",
+    "flow_status": "completed",
+    "estimated_remaining_time": "0分钟"
+  }
+  ```
+
+**Step 3: 更新查询索引**
+
+使用 Serena `write_memory` 更新查询索引：
+
+- **记忆名称**：`index/quick-flow-active`
+- **更新内容**：
+  ```json
+  {
+    "current_phase": "subagent-development",
+    "progress": "100%",
+    "last_update": "2026-03-05T11:25:00Z",
+    "flow_status": "completed"
+  }
+  ```
+
+**Step 4: 显示当前进度**
+
+向用户展示当前进度：
+
+```
+✅ Phase 4/4 已完成：Subagent Development（代码实现+单元测试）
+
+📊 当前进度：
+- 已完成：Requirement (1/4), Plan (2/4), Git Worktrees (3/4), Subagent Development (4/4)
+- 总进度：100% ✅
+
+⏱️ 时间统计：
+- Requirement 耗时：12分钟
+- Plan 耗时：7分钟
+- Git Worktrees 耗时：5分钟
+- Subagent Development 耗时：50分钟
+- 总耗时：74分钟
+
+💾 检查点已保存：
+- Checkpoint ID: checkpoint-quick-flow-subagent-development-20260305-112500
+- Progress 记录: progress/quick-flow-用户头像上传
+- 索引更新: index/quick-flow-active
+
+✅ 所有任务已完成：
+- 完成任务：3/3
+- 测试覆盖率：85%
+- Spec Review: ✅ 通过
+- Code Quality Review: ✅ 通过
+- Git Commits: 3个
+
+🎉 Quick Flow 流程已完成！
+
+项目信息：
+- 功能名称：用户头像上传
+- Git 分支：feature/avatar-upload
+- 工作目录：.worktrees/avatar-upload
+
+输出产物：
+- 需求文档（简化版）：.claude/docs/2026-03-05_需求文档_用户头像上传_v1.0.md
+- 实现计划（简化版）：.claude/designs/2026-03-05_实现计划_用户头像上传_v1.0.md
+- 代码实现：src/features/avatar-upload/
+- 单元测试：src/features/avatar-upload/__tests__/
+
+下一步建议：
+1. 使用 /finish 完成开发分支
+2. 创建 Pull Request
+3. 或继续其他功能开发
+```
 
 ---
 
@@ -497,6 +718,136 @@ Worktree 已创建：
 
 ✅ 快速流程已完成！
 ```
+
+### 流程完成总结（结束后自动执行）
+
+**重要**: 所有节点完成后，自动执行以下总结，无需用户干预：
+
+#### Step 1: 生成 Session Summary
+
+使用 Serena `write_memory` 生成会话总结：
+
+- **记忆名称**: `session-{project_id}-{date}`
+- **内容结构**:
+  ```json
+  {
+    "session_id": "session-{project_id}-{uuid}",
+    "project_id": "{project_id}",
+    "project_name": "{project_name}",
+    "flow_type": "quick-flow",
+    "feature_name": "{feature_name}",
+    "start_time": "{ISO8601_timestamp}",
+    "end_time": "{ISO8601_timestamp}",
+    "duration_minutes": {calculated},
+    "phases": [
+      {
+        "phase_name": "requirement",
+        "status": "completed",
+        "duration_minutes": {calculated},
+        "output": "{output_file}"
+      },
+      // ... 4个节点的完成信息
+    ],
+    "deliverables": {
+      "requirement_doc": "{path}",
+      "plan_doc": "{path}",
+      "code_files": ["{paths}"],
+      "test_files": ["{paths}"]
+    },
+    "quality_metrics": {
+      "test_coverage": "{percentage}",
+      "spec_review": "passed",
+      "code_quality_review": "passed"
+    },
+    "checkpoints_created": ["{uuid1}", "{uuid2}", ...],
+    "git_commits": ["{commit_hash1}", "{commit_hash2}", ...],
+    "git_worktree": {
+      "worktree_path": "{path}",
+      "branch_name": "{branch}",
+      "status": "active"
+    }
+  }
+  ```
+
+#### Step 2: 计算统计数据
+
+从 Progress 记录中提取：
+- 总用时（从 start_time 到 end_time）
+- 完成节点数（4个）
+- 生成的文档列表
+- 创建的 Checkpoint 数量
+- Git commits 数量
+- 测试覆盖率
+- 审查结果
+
+#### Step 3: 更新查询索引
+
+使用 Serena `write_memory` 更新索引：
+
+- **时间索引**: `index-sessions-by-time`
+  ```json
+  {
+    "sessions": [
+      {
+        "session_id": "{session_id}",
+        "project_id": "{project_id}",
+        "date": "{YYYY-MM-DD}",
+        "flow_type": "quick-flow",
+        "feature_name": "{feature_name}",
+        "duration_minutes": {calculated}
+      }
+    ]
+  }
+  ```
+
+- **项目索引**: `index-sessions-by-project`
+  ```json
+  {
+    "projects": {
+      "{project_id}": {
+        "sessions": ["{session_id}"],
+        "total_sessions": {count}
+      }
+    }
+  }
+  ```
+
+#### Step 4: 显示完成报告
+
+向用户展示最终报告：
+
+```
+🎉 Quick Flow 完成！
+
+📊 总体统计:
+- 总用时: {duration}
+- 完成节点: 4/4 (100%)
+- 创建时间: {start_time}
+- 完成时间: {end_time}
+
+📄 交付物:
+- 需求文档: {requirement_doc}
+- 实现计划: {plan_doc}
+- 代码文件: {count} 个
+- 测试文件: {test_count} 个
+
+✅ 质量指标:
+- 测试覆盖率: {coverage}%
+- 规范审查: ✅ 通过
+- 代码质量审查: ✅ 通过
+
+💾 进度追踪:
+- Checkpoints: {checkpoint_count} 个
+- Git Commits: {commit_count} 个
+- Worktree: {worktree_path}
+- 分支: {branch_name}
+
+📝 Session Summary 已保存: session-{project_id}-{date}
+
+🚀 项目开发流程已完成！
+```
+
+---
 
 ## 时间预估
 

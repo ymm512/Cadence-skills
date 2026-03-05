@@ -311,6 +311,85 @@ CLAUDE.md (用户维护)
 | ❌ 在 Plan 阶段识别风险 | ✅ 风险已在 Design Review 阶段识别 |
 | ❌ 时间估计过于乐观 | ✅ 给出合理的时间范围 |
 
+## After the Plan
+
+完成实现计划后，自动触发以下4步逻辑：
+
+### Step 1: 保存实现计划
+
+**触发条件**: 用户确认实现计划合理
+**执行动作**:
+- 保存实现计划到 `.claude/designs/{date}_实现计划_{功能名称}_v1.0.md`
+- 记录保存路径，供后续节点使用
+
+**输出**:
+```
+✅ 实现计划已保存到: .claude/designs/2026-03-05_实现计划_用户认证_v1.0.md
+```
+
+### Step 2: 询问是否进入 Git Worktrees
+
+**触发条件**: 实现计划保存成功
+**执行动作**:
+- 询问用户是否进入 Git Worktrees 阶段
+- 提供两个选项：立即进入 / 暂不进入
+
+**提示信息**:
+```
+📋 实现计划已完成！
+
+是否进入 Git Worktrees 阶段创建隔离开发环境？
+
+1. ✅ 立即进入 - 自动触发 using-git-worktrees
+2. ⏸️ 暂不进入 - 稍后手动触发
+
+请选择（1 或 2）：
+```
+
+### Step 3: 自动触发 Git Worktrees（可选）
+
+**触发条件**: 用户选择"立即进入"
+**执行动作**:
+- 自动触发 `using-git-worktrees` Skill
+- 传递必要的上下文信息：
+  - 功能名称（来自实现计划）
+  - 任务优先级（决定分支创建顺序）
+  - 任务依赖关系（决定分支创建顺序）
+
+**传递的上下文**:
+```yaml
+plan_path: ".claude/designs/2026-03-05_实现计划_用户认证_v1.0.md"
+feature_name: "用户认证"
+tasks:
+  - name: "Task 1: 实现用户注册"
+    priority: "P0"
+  - name: "Task 2: 实现用户登录"
+    priority: "P0"
+  - name: "Task 3: 实现密码加密"
+    priority: "P1"
+```
+
+### Step 4: 等待 Git Worktrees 完成（可选）
+
+**触发条件**: 已触发 Git Worktrees
+**执行动作**:
+- 等待 Git Worktrees 完成环境创建
+- Git Worktrees 完成后，自动提示下一步
+
+**完成提示**:
+```
+✅ Git Worktrees 环境创建完成！
+
+开发环境路径: .worktrees/feature-user-auth/
+分支名称: feature/user-auth
+
+下一步：
+- 手动触发 Subagent Development 开始代码实现
+- 或使用 /resume 命令恢复开发流程
+```
+
+---
+
 ## Integration
 
 ### 前置依赖

@@ -91,6 +91,108 @@ graph TB
     K --> L[更新进度]
 ```
 
+### 流程初始化（开始前自动执行）
+
+**重要**: 流程开始前， 自动执行以下初始化，无需用户干预：
+
+#### Step 1: 获取项目信息
+
+```yaml
+# 获取项目ID
+project_id = get_project_id()  # 从 CLAUDE.md 或 Git 仓库名称
+
+# 获取项目名称
+project_name = get_project_name()
+
+# 获取当前 Git 分支
+git_branch = get_current_branch()
+```
+
+#### Step 2: 创建 Progress 记录
+
+使用 Serena `write_memory` 创建进度记录：
+
+```yaml
+# 构建 Progress 数据
+progress_data = {
+  metadata: {
+    version: "1.0"
+    project_id: project_id
+    project_name: project_name
+    flow_type: "full-flow"
+    created_at: get_current_timestamp()
+    updated_at: get_current_timestamp()
+
+  project_info: {
+    name: project_name
+    current_phase: "brainstorm"
+    git_branch: git_branch
+  }
+
+  phases: [
+    {phase_name: "brainstorm", status: "pending", start_time: null, end_time: null, tasks: []}
+    {phase_name: "analyze", status: "pending", start_time: null, end_time: null, tasks: []}
+    {phase_name: "requirement", status: "pending", start_time: null, end_time: null, tasks: []}
+    {phase_name: "design", status: "pending", start_time: null, end_time: null, tasks: []}
+    {phase_name: "design-review", status: "pending", start_time: null, end_time: null, tasks: []}
+    {phase_name: "plan", status: "pending", start_time: null, end_time: null, tasks: []}
+    {phase_name: "git-worktrees", status: "pending", start_time: null, end_time: null, tasks: []}
+    {phase_name: "subagent-development", status: "pending", start_time: null, end_time: null, tasks: []}
+  ]
+
+  overall_progress: {
+    percentage: 0
+    completed_phases: 0
+    total_phases: 8
+  }
+
+  time_stats: {
+    total_time: 0
+    estimated_remaining: 0
+  }
+}
+
+# 保存 Progress
+write_memory(f"progress-{project_id}", progress_data)
+```
+
+#### Step 3: 创建查询索引
+
+```yaml
+# 创建时间索引
+time_index = {}
+write_memory(f"index-{project_id}-checkpoints-by-time", time_index)
+
+# 创建阶段索引
+phase_index = {
+  brainstorm: []
+  analyze: []
+  requirement: []
+  design: []
+  design-review: []
+  plan: []
+  git-worktrees: []
+  subagent-development: []
+}
+write_memory(f"index-{project_id}-checkpoints-by-phase", phase_index)
+```
+
+#### Step 4: 显示初始化完成
+
+```
+✅ 流程初始化完成！
+
+项目信息:
+- 项目ID: {project_id}
+- 项目名称: {project_name}
+- 流程类型: full-flow
+- Git 分支: {git_branch}
+
+准备开始 Phase 1: 需求阶段...
+```
+
+---
+
 ### 详细步骤
 
 #### Phase 1: 需求阶段（20-40分钟）
@@ -116,20 +218,6 @@ PRD 已生成：
 ├── ⚠️ 需要调整 → 重新 Brainstorm
 └── ❌ 不满意 → 重新 Brainstorm
 ```
-
-##### 保存 Checkpoint
-
-使用 Serena `write_memory` 保存检查点：
-
-- **记忆名称**：`checkpoint-full-flow-brainstorm-${timestamp}`
-- **内容结构**：
-
-| 字段 | 类型 | 示例值 | 说明 |
-|------|------|--------|------|
-| phase | string | "brainstorm" | 当前阶段 |
-| status | string | "completed" | 完成状态 |
-| output | string | "PRD文档路径" | 产物路径 |
-| timestamp | string | ISO 8601 | 时间戳（自动生成） |
 
 ---
 
@@ -158,8 +246,6 @@ PRD 已生成：
 └── ❌ 不满意 → 重新 Analyze
 ```
 
-##### 保存 Checkpoint
-
 ---
 
 #### Phase 3: 需求分析（20-40分钟）
@@ -187,8 +273,6 @@ PRD 已生成：
 ├── ⚠️ 需要调整 → 重新 Requirement
 └── ❌ 不满意 → 重新 Requirement
 ```
-
-##### 保存 Checkpoint
 
 ---
 
@@ -219,8 +303,6 @@ PRD 已生成：
 └── ❌ 不满意 → 重新 Design
 ```
 
-##### 保存 Checkpoint
-
 ---
 
 #### Phase 5: 设计审查（15-30分钟）
@@ -250,8 +332,6 @@ PRD 已生成：
 
 **注意**: P0 问题必须解决，或明确标记为技术债务
 
-##### 保存 Checkpoint
-
 ---
 
 #### Phase 6: 实现计划（15-30分钟）
@@ -279,8 +359,6 @@ PRD 已生成：
 ├── ⚠️ 需要调整 → 重新 Plan
 └── ❌ 不满意 → 重新 Plan
 ```
-
-##### 保存 Checkpoint
 
 ---
 
@@ -310,8 +388,6 @@ Worktree 已创建：
 ├── ⚠️ 需要调整 → 重新 Git Worktrees
 └── ❌ 不满意 → 重新 Git Worktrees
 ```
-
-##### 保存 Checkpoint
 
 ---
 
@@ -351,8 +427,6 @@ Worktree 已创建：
 ├── ⚠️ 需要调整 → 继续修复
 └── ❌ 不满意 → 继续修复
 ```
-
-##### 保存最终 Checkpoint
 
 ---
 
@@ -564,6 +638,158 @@ PRD 已生成：
 
 ✅ 完整流程已完成！
 ```
+
+### 流程完成总结（结束后自动执行）
+
+**重要**: 所有节点完成后，自动执行以下总结，无需用户干预：
+
+#### Step 1: 生成 Session Summary
+
+使用 Serena `write_memory` 生成会话总结：
+
+- **记忆名称**: `session-{project_id}-{date}`
+- **内容结构**:
+  ```json
+  {
+    "metadata": {
+      "version": "1.0",
+      "session_id": "{uuid}",
+      "project_id": "{project_id}",
+      "project_name": "{project_name}",
+      "flow_type": "full-flow",
+      "start_time": "{start_timestamp}",
+      "end_time": "{end_timestamp}",
+      "duration_minutes": "{calculated}",
+      "date": "{YYYY-MM-DD}"
+    },
+    "phases_completed": [
+      {
+        "phase_name": "brainstorm",
+        "status": "completed",
+        "start_time": "{timestamp}",
+        "end_time": "{timestamp}",
+        "duration_minutes": "{calculated}",
+        "output_files": ["{file_path}"],
+        "checkpoint_id": "{checkpoint_uuid}"
+      },
+      // ... 8个节点的完成信息
+    ],
+    "deliverables": {
+      "prd_file": "{path}",
+      "analyze_report": "{path}",
+      "requirement_doc": "{path}",
+      "design_doc": "{path}",
+      "plan_doc": "{path}",
+      "code_files": ["{paths}"],
+      "test_files": ["{paths}"]
+    },
+    "quality_metrics": {
+      "test_coverage": "{percentage}",
+      "spec_review": "passed",
+      "code_quality_review": "passed",
+      "p0_issues_resolved": true
+    },
+    "checkpoints_created": ["{uuid1}", "{uuid2}", ...],
+    "git_commits": ["{commit_hash1}", "{commit_hash2}", ...],
+    "git_worktree": {
+      "worktree_path": "{path}",
+      "branch_name": "{branch}",
+      "status": "active"
+    }
+  }
+  ```
+
+#### Step 2: 计算统计数据
+
+从 Progress 记录中提取：
+- 总用时（从 start_time 到 end_time）
+- 完成节点数（8个）
+- 生成的文档列表
+- 创建的 Checkpoint 数量
+- Git commits 数量
+- 测试覆盖率
+- 审查结果
+
+#### Step 3: 更新查询索引
+
+使用 Serena `write_memory` 更新索引：
+
+- **时间索引**: `index-sessions-by-time`
+  ```json
+  {
+    "sessions": [
+      {
+        "session_id": "{session_id}",
+        "project_id": "{project_id}",
+        "date": "{YYYY-MM-DD}",
+        "flow_type": "full-flow",
+        "duration_minutes": "{calculated}",
+        "status": "completed"
+      },
+      // ... 其他会话
+    ]
+  }
+  ```
+
+- **项目索引**: `index-sessions-by-project`
+  ```json
+  {
+    "projects": {
+      "{project_id}": {
+        "sessions": [
+          {
+            "session_id": "{session_id}",
+            "date": "{YYYY-MM-DD}",
+            "flow_type": "full-flow",
+            "status": "completed"
+          },
+          // ... 该项目的其他会话
+        ]
+      }
+    }
+  }
+  ```
+
+#### Step 4: 显示完成报告
+
+输出格式：
+```
+✅ Full Flow 已完成！
+
+📊 会话统计:
+- 项目: {project_name}
+- 总用时: {duration}
+- 完成节点: 8/8 (100%)
+- 创建时间: {start_time}
+- 完成时间: {end_time}
+
+📄 交付物:
+- PRD: {prd_file}
+- 分析报告: {analyze_report}
+- 需求文档: {requirement_doc}
+- 技术方案: {design_doc}
+- 实现计划: {plan_doc}
+- 代码文件: {count} 个
+- 测试文件: {test_count} 个
+
+✅ 质量指标:
+- 测试覆盖率: {coverage}%
+- 规范审查: ✅ 通过
+- 代码质量审查: ✅ 通过
+- P0 问题: ✅ 已解决
+
+💾 进度追踪:
+- Checkpoints: {checkpoint_count} 个
+- Git Commits: {commit_count} 个
+- Worktree: {worktree_path}
+- 分支: {branch_name}
+
+📝 Session Summary 已保存: session-{project_id}-{date}
+
+🎉 项目开发流程已完成！
+```
+
+---
 
 ## 时间预估
 

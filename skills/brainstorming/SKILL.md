@@ -94,3 +94,84 @@ digraph brainstorming {
 - **Explore alternatives** - Always propose 2-3 approaches before settling
 - **Incremental validation** - Present design, get approval before moving on
 - **Be flexible** - Go back and clarify when something doesn't make sense
+
+## After the Brainstorming
+
+**进度追踪**（用户确认后自动执行，无需用户干预）:
+
+完成 Brainstorming 节点后，系统将自动执行以下 4 个步骤来保存和更新进度：
+
+### Step 1: 保存 Checkpoint
+
+调用 `checkpoint` skill 保存进度:
+
+```yaml
+checkpoint_data = {
+  phase: "brainstorming",
+  status: "completed",
+  output: "docs/plans/YYYY-MM-DD-<topic>-design.md",
+  context: {
+    git_branch: get_current_branch(),
+    git_commits: get_recent_commits(),
+    todowrite_state: get_todowrite_state()
+  }
+}
+
+checkpoint_id = save_checkpoint(project_id, checkpoint_data)
+```
+
+### Step 2: 更新 Progress
+
+更新 Progress 记录:
+
+```yaml
+progress_data = read_memory(f"progress-{project_id}")
+
+# 更新阶段状态
+for phase in progress_data.phases:
+  if phase.phase_name == "brainstorming":
+    phase.status = "completed"
+    phase.end_time = get_current_timestamp()
+    break
+
+# 计算整体进度
+progress_data.overall_progress.percentage = calculate_overall_progress(progress_data)
+progress_data.overall_progress.completed_phases = sum(
+  1 for phase in progress_data.phases
+  if phase.status == "completed"
+)
+
+# 保存 Progress
+write_memory(f"progress-{project_id}", progress_data)
+```
+
+### Step 3: 更新索引
+
+更新查询索引:
+
+```yaml
+# 更新时间索引
+time_index = read_memory(f"index-{project_id}-checkpoints-by-time")
+today = get_current_date()
+time_index[today].append(checkpoint_id)
+write_memory(f"index-{project_id}-checkpoints-by-time", time_index)
+
+# 更新阶段索引
+phase_index = read_memory(f"index-{project_id}-checkpoints-by-phase")
+phase_index["brainstorming"].append(checkpoint_id)
+write_memory(f"index-{project_id}-checkpoints-by-phase", phase_index)
+```
+
+### Step 4: 显示当前进度
+
+显示项目进度:
+
+```yaml
+status_data = get_project_status(project_id)
+
+print("\n📊 项目进度:")
+print(f"✅ 已完成: {status_data.completed_phases}/{status_data.total_phases} 节点")
+print(f"📈 进度: {status_data.percentage:.1f}%")
+print(f"⏱️  已用时: {format_duration(status_data.total_time)}")
+print(f"⏳ 预估剩余: {format_duration(status_data.estimated_remaining)}\n")
+```

@@ -341,3 +341,115 @@ Worktree 准备就绪，位于 /Users/jesse/myproject/.worktrees/auth
 
 - **问题**: 在使用不同工具的项目上中断
 - **修复**: 从项目文件（package.json 等）自动检测
+```
+---
+
+## After the using-git-worktrees
+完成本节点后,自动执行以下4步,无需用户干预
+
+#### Step 1: 保存 Checkpoint
+调用 Skill tool,skill='checkpoint',传递以下参数
+- flow: "full-flow" | "quick-flow" | "exploration-flow"
+- phase: "git-worktrees"
+- status: "completed"
+- output: "Worktree信息（路径、分支名、测试结果）"
+- context: 包含分支名称、项目信息
+- **说明**: checkpoint skill 会自动完成所有保存工作,并返回 checkpoint_id
+- 记录返回的 checkpoint_id
+- 用于后续进度追踪
+
+#### Step 2: 更新 Progress 记录
+使用 Serena `write_memory` 更新进度记录
+- 记忆名称: `progress-{flow_name}-{feature_name}`
+- 更新内容
+  - 标记 git-worktrees 节点为 completed
+  - 记录结束时间
+  - 计算整体进度百分比
+  - 统计已完成节点数
+- 更新时间统计
+  - 更新已用时间
+  - 预估剩余时间
+
+#### Step 3: 更新查询索引
+使用 Serena `write_memory` 更新查询索引
+- 记忆名称: `index-{flow_name}`
+- 更新内容
+  - 更新当前流程
+  - 更新 progress 为相应百分比
+  - 更新 last_update 时间
+  - 更新 active_flows 列表
+  - 如果在索引中不存在该流程,则创建它
+  ```json
+  {
+    "active_flows": [
+      {
+        "flow": "{flow_name}",
+        "feature_name": "{feature_name}",
+        "current_phase": "git-worktrees",
+        "progress": {percentage},
+        "last_update": "{timestamp}",
+        "resume_command": "/resume {flow_name}-{feature_name}"
+      }
+    ]
+  }
+  ```
+- **阶段索引**: `index-{flow_name}-phases`
+  - 更新内容
+  - 添加 git-worktrees 阶段信息
+  - 如果在索引中不存在该流程,则创建它
+  ```json
+  {
+    "phases": [
+      {
+        "phase_name": "git-worktrees",
+        "status": "completed",
+        "start_time": "{ISO8601}",
+        "end_time": "{ISO8601}",
+        "duration_minutes": {number},
+        "output": ".worktrees/{branch-name}"
+      }
+    ]
+  }
+  ```
+
+#### Step 4: 显示当前进度
+向用户展示当前进度
+  ```
+`
+✅ Phase 3/4 已完成: Git Worktrees（隔离环境）
+
+📊 当前进度:
+- 已完成: Requirement → Plan → Git Worktrees (3/4)
+- 待完成: Subagent development (1/4)
+- 总进度: 75%
+
+⏱️ 时间统计:
+- Requirement 耗时: 10分钟
+- Plan 耗时: 5分钟
+- Git Worktrees 耗时: 5分钟
+- 已用时间: 20 分钟
+- 预估剩余时间: 30-45分钟
+
+💾 进度追踪:
+- Progress: progress-{flow_name}-{feature_name}
+- 索引: index-{flow_name}
+- Checkpoint: checkpoint-{flow_name}-git-worktrees-{uuid}
+  (UUID 使用方案3规范)
+
+➡️ 下一步: 进入 Subagent development（代码实现）
+```
+---
+
+## Common Mistakes
+### 跳过 ignore 验证
+- **问题**: Worktree 内容被跟踪，污染 git status
+- **修复**: 在创建项目本地 worktree 之前始终使用 `git check-ignore`
+### 假设目录位置
+- **问题**: 造成不一致,违反项目约定
+- **修复**: 遵循优先级:现有 > CLAUDE.md > 询问
+### 继续进行失败的测试
+- **问题**: 无法区分新 bug 和预先存在的问题
+- **修复**: 报告失败，获得明确许可继续
+### 硬编码设置命令
+- **问题**: 在使用不同工具的项目上中断
+- **修复**: 从项目文件（package.json 等）自动检测

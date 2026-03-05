@@ -565,6 +565,68 @@ graph TD
 - 🟡 **Medium**: 3-8 features, 10-20 acceptance criteria
 - 🔴 **Complex**: > 8 features, > 20 acceptance criteria
 
+## After the Requirement
+
+### Automatic Trigger Logic
+
+After completing the Requirement skill, the system will **automatically** suggest the next step:
+
+#### 1. Suggest Next Skill
+- **Default**: Suggest proceeding to **Design** skill
+- **Message**: "✅ Requirement analysis complete. Ready to proceed to Design phase to create technical solution?"
+- **Alternative**: If requirements unclear, suggest returning to Brainstorm
+
+#### 2. Save Progress
+- **Save requirement document** to `.claude/docs/`
+- **Update progress tracker** with Requirement completion status
+- **Record artifact location** for next skill to use
+
+#### 3. Prepare for Design
+- **Pass requirement document path** to Design skill
+- **Highlight key artifacts**:
+  - Feature list with priorities
+  - User stories
+  - Acceptance criteria
+  - Legacy reuse plan (if applicable)
+  - Non-functional requirements
+
+#### 4. Ask User Confirmation
+- **Ask**: "Shall I proceed to Design phase?"
+- **Options**:
+  - ✅ Yes → Trigger Design skill
+  - ⏸️ Pause → Save progress and wait
+  - 🔄 Review → Re-examine requirement document
+  - ↩️ Back → Return to Brainstorm or Analyze
+
+### Transition Example
+
+```
+📋 Requirement Analysis Complete!
+
+Generated artifacts:
+- .claude/docs/2026-03-05_Requirement_UserLogin_v1.0.md
+
+Key features identified:
+- P0: Email/password login
+- P1: Login failure rate limiting
+- P2: Multi-factor authentication
+
+Acceptance criteria: 12 criteria defined
+Legacy reuse: 2 modules reusable, 1 module needs modification
+
+---
+
+🎯 Ready for next step: Design phase
+
+The Design skill will:
+- Create technical solution based on requirements
+- Design data models and API interfaces
+- Select appropriate technology stack
+- Assess technical risks
+
+Shall I proceed to Design phase? [Yes/Pause/Review/Back]
+```
+
 ## Checklist ✅
 
 After completing requirement analysis, ensure:

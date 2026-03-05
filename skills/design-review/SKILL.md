@@ -451,3 +451,101 @@ graph TD
 - Plan 关注"如何实现技术方案"
 - Design Review 输出审查报告
 - Plan 输出实现计划
+
+
+---
+
+## After the Design Review
+完成本节点后,自动执行以下4步,无需用户干预
+
+#### Step 1: 保存 Checkpoint
+调用 Skill tool,skill='checkpoint',传递以下参数
+- flow: "full-flow" | "quick-flow" | "exploration-flow"
+- phase: "design-review"
+- status: "completed"
+- output: "审查报告路径(如: .claude/docs/2026-03-05_设计审查_用户认证_v1.0.md）"
+- context: 包含审查结论、问题列表、修复建议
+- **说明**: checkpoint skill 会自动完成所有保存工作,并返回 checkpoint_id
+- 记录返回的 checkpoint_id
+- 用于后续进度追踪
+
+#### Step 2: 更新 Progress 记录
+使用 Serena \`write_memory` 更新进度记录
+- 记忆名称: `progress-{flow_name}-{feature_name}`
+- 更新内容
+  - 标记 design-review 节点为 completed
+  - 记录结束时间
+  - 计算整体进度百分比
+  - 统计已完成节点数
+- 更新时间统计
+  - 更新已用时间
+  - 预估剩余时间
+#### Step 3: 更新查询索引
+使用 Serena `write_memory` 更新查询索引
+- 记忆名称: `index-{flow_name}`
+- 更新内容
+  - 更新当前流程
+  - 更新 progress 为相应百分比
+  - 更新 last_update 时间
+  - 更新 active_flows 列表
+  - 如果在索引中不存在该流程,则创建它
+  ```json
+  {
+    "active_flows": [
+      {
+        "flow": "{flow_name}",
+        "feature_name": "{feature_name}",
+        "current_phase": "design-review",
+        "progress": {percentage},
+        "last_update": "{timestamp}",
+        "resume_command": "/resume {flow_name}-{feature_name}"
+      }
+    ]
+  }
+  ```
+- **阶段索引**: `index-{flow_name}-phases`
+  - 更新内容
+  - 添加 design-review 阶段信息
+  - 如果在索引中不存在该流程,则创建它
+  ```json
+  {
+    "phases": [
+      {
+        "phase_name": "design-review",
+        "status": "completed",
+        "start_time": "{ISO8601}",
+        "end_time": "{ISO8601}",
+        "duration_minutes": {number},
+        "output": ".claude/docs/2026-03-05_设计审查_用户认证_v1.0.md"
+      }
+    ]
+  }
+  ```
+
+#### Step 4: 显示当前进度
+向用户展示当前进度
+  ```
+✅ Phase 5/8 已完成: Design Review（设计审查）
+
+📊 当前进度:
+- 已完成: Brainstorm → Analyze → Requirement → Design → Design Review (5/8)
+- 待完成: Plan → Git Worktrees → Subagent development (3/8)
+- 总进度: 62.5%
+
+⏱️ 时间统计:
+- Brainstorm 耗时: 20分钟
+- Analyze 耗时: 15分钟
+- Requirement 耗时: 10分钟
+- Design 耗时: 20分钟
+- Design Review 耗时: 10分钟
+- 已用时间: 75 分钟
+- 预估剩余时间: 45 分钟
+
+💾 进度追踪:
+- Progress: progress-{flow_name}-{feature_name}
+- 索引: index-{flow_name}
+- Checkpoint: checkpoint-{flow_name}-design-review-{uuid}
+  (UUID 使用方案3规范)
+
+➡️ 下一步: 进入 Plan（实现计划）
+```

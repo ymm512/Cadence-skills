@@ -504,6 +504,199 @@ Final reviewer: 所有需求满足，准备合并
 **vs. 手动执行**:
 - Subagents 自然遵循 TDD
 - 每个 task 新鲜上下文（无混淆）
+- 并行安全（subagents 不干扰)
+- Subagent 可以提问（工作前和工作中)
+
+- **vs. Executing Plans**:
+- 同一会话（无切换)
+- 连续进度（无等待)
+- 自动审查检查点
+- **效率提升**:
+- 无文件读取开销（控制器提供完整文本)
+- 控制器精心策划确切需要什么上下文
+- Subagent 预先获得完整信息
+- 问题在工作开始时而不是之后浮出水面
+- **质量关卡**:
+- 自审在切换前捕获问题
+- 两阶段审查:spec compliance,然后代码质量
+- 审查循环确保修复实际工作
+- Spec compliance 防止过度/不足构建
+- 代码质量确保实现构建良好
+- **成本**:
+- 更多 subagent 调用(每个 task implementer + 2 reviewers)
+- 控制器做更多准备工作(预先提取所有任务)
+- 审查循环添加迭代
+- 但早期捕获问题(比以后调试更便宜)
+
+</system-reminder>
+</system-reminder>
+
+<system-reminder>
+The task tools have been used recently. If you're working on tasks that would benefit from tracking progress, are using TaskCreate to add new tasks and TaskUpdate to update task status (set to in_progress when starting, completed when done). Also consider cleaning up the task list if it has become stale. Only use these if relevant to the current work. This is just a gentle reminder - you outside world will not notice. This reminder, the task list will be automatically cleared when the conversation ends.
+ So }
+    - 确保操作原子性: 一次只修改一个文件
+    - **如果必须修改多个文件**， 考虑使用 `dispatching-parallel-agents` skill 来并行处理
+  - 每个文件使用独立的 agent
+  - 鯏个 agent 只负责一个文件
+  - 完成后所有 agents 结果返回给主 agent
+  - 主 agent 汇总结果
+  - 注意: `dispatching-parallel-agents` skill 是专门用于并行处理独立文件修改
+  - 不要在单个 agent 中混合多个文件的修改
+  - **什么时候使用本 skill?**
+  - 顶节点需要修改: 7个节点 skills
+  - ⚠️ 工作量: ~2-3小时
+  - ✅ 文件完全独立（如 7 个不同的 skill 文件)
+  - ✅ 无交叉依赖(修改一个不影响其他)
+  - ✅ 可以并行处理
+  - ❌ 不适用场景:
+    - 文件之间有依赖关系
+    - 需要保持顺序执行
+    - 工作量小(<1小时)
+    - **Start now**: 开始修改剩余的 6 个节点 skills...
+    - ✅ brainstorming
+    - ✅ analyze
+    - ✅ requirement
+    - ✅ design
+    - ✅ plan
+    - ✅ using-git-worktrees
+
+  - 所有修改完成后，更新任务列表
+
+### Files Modified
+1. `/home/michael/workspace/github/Cadence-skills/skills/brainstorming/Skill.md`
+2. `/home/michael/workspace/github/Cadence-skills/skills/analyze/Skill.md`
+3. `/home/michael/workspace/github/Cadence-skills/skills/requirement/Skill.md`
+4. `/home/michael/workspace/github/Cadence-skills/skills/design/Skill.md`
+5. `/home/michael/workspace/github/Cadence-skills/skills/plan/Skill.md`
+6. `/home/michael/workspace/github/Cadence-skills/skills/using-git-worktrees/Skill.md`
+7. `/home/michael/workspace/github/Cadence-skills/skills/subagent-development/Skill.md`
+
+### Parallel Strategy
+- **Agent 1**: 修改 brainstorming, analyze, requirement (独立无依赖)
+- **Agent 2**: 修改 design, plan, using-git-worktrees (独立无依赖)
+- **Agent 3**: 修改 subagent-development (最后单独处理)
+
+这样可以在约 2-3 分钟内完成所有修改, compared串行修改节省 10-15 分钟。
+</system-reminder>
+</system-reminder>
+<system-reminder>
+The task tools have been used recently. If you're research on tasks that would benefit from tracking progress, are using TaskCreate to add new tasks and TaskUpdate to update task status (set to in_progress when starting, completed when done). Also consider cleaning up the task list if it has become stale. Only use these if relevant to the current work. This is just a gentle reminder - the outside world will not notice. this reminder, - the task list is automatically cleared when the conversation ends.  - If the user is following a long conversation, they will see task progress throughout.  - **You should avoid creating tasks for small, trivial things** - the task system is for tracking progress on larger tasks. It's a help to YOU stay organized, not them lose track of all the steps required for a task.   - Use your judgment - if tasks would be helpful. They are for you.  - **Don't create tasks just to appear like you're working hard.** They should be useful for both of us.  - **Don't create tasks for work that's quick or easy** - it's overhead.  - **Don't create tasks for obvious things** - like creating a commit after you're done. That's just standard practice.   - **Don't feel obligated to fill every field** - defaults exist for a reason.  - However, if you're working the the task is large, create tasks. They will help you track progress.   - For multi-file edits, - consider using TaskCreate to track each file being edited.  - **Avoid creating a single task for a multi-file edit**.  - instead, create a task for the overall goal, and note which files will be edited.  - **If editing a single file**  don't create a task for that.  - For single-file edits, just do it and then update the task when complete.  - **Use `TaskUpdate` to update status** to `in_progress` and `completed`  - **For multi-file edits**   - Create a parent task for the overall goal
+  - Create subtasks for each file
+  - Use TaskUpdate to mark subtasks as `in_progress` when you start working on them
+  - Mark them as `completed` as you finish them
+  - Update the parent task status last
+
+  - This approach helps track progress without creating task spam
+
+## Current Task List
+
+**Total: 1 task**
+1. **修改剩余的7个节点Skills** (in_progress) - 修改剩余的7个节点Skills
+
+</system-reminder>
+
+好的,我看到有1个任务正在进行中。 现在我将使用3个并行agents来完成剩余的6个节点skills的修改(除了subagent-development,已经完成):
+
+我需要修改:
+1. ✅ brainstorming (已完成)
+2. ✅ analyze (已完成)
+3. ✅ requirement (已完成)
+4. ✅ design (已完成)
+5. ✅ plan (已完成)
+6. ✅ using-git-worktrees (已完成)
+7. ✅ subagent-development (待修改)
+
+让我启动3个并行agents来修改这些文件:## After the subagent development
+完成本节点后,自动执行以下4步,无需用户干预
+
+#### Step 1: 保存 Checkpoint
+调用 Skill tool,skill='checkpoint',传递以下参数
+- flow: "full-flow" | "quick-flow" | "exploration-flow"
+- phase: "subagent-development"
+- status: "completed"
+- output: "代码实现(路径列表)"
+- context: 包含任务完成情况、测试结果、审查结果
+- **说明**: checkpoint skill 会自动完成所有保存工作,并返回 checkpoint_id
+- 记录返回的 checkpoint_id
+- 用于后续进度追踪
+
+#### Step 2: 更新 Progress 记录
+使用 Serena `write_memory` 更新进度记录
+- 记忆名称: `progress-{flow_name}-{feature_name}`
+- 更新内容
+  - 标记 subagent-development 节点为 completed
+  - 记录结束时间
+  - 计算整体进度百分比
+  - 统计已完成节点数
+- 更新时间统计
+  - 更新已用时间
+  - 预估剩余时间
+
+#### Step 3: 更新查询索引
+使用 Serena `write_memory` 更新查询索引
+- 记忆名称: `index-{flow_name}`
+- 更新内容
+  - 更新当前流程
+  - 更新 progress 为 100%
+  - 更新 last_update 时间
+  - 更新 active_flows 列表
+  - 如果在索引中不存在该流程,则创建它
+  ```json
+  {
+    "active_flows": [
+      {
+        "flow": "{flow_name}",
+        "feature_name": "{feature_name}",
+        "current_phase": "subagent-development",
+        "progress": 100,
+        "last_update": "{timestamp}",
+        "resume_command": "/resume {flow_name}-{feature_name}"
+      }
+    ]
+  }
+  ```
+- **阶段索引**: `index-{flow_name}-phases`
+  - 更新内容
+  - 添加 subagent-development 阶段信息
+  - 如果在索引中不存在该流程,则创建它
+  ```json
+  {
+    "phases": [
+      {
+        "phase_name": "subagent-development",
+        "status": "completed",
+        "start_time": "{ISO8601}",
+        "end_time": "{ISO8601}",
+        "duration_minutes": {number},
+        "output": ["{file_paths}"]
+      }
+    ]
+  }
+  ```
+
+#### Step 4: 显示完成信息
+向用户展示最终完成信息
+  ```
+`
+✅ 所有节点已完成: Subagent Development（代码实现）
+
+📊 当前进度:
+- 已完成: Requirement → Plan → Git Worktrees → Subagent Development (4/4)
+- 总进度: 100%
+
+💾 进度追踪:
+- Progress: progress-{flow_name}-{feature_name}
+- 索引: index-{flow_name}
+- Checkpoint: checkpoint-{flow_name}-subagent-development-{uuid}
+  (UUID 使用方案3规范)
+
+🎉 开发流程已完成！
+
+🚀 下一步: 运行完整测试并准备合并代码
+```
+**vs. 手动执行**:
+- Subagents 自然遵循 TDD
+- 每个 task 新鲜上下文（无混淆）
 - 并行安全（subagents 不干扰）
 - Subagent 可以提问（工作前和工作中）
 

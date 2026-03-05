@@ -339,6 +339,103 @@ Read: pom.xml           # Java
 - 🟡 **Medium**: 5-15 files to modify, some external dependencies
 - 🔴 **Complex**: > 15 files to modify, multi-system integration
 
+## After the Analysis
+
+### Automatic Trigger Logic
+
+After successfully completing the analysis (user confirms accuracy), automatically trigger the following 4 steps:
+
+#### Step 1: Save Analysis Artifact
+
+**Action**: Save the legacy analysis report to designated location
+
+**Location**: `.claude/docs/{YYYY-MM-DD}_LegacyAnalysis_{ModuleName}_v1.0.md`
+
+**Example**:
+```
+.claude/docs/2026-03-05_LegacyAnalysis_UserAuth_v1.0.md
+```
+
+**Content**: Complete analysis report including tech stack, architecture, dependencies, risks, and user confirmation.
+
+#### Step 2: Update Progress Tracking
+
+**Action**: Update progress tracking file to mark Analyze node as completed
+
+**File**: `.claude/plans/progress.json` or equivalent tracking file
+
+**Update Content**:
+```json
+{
+  "current_node": "analyze",
+  "status": "completed",
+  "completed_at": "2026-03-05T10:30:00Z",
+  "artifacts": [
+    ".claude/docs/2026-03-05_LegacyAnalysis_UserAuth_v1.0.md"
+  ]
+}
+```
+
+#### Step 3: Provide Next Step Recommendation
+
+**Action**: Automatically recommend the next skill node based on flow type
+
+**Recommendation Logic**:
+- **Full Flow**: Recommend `requirement` skill
+- **Quick Flow**: Recommend `requirement` skill
+- **Exploration Flow**: Recommend `design` skill
+
+**Output Format**:
+```
+✅ Analysis completed successfully!
+
+📋 Next recommended step: Requirement Analysis
+💡 Trigger command: /cadence:requirement
+
+Would you like to proceed to Requirement Analysis? (Y/n)
+```
+
+#### Step 4: Prepare Handoff Context
+
+**Action**: Prepare context summary for the next skill node
+
+**Handoff Content**:
+```markdown
+## Handoff from Analyze to Requirement
+
+### Analysis Summary
+- **Tech Stack**: [from CLAUDE.md]
+- **Key Modules**: [modules identified]
+- **Dependencies**: [critical dependencies]
+- **Risks**: [high/medium risks identified]
+- **Technical Debt**: [debt items]
+
+### Key Artifacts
+- Legacy Analysis Report: `.claude/docs/{date}_LegacyAnalysis_{ModuleName}_v1.0.md`
+
+### Recommended Focus Areas for Requirement
+- [Focus area 1 based on analysis findings]
+- [Focus area 2 based on analysis findings]
+- [Focus area 3 based on analysis findings]
+```
+
+**Purpose**: Ensure smooth transition and provide context for the next skill node.
+
+### User Interaction
+
+**After automatic trigger logic completes, ask user**:
+```
+Analysis artifact saved. Progress updated.
+
+Would you like to:
+1. ✅ Proceed to Requirement Analysis (recommended)
+2. 📋 Review the analysis report first
+3. 🔄 Make adjustments to the analysis
+4. ⏸️ Pause and continue later
+
+Please choose [1-4]:
+```
+
 ## Checklist ✅
 
 After completing analysis, ensure:
