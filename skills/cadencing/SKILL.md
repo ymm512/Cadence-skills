@@ -71,8 +71,9 @@ uvx --version
 9. **添加 MCP 配置** — 在项目根目录创建 `.mcp.json` 配置
 10. **创建目录结构** — 创建 `.claude/` 子目录
 11. **创建个性化规则示例** — 在 `project-rules/` 中创建示例模板和规范
+12. **配置 .gitignore** — 添加 `.serena/` 和 `.worktrees/` 到 .gitignore
 
-**下一步（必须）**：执行 `/cad-load` 加载项目上下文和记忆
+**下一步（必须）**：重启 Claude Code，然后执行 `/cad-load` 加载项目上下文和记忆
 
 ## 流程图
 
@@ -90,6 +91,8 @@ digraph cadencing {
     "用户确认技术栈？" [shape=diamond];
     "创建 .mcp.json" [shape=box];
     "创建目录" [shape=box];
+    "创建个性化规则示例" [shape=box];
+    "配置 .gitignore" [shape=box];
     "初始化完成" [shape=doublecircle];
 
     "前置条件检查" -> "调用 /init";
@@ -105,11 +108,13 @@ digraph cadencing {
     "用户确认技术栈？" -> "检测技术栈" [label="否，修改"];
     "用户确认技术栈？" -> "创建 .mcp.json" [label="是"];
     "创建 .mcp.json" -> "创建目录";
-    "创建目录" -> "初始化完成";
+    "创建目录" -> "创建个性化规则示例";
+    "创建个性化规则示例" -> "配置 .gitignore";
+    "配置 .gitignore" -> "初始化完成";
 }
 ```
 
-**终端状态是初始化完成。** 展示已配置内容的摘要，并建议下一步：必须先执行 `/cad-load` 加载项目上下文，然后选择工作流程（quick-flow、full-flow 或 exploration-flow）。
+**终端状态是初始化完成。** 展示已配置内容的摘要，并建议下一步：必须先重启 Claude Code，然后执行 `/cad-load` 加载项目上下文，最后选择工作流程（quick-flow、full-flow 或 exploration-flow）。
 
 ## 处理流程
 
@@ -543,6 +548,58 @@ mkdir -p .claude/{prds,analysis-docs,docs,designs,designs-reviews,plans,readmes,
 - 不自动启用，仅作参考
 - 用户需要主动修改和启用
 
+### 配置 .gitignore（步骤 12）
+
+**目的**：将 Cadence 工作目录添加到 .gitignore，避免将临时文件和本地配置提交到版本控制。
+
+**操作步骤**：
+
+**1. 检查是否存在 .gitignore 文件**
+
+```bash
+# 检查根目录下是否有 .gitignore
+ls -la .gitignore
+```
+
+**2. 添加 Cadence 相关配置**
+
+如果 `.gitignore` 已存在，在文件末尾添加以下内容：
+
+```gitignore
+# Cadence 工作目录
+.serena/
+.worktrees/
+```
+
+如果 `.gitignore` 不存在，创建文件并添加内容：
+
+```bash
+cat > .gitignore << 'EOF'
+# Cadence 工作目录
+.serena/
+.worktrees/
+EOF
+```
+
+**3. 说明**
+
+| 目录/文件 | 说明 | 排除原因 |
+|----------|------|---------|
+| `.serena/` | Serena MCP 本地记忆和会话数据 | 包含用户本地的会话记录和项目记忆，不应共享 |
+| `.worktrees/` | Git worktrees 隔离开发环境 | 包含临时的隔离开发环境，不应提交 |
+
+**4. 验证**
+
+```bash
+# 验证 .gitignore 是否生效
+git status
+# 应该看不到 .serena/ 和 .worktrees/ 目录
+```
+
+**错误处理**：
+- 如果项目不是 Git 仓库，提示用户稍后手动添加
+- 如果配置已存在，跳过重复添加
+
 ## 初始化完成后
 
 **摘要展示：**
@@ -557,9 +614,20 @@ mkdir -p .claude/{prds,analysis-docs,docs,designs,designs-reviews,plans,readmes,
 
 **下一步（必须）：**
 
-### 1. 加载项目上下文 — `/cad-load`（必须）
+### 1. 重启 Claude Code（必须）
 
-`/cadencing` 完成后，**必须先执行 `/cad-load`** 来加载项目上下文和记忆：
+**在执行 `/cad-load` 之前，必须先重启 Claude Code**，以确保：
+- MCP 配置（`.mcp.json`）被正确加载
+- 新的 MCP servers（time、context7、sequential-thinking、serena）被初始化
+- CLAUDE.md 的规则生效
+
+**重启方法**：
+- 退出当前的 Claude Code 会话
+- 重新启动 Claude Code
+
+### 2. 加载项目上下文 — `/cad-load`（必须）
+
+重启 Claude Code 后，**必须执行 `/cad-load`** 来加载项目上下文和记忆：
 
 - 恢复项目会话状态
 - 加载 Serena MCP 记忆
@@ -568,7 +636,7 @@ mkdir -p .claude/{prds,analysis-docs,docs,designs,designs-reviews,plans,readmes,
 
 > **注意**：`/cad-load` 是 `/cadencing` 后的必需步骤，不加载上下文将无法使用 Cadence 的完整功能。
 
-### 2. 选择工作流程
+### 3. 选择工作流程
 
 加载完成后，可以选择以下工作流程：
 
