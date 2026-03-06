@@ -180,6 +180,38 @@ created_at: "{current timestamp}"
 expires_at: "{created_at + 30 days}"
 ```
 
+### Step 3.5: Validate Checkpoint Data (REQUIRED)
+
+**🔴 CRITICAL: Validate data before saving**
+
+**Call data-validation skill:**
+```markdown
+Call: data-validation skill
+Input: checkpoint_data
+
+IF validation fails:
+  → STOP checkpoint creation
+  → Log validation errors
+  → Return error to user
+  → DO NOT proceed to Step 4
+
+IF validation passes:
+  → Continue to Step 4
+```
+
+**Validation checklist:**
+- ✅ All required fields present
+- ✅ Field types correct
+- ✅ UUID format valid
+- ✅ Enum values valid
+- ✅ Timestamps in ISO 8601 format
+- ✅ TTL > 0
+
+**Why validation is REQUIRED:**
+- Prevents corrupted data in Serena memory
+- Ensures all checkpoints can be read by other skills
+- Catches errors early (before they cause cascading failures)
+
 ### Step 4: Save to Serena Memory
 
 **Save checkpoint data:**

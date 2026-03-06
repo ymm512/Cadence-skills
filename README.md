@@ -157,6 +157,11 @@ Cadence 提供 3 种流程模式，适应不同的开发场景：
 - **report** - 生成进度报告，支持日报和周报 [📖 详细指南](readmes/skills/report.md)
 - **monitor** - 查看状态快照（一次性，非实时）[📖 详细指南](readmes/skills/monitor.md)
 
+**数据管理阶段**
+- **data-validation** - 数据验证，写入前验证数据格式和必填字段 [📖 详细指南](readmes/skills/data-validation.md)
+- **data-cleanup** - 数据清理，归档旧数据并删除过期数据 [📖 详细指南](readmes/skills/data-cleanup.md)
+- **version-migration** - 版本迁移，升级旧版本数据到当前版本 [📖 详细指南](readmes/skills/version-migration.md)
+
 **📖 [查看所有 Skills 详细指南](readmes/skills/README.md)**
 
 ### 流程 Skills（3个）

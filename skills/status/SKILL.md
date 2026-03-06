@@ -130,17 +130,46 @@ Expected data:
 - time_stats (total_time, estimated_remaining)
 ```
 
-**Validate data:**
-```markdown
-Check:
-- [ ] metadata.version exists
-- [ ] project_info.current_phase exists
-- [ ] phases array not empty
-- [ ] overall_progress fields present
-- [ ] time_stats fields present
+### Step 2.5: Auto-Migrate and Validate (REQUIRED)
 
-If any field missing, output warning and exit.
+**🔴 CRITICAL: Auto-migrate old data and validate**
+
+**Check version and migrate if needed:**
+```markdown
+Call: version-migration skill
+Input: progress_data
+
+IF version < current_version:
+  → Auto-migrate to current version
+  → Save migrated data
+  → Log: "Progress migrated from v{old} to v{new}"
+  → Use migrated data for display
+
+IF version == current_version:
+  → No migration needed
+  → Continue with existing data
 ```
+
+**Validate data format:**
+```markdown
+Call: data-validation skill
+Input: progress_data
+
+IF validation fails:
+  → Log validation errors
+  → Display warning to user
+  → Show partial status (what's available)
+  → DO NOT attempt to fix automatically
+
+IF validation passes:
+  → Continue to Step 3
+```
+
+**Why auto-migration and validation are REQUIRED:**
+- Ensures data is always in current format
+- Catches data corruption early
+- Provides clear error messages
+- Prevents cascading failures in other skills
 
 ### Step 3: Calculate Progress
 

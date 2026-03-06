@@ -170,6 +170,47 @@ project_context = checkpoint["context"]["project_context"]
 current_phase = checkpoint["phase"]
 ```
 
+### Step 4.5: Auto-Migrate Checkpoint Data (REQUIRED)
+
+**🔴 CRITICAL: Auto-migrate old checkpoint data**
+
+**Check version and migrate if needed:**
+```markdown
+Call: version-migration skill
+Input: checkpoint_data
+
+IF checkpoint version < current_version:
+  → Auto-migrate to current version
+  → Save migrated checkpoint
+  → Log: "Checkpoint migrated from v{old} to v{new}"
+  → Use migrated data for context rebuild
+
+IF checkpoint version == current_version:
+  → No migration needed
+  → Continue with existing data
+```
+
+**Validate checkpoint data:**
+```markdown
+Call: data-validation skill
+Input: checkpoint_data
+
+IF validation fails:
+  → Log validation errors
+  → Display warning to user
+  → Attempt partial resume (with warnings)
+  → Show what can be restored vs what's corrupted
+
+IF validation passes:
+  → Continue to Step 5
+```
+
+**Why auto-migration and validation are REQUIRED:**
+- Ensures checkpoint data is in current format
+- Detects data corruption from interrupted writes
+- Provides clear feedback about data quality
+- Prevents context rebuild failures
+
 ### Step 5: Rebuild Context
 
 **Switch to Git branch:**
