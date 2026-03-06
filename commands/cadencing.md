@@ -1,0 +1,44 @@
+# /cadencing - 项目初始化
+
+调用 `cadencing` skill 初始化现有项目为 Cadence 管理项目。
+
+## 使用场景
+
+- 首次在项目中使用 Cadence
+- 现有项目需要接入 Cadence 管理体系
+- 配置项目环境、规则、文档结构和技术栈
+
+## 功能
+
+自动执行以下初始化步骤：
+
+1. 前置条件检查（npx、uvx、serena 路径）
+2. Claude Code 初始化（调用 `/init`）
+3. 项目分析（分析结构、依赖、Git 历史）
+4. 添加语言规则（强制中文响应）
+5. 添加文档规则（`.claude` 目录结构和命名规范）
+6. 检测项目类型（前端/后端/全栈，需用户确认）
+7. 添加包管理器规则（前端 pnpm，Python uv）
+8. 添加 MCP 使用规则（time、context7、sequential-thinking、serena）
+9. 检测技术栈（语言、测试/检查/格式化命令，需用户确认）
+10. 创建 MCP 配置（`.mcp.json`）
+11. 创建目录结构（14个子目录）
+12. 创建个性化规则示例（需求模板、设计模板、代码规范、测试规范）
+
+## 输出
+
+- CLAUDE.md 配置文件（包含所有规则和配置）
+- `.mcp.json` 配置文件（MCP 服务器配置）
+- 14个 `.claude/` 子目录
+- 5个个性化规则示例文件
+
+## 下一步（必须）
+
+初始化完成后，**必须先执行 `/cad-load`** 加载项目上下文和记忆，然后选择工作流程（quick-flow、full-flow 或 exploration-flow）。
+
+## 相关命令
+
+- `/cad-load` - 加载项目上下文（必需的下一步）
+- `/quick-flow` - 快速开发流程
+- `/full-flow` - 完整开发流程
+- `/exploration-flow` - 技术探索流程
