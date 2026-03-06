@@ -61,6 +61,7 @@ uvx --version
 
 1. **前置条件检查** — 检查 npx、uvx、serena 路径
 2. **Claude Code 初始化** — 调用 `/init` 命令，验证 CLAUDE.md 已创建
+2.5. **项目分析** — 分析项目结构、依赖、Git 历史，生成摘要文档
 3. **添加语言规则** — 配置强制中文响应
 4. **添加文档规则** — 配置 `.claude` 目录结构和命名规范
 5. **检测项目类型** — 识别前端/后端/全栈，获取用户确认
@@ -69,6 +70,7 @@ uvx --version
 8. **检测技术栈** — 自动检测语言、测试/检查/格式化命令，获取用户确认
 9. **添加 MCP 配置** — 在项目根目录创建 `.mcp.json` 配置
 10. **创建目录结构** — 创建 `.claude/` 子目录
+11. **创建个性化规则示例** — 在 `project-rules/` 中创建示例模板和规范
 
 **下一步（必须）**：执行 `/cad-load` 加载项目上下文和记忆
 
@@ -78,6 +80,7 @@ uvx --version
 digraph cadencing {
     "前置条件检查" [shape=box];
     "调用 /init" [shape=box];
+    "项目分析" [shape=box];
     "添加强制规则" [shape=box];
     "检测项目类型" [shape=box];
     "用户确认类型？" [shape=diamond];
@@ -90,7 +93,8 @@ digraph cadencing {
     "初始化完成" [shape=doublecircle];
 
     "前置条件检查" -> "调用 /init";
-    "调用 /init" -> "添加强制规则";
+    "调用 /init" -> "项目分析";
+    "项目分析" -> "添加强制规则";
     "添加强制规则" -> "检测项目类型";
     "检测项目类型" -> "用户确认类型？";
     "用户确认类型？" -> "检测项目类型" [label="否，修改"];
@@ -135,6 +139,103 @@ uvx --version
 - Linux: /home/username/projects/serena
 - Windows: C:\Users\username\Documents\serena
 ```
+
+### 项目分析（步骤 2.5）
+
+**分析流程**：
+
+**1. 收集项目信息**
+```bash
+# 统计文件和目录数量
+find . -type f -not -path '*/\.*' | wc -l  # 文件数
+find . -type d -not -path '*/\.*' | wc -l  # 目录数
+
+# 识别主要编程语言
+find . -name "*.py" -o -name "*.js" -o -name "*.ts" -o -name "*.java" | head -20
+
+# 检测项目类型
+ls -la | grep -E "package.json|requirements.txt|pom.xml|go.mod"
+```
+
+**2. 分析目录结构**
+```bash
+# 获取主要目录
+find . -maxdepth 2 -type d -not -path '*/\.*' | head -20
+```
+
+**3. 分析依赖关系**
+- 读取 package.json（前端项目）
+- 读取 requirements.txt（Python 项目）
+- 读取 pom.xml（Java 项目）
+
+**4. 分析 Git 历史**
+```bash
+# 最近 10 条提交
+git log --oneline -10
+
+# 提交统计
+git log --oneline --since="30 days ago" | wc -l
+```
+
+**5. 生成分析报告**
+
+**文件路径**：`.claude/analysis-docs/YYYY-MM-DD_分析报告_项目初始化摘要_v1.0.md`
+
+**文件内容模板**：
+```markdown
+# 项目初始化分析摘要
+
+**生成时间**：[当前时间]
+**项目路径**：[项目路径]
+
+## 1. 项目基本信息
+
+- **项目类型**：[前端/后端/全栈/其他]
+- **主要语言**：[语言列表]
+- **项目规模**：
+  - 文件总数：[数量]
+  - 目录总数：[数量]
+  - 估算代码行数：[数量]
+
+## 2. 目录结构
+
+```
+[主要目录树]
+```
+
+**目录说明**：
+- `src/`：[说明]
+- `tests/`：[说明]
+
+## 3. 依赖关系
+
+**主要依赖**：
+- [依赖名称]：[版本]
+
+## 4. 主要模块
+
+- **模块 1**：[说明]
+- **模块 2**：[说明]
+
+## 5. Git 历史
+
+**最近提交**：
+```
+[最近 10 条提交]
+```
+
+**提交统计**：
+- 最近 30 天提交数：[数量]
+
+## 6. 下一步建议
+
+[基于分析的建议]
+```
+
+**错误处理**：
+- 如果不是 Git 仓库，跳过 Git 历史分析
+- 如果文件过多（>10000），显示进度提示
+- 超时限制：30 秒
 
 ### 强制规则配置
 
@@ -304,20 +405,143 @@ uvx --version
 - `{{SERENA_PATH}}` 需要替换为用户提供的 Serena 本地路径
 - Windows 路径需要处理反斜杠（使用 `\\` 或转换为正斜杠 `/`）
 
-### 目录结构创建
+### 目录结构创建（步骤 10）
+
+**创建以下目录结构**：
 
 ```
 .claude/
-├── docs/           # 需求文档
-├── designs/        # 设计文档
-├── readmes/        # README 文档
-├── modao/          # 界面原型
-├── model/          # 数据模型
-├── architecture/   # 架构文档
-├── notes/          # 开发笔记
-├── analysis/       # 分析报告
-└── logs/           # 开发日志
+├── prds/                   # 概要需求文档（新增）
+├── analysis-docs/          # 分析报告（重命名自 analysis）
+├── docs/                   # 详细需求文档
+├── designs/                # 设计文档
+├── designs-reviews/        # 设计评审（新增）
+├── plans/                  # 计划文档
+├── readmes/                # README 文档
+├── modaos/                 # 界面原型（重命名自 modao）
+├── models/                 # 数据模型（重命名自 model）
+├── architecture/           # 架构文档
+├── notes/                  # 开发笔记
+├── logs/                   # 开发日志
+├── reports/                # 进度报告（新增）
+└── project-rules/          # 个性化规则（新增）
 ```
+
+**目录用途说明**：
+
+| 目录 | 用途 | 说明 |
+|------|------|------|
+| `prds/` | 概要需求 | @brainstorming skill 生成的早期需求方案 |
+| `analysis-docs/` | 分析报告 | @analyze skill 生成的代码分析、调研报告 |
+| `docs/` | 详细需求 | @requirement skill 生成的详细需求文档 |
+| `designs/` | 设计文档 | @design skill 生成的技术方案、架构设计 |
+| `designs-reviews/` | 设计评审 | @design-review skill 的评审文档 |
+| `plans/` | 计划文档 | @plan skill 生成的实施计划 |
+| `readmes/` | README 文档 | 开发相关的技术文档（API 文档、开发指南等） |
+| `modaos/` | 界面原型 | 墨刀/Figma 原型截图、设计稿 |
+| `models/` | 数据模型 | 数据库表模型、ER 图、schema 定义 |
+| `architecture/` | 架构文档 | 系统架构分析、技术选型 |
+| `notes/` | 开发笔记 | 临时记录、开发心得、TODO 列表 |
+| `logs/` | 开发日志 | 问题追踪、Bug 记录、开发进度 |
+| `reports/` | 进度报告 | @report skill 生成的开发进度报告 |
+| `project-rules/` | 个性化规则 | 用户定制的模板和规范（步骤 11 创建） |
+
+**创建命令**：
+```bash
+mkdir -p .claude/{prds,analysis-docs,docs,designs,designs-reviews,plans,readmes,modaos,models,architecture,notes,logs,reports,project-rules/examples}
+```
+
+### 创建个性化规则示例（步骤 11）
+
+**创建目录结构**：
+```
+.claude/project-rules/
+├── README.md                          # 使用说明
+└── examples/                           # 示例目录
+    ├── requirement-template.md        # 需求文档模板
+    ├── design-template.md             # 设计文档模板
+    ├── coding-standards.md            # 代码开发规范
+    └── test-standards.md              # 测试规范
+```
+
+**创建 README.md**：
+
+**文件路径**：`.claude/project-rules/README.md`
+
+**文件内容**：
+```markdown
+# 项目个性化规则文档
+
+## 📖 目录说明
+
+本目录用于存放项目个性化的规则文档，包括模板、规范、约定等。
+
+## 🎯 使用方法
+
+### 步骤 1：浏览示例
+
+查看 `examples/` 目录中的示例文件，了解可以定制的内容。
+
+### 步骤 2：创建您的规则
+
+1. 复制 `examples/` 中的模板到本目录
+2. 根据您的项目需求修改内容
+3. 重命名为合适的文件名（不含 `examples/` 前缀）
+
+### 步骤 3：在 CLAUDE.md 中启用
+
+在项目根目录的 `CLAUDE.md` 中添加规则，指导 Claude 使用您的定制文档。
+
+**示例：**
+
+\```markdown
+## 项目个性化规则
+
+### 需求文档格式
+使用 `.claude/project-rules/requirement-template.md` 作为需求文档格式，
+不要使用 requirement skill 中的通用格式。
+
+### 设计文档格式
+使用 `.claude/project-rules/design-template.md` 作为设计文档模板。
+
+### 代码开发规范
+所有代码开发必须遵循 `.claude/project-rules/coding-standards.md` 中的规范。
+\```
+
+## 📁 文件说明
+
+### requirement-template.md
+需求文档模板，定义需求文档的格式和内容结构。
+
+### design-template.md
+设计文档模板，定义设计文档的格式和内容结构。
+
+### coding-standards.md
+代码开发规范，包括命名规范、代码风格、注释规范等。
+
+### test-standards.md
+测试规范，包括测试覆盖率要求、测试类型要求、测试命名规范等。
+
+## 💡 提示
+
+- 只创建您需要的规则文档，不必全部创建
+- 规则文档可以根据项目需求随时调整
+- 在 CLAUDE.md 中明确说明何时使用哪个规则文档
+
+## 📝 示例文件
+
+所有示例文件都在 `examples/` 目录中，包含详细的注释和说明。
+```
+
+**创建示例文件**：
+
+所有示例文件的完整内容见设计文档 8.1 节。
+
+**说明**：
+- 示例文件包含详细注释
+- 提供完整的模板结构
+- 不自动启用，仅作参考
+- 用户需要主动修改和启用
 
 ## 初始化完成后
 

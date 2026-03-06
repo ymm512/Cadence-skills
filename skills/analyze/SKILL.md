@@ -214,7 +214,7 @@ mcp__serena__find_referencing_symbols(
 
 #### Step 7: Generate Analysis Report
 
-**Output**: `.claude/docs/{date}_LegacyAnalysis_{ModuleName}_v1.0.md`
+**Output**: `.claude/analysis-docs/{date}_LegacyAnalysis_{ModuleName}_v1.0.md`
 
 **Report Structure**:
 ```markdown
@@ -349,11 +349,11 @@ After successfully completing the analysis (user confirms accuracy), automatical
 
 **Action**: Save the legacy analysis report to designated location
 
-**Location**: `.claude/docs/{YYYY-MM-DD}_LegacyAnalysis_{ModuleName}_v1.0.md`
+**Location**: `.claude/analysis-docs/{YYYY-MM-DD}_LegacyAnalysis_{ModuleName}_v1.0.md`
 
 **Example**:
 ```
-.claude/docs/2026-03-05_LegacyAnalysis_UserAuth_v1.0.md
+.claude/analysis-docs/2026-03-05_LegacyAnalysis_UserAuth_v1.0.md
 ```
 
 **Content**: Complete analysis report including tech stack, architecture, dependencies, risks, and user confirmation.
@@ -371,7 +371,7 @@ After successfully completing the analysis (user confirms accuracy), automatical
   "status": "completed",
   "completed_at": "2026-03-05T10:30:00Z",
   "artifacts": [
-    ".claude/docs/2026-03-05_LegacyAnalysis_UserAuth_v1.0.md"
+    ".claude/analysis-docs/2026-03-05_LegacyAnalysis_UserAuth_v1.0.md"
   ]
 }
 ```
@@ -411,7 +411,7 @@ Would you like to proceed to Requirement Analysis? (Y/n)
 - **Technical Debt**: [debt items]
 
 ### Key Artifacts
-- Legacy Analysis Report: `.claude/docs/{date}_LegacyAnalysis_{ModuleName}_v1.0.md`
+- Legacy Analysis Report: `.claude/analysis-docs/{date}_LegacyAnalysis_{ModuleName}_v1.0.md`
 
 ### Recommended Focus Areas for Requirement
 - [Focus area 1 based on analysis findings]
@@ -503,7 +503,7 @@ digraph skill_relationship {
 
 ### Provided Output
 
-1. **Legacy Analysis Report**: `.claude/docs/{date}_LegacyAnalysis_{ModuleName}_v1.0.md`
+1. **Legacy Analysis Report**: `.claude/analysis-docs/{date}_LegacyAnalysis_{ModuleName}_v1.0.md`
 2. **Architecture Diagram**: Mermaid format
 3. **Dependency Graph**: Mermaid format
 4. **Risk Assessment List**
@@ -555,7 +555,7 @@ digraph skill_relationship {
 
 6. **Generate Report**:
    ```
-   Save to: .claude/docs/2026-03-01_LegacyAnalysis_UserAuth_v1.0.md
+   Save to: .claude/analysis-docs/2026-03-01_LegacyAnalysis_UserAuth_v1.0.md
    ```
 
 7. **User Confirmation**:

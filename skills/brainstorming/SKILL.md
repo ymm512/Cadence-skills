@@ -78,7 +78,7 @@ digraph brainstorming {
 ## After the Design
 
 **Documentation:**
-- Write the validated design to `docs/plans/YYYY-MM-DD-<topic>-design.md`
+- Write the validated design to `.claude/prds/YYYY-MM-DD-<topic>-design.md`
 - Use elements-of-style:writing-clearly-and-concisely skill if available
 - Commit the design document to git
 
@@ -109,7 +109,7 @@ digraph brainstorming {
 checkpoint_data = {
   phase: "brainstorming",
   status: "completed",
-  output: "docs/plans/YYYY-MM-DD-<topic>-design.md",
+  output: ".claude/prds/YYYY-MM-DD-<topic>-design.md",
   context: {
     git_branch: get_current_branch(),
     git_commits: get_recent_commits(),

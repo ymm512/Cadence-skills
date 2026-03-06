@@ -226,9 +226,9 @@ report += f"{next_steps}\n"
 **Save report:**
 ```markdown
 # Generate filename
-filename = f".claude/reports/{date}_开发报告_{project_name}.md"
+filename = f".claude/reports/{date}_开发报告_{project_name}_v1.0.md"
 
-example: 2026-03-04_开发报告_user-auth.md
+example: 2026-03-04_开发报告_user-auth_v1.0.md
 
 # Write report
 write_file(filename, report)
@@ -259,12 +259,12 @@ Location: {filename}
 
 ### File Naming Convention
 
-**Format**: `{date}_开发报告_{project_name}.md`
+**Format**: `YYYY-MM-DD_开发报告_{project_name}_v1.0.md`
 
 **Examples**:
-- `2026-03-04_开发报告_user-auth.md`
-- `2026-03-03_开发报告_api-refactor.md`
-- `2026-03-02_阶段报告_brainstorm.md`
+- `2026-03-04_开发报告_user-auth_v1.0.md`
+- `2026-03-03_开发报告_api-refactor_v1.0.md`
+- `2026-03-02_阶段报告_brainstorm_v1.0.md`
 
 ## Code Example
 
@@ -439,5 +439,5 @@ Before deploying:
 - [ ] calculates overall statistics
 - [ ] generates markdown report
 - [ ] saves to `.claude/reports/`
-- [ ] filename follows convention: `YYYY-mm-dd_开发报告_{project_name}.md`
+- [ ] filename follows convention: `YYYY-MM-DD_开发报告_{project_name}_v1.0.md`
 - [ ] displays confirmation with file location

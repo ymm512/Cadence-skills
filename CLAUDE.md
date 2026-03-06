@@ -32,14 +32,18 @@
 | 文档类型 | 存储路径 | 说明 |
 |---------|---------|------|
 | **计划文档** | **`.claude/plans/`** | **项目计划、开发计划、发布计划（🔴 强制路径）** |
-| 需求文档 | `.claude/docs/` | PRD、产品需求、业务需求 |
+| **概要需求** | **`.claude/prds/`** | **brainstorm skill 生成的概要需求方案（🔴 新增）** |
+| 需求文档 | `.claude/docs/` | requirement skill 生成的详细需求文档 |
 | 方案设计 | `.claude/designs/` | 技术方案、架构设计、API设计 |
+| **设计评审** | **`.claude/designs-reviews/`** | **设计评审文档（🔴 新增）** |
+| **分析报告** | **`.claude/analysis-docs/`** | **代码分析、调研报告、性能分析（🔴 路径调整）** |
+| **进度报告** | **`.claude/reports/`** | **开发进度报告、阶段总结（🔴 新增）** |
+| **个性化规则** | **`.claude/project-rules/`** | **项目个性化模板和规范（🔴 新增）** |
 | **README文档** | **见下方详细规则** | **项目说明、安装指南、使用文档（🔴 特殊规则）** |
-| 页面原型 | `.claude/modao/` | 墨刀/Figma 原型截图、设计稿 |
-| 数据模型 | `.claude/model/` | 数据库表模型、ER图、schema |
+| 页面原型 | `.claude/modaos/` | 墨刀/Figma 原型截图、设计稿 |
+| 数据模型 | `.claude/models/` | 数据库表模型、ER图、schema |
 | 架构文档 | `.claude/architecture/` | 系统架构分析、技术选型 |
 | 开发笔记 | `.claude/notes/` | 临时记录、开发心得、TODO |
-| 分析报告 | `.claude/analysis/` | 代码分析、调研报告、性能分析 |
 | 开发日志 | `.claude/logs/` | 问题追踪、Bug记录、开发进度 |
 
 #### README 文档存储规则
@@ -237,6 +241,43 @@ serena analyze .git/
 # ❌ 错误：使用 Serena 读取 .git 目录下的文件
 serena read .git/objects/...
 ```
+
+### 6. 项目个性化规则
+
+> **🔴 定制化能力**
+
+- **规则目录**：`.claude/project-rules/`
+- **使用方法**：
+  1. 查看项目初始化时创建的示例文件（`examples/` 目录）
+  2. 根据需要复制和修改示例文件到 `project-rules/` 目录
+  3. 在本文件（CLAUDE.md）中添加规则，指导 Claude 使用您的定制文档
+
+**示例规则**：
+
+````markdown
+## 项目个性化规则（示例）
+
+> 以下是使用示例，默认不启用。
+> 如果您创建了自定义规则，可以取消注释或添加类似规则：
+
+<!--
+### 需求文档格式
+使用 `.claude/project-rules/requirement-template.md` 作为需求文档格式，
+不要使用 requirement skill 中的通用格式。
+
+### 设计文档格式
+使用 `.claude/project-rules/design-template.md` 作为设计文档模板。
+
+### 代码开发规范
+所有代码开发必须遵循 `.claude/project-rules/coding-standards.md` 中的规范。
+-->
+````
+
+**说明**：
+- 个性化规则由用户主动启用
+- Claude Code 会自动遵循 CLAUDE.md 中的规则
+- 示例文件仅作参考，不强制使用
+- 用户可以根据项目需求自由定制规则内容
 
 ---
 

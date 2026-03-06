@@ -195,7 +195,7 @@ graph TB
 
 ## 输出产物
 
-**文件：** `.claude/docs/{date}_设计审查_{功能名称}_v1.0.md`
+**文件：** `.claude/designs-reviews/{date}_设计审查_{功能名称}_v1.0.md`
 
 **内容结构：**
 ```markdown
@@ -463,7 +463,7 @@ graph TD
 - flow: "full-flow" | "quick-flow" | "exploration-flow"
 - phase: "design-review"
 - status: "completed"
-- output: "审查报告路径(如: .claude/docs/2026-03-05_设计审查_用户认证_v1.0.md）"
+- output: "审查报告路径(如: .claude/designs-reviews/2026-03-05_设计审查_用户认证_v1.0.md）"
 - context: 包含审查结论、问题列表、修复建议
 - **说明**: checkpoint skill 会自动完成所有保存工作,并返回 checkpoint_id
 - 记录返回的 checkpoint_id
@@ -516,7 +516,7 @@ graph TD
         "start_time": "{ISO8601}",
         "end_time": "{ISO8601}",
         "duration_minutes": {number},
-        "output": ".claude/docs/2026-03-05_设计审查_用户认证_v1.0.md"
+        "output": ".claude/designs-reviews/2026-03-05_设计审查_用户认证_v1.0.md"
       }
     ]
   }
