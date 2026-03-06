@@ -200,15 +200,11 @@ YYYY-MM-DD_简短描述.md
 
 **示例**：
 
-````markdown
-````markdown
 ```javascript
 function example() {
   return "这是嵌套的代码示例";
 }
 ```
-````
-````
 
 ### 5. Serena 使用规则
 
