@@ -123,7 +123,7 @@ Instructions say WHAT, not HOW. "Add X" or "Fix Y" doesn't mean skip workflows.
 - `/cadence:design` - Technical design
 - `/cadence:design-review` - Design review
 - `/cadence:plan` - Implementation planning
-- `/cadence:git-worktrees` - Environment isolation
+- `/cadence:using-git-worktrees` - Environment isolation
 - `/cadence:subagent-development` - Code implementation
 
 **Progress Management:**
