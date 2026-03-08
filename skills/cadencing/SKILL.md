@@ -13,55 +13,12 @@ description: "初始化现有项目为 Cadence 管理项目，自动配置环境
 不要跳过任何检查清单项目。每个步骤必须按顺序完成并通过验证后才能进行下一步。技术栈检测和项目类型检测需要用户确认。
 </HARD-GATE>
 
-## 前置条件检查
-
-在执行初始化之前，必须检查以下前置条件：
-
-### 1. 检查 npx 是否可用
-
-```bash
-npx --version
-```
-
-**如果未安装：**
-- **macOS/Linux**: `npm install -g npx` 或安装 Node.js (包含 npm/npx)
-- **Windows**: 安装 Node.js，npx 会随 npm 一起安装
-
-### 2. 检查 uvx 是否可用
-
-```bash
-uvx --version
-```
-
-**如果未安装：**
-- **macOS/Linux**: `curl -LsSf https://astral.sh/uv/install.sh | sh`
-- **Windows**: `powershell -c "irm https://astral.sh/uv/install.ps1 | iex"`
-
-### 3. 检查 Serena 本地克隆
-
-询问用户 Serena 仓库的本地路径：
-- "请提供 Serena 仓库在本地的克隆路径（例如：~/Documents/git-folder/github-folder/serena 或 C:\\Users\\username\\Projects\\serena）"
-
-**验证路径：**
-- 检查路径是否存在
-- 检查路径下是否有 `pyproject.toml` 或 `setup.py`
-- 如果路径不存在，提示用户先克隆 Serena：`git clone https://github.com/oraios/serena.git`
-
-### 4. 跨平台路径处理
-
-| 系统 | 路径示例 | 处理方式 |
-|------|---------|---------|
-| macOS | `/Users/name/serena` | 直接使用，支持 `~` 展开 |
-| Linux | `/home/name/serena` | 直接使用，支持 `~` 展开 |
-| Windows | `C:\\Users\\name\\serena` | 使用反斜杠或转义为 `\\` |
-
 ## 检查清单
 
 你必须为以下每个项目创建任务并按顺序完成：
 
-1. **前置条件检查** — 检查 npx、uvx、serena 路径
-2. **Claude Code 初始化** — 调用 `/init` 命令，验证 CLAUDE.md 已创建
-2.5. **项目分析** — 分析项目结构、依赖、Git 历史，生成摘要文档
+1. **Claude Code 初始化** — 调用 `/init` 命令，验证 CLAUDE.md 已创建
+2. **项目分析** — 分析项目结构、依赖、Git 历史，生成摘要文档
 3. **添加语言规则** — 配置强制中文响应
 4. **添加文档规则** — 配置 `.claude` 目录结构和命名规范
 5. **检测项目类型** — 识别前端/后端/全栈，获取用户确认
@@ -79,7 +36,6 @@ uvx --version
 
 ```dot
 digraph cadencing {
-    "前置条件检查" [shape=box];
     "调用 /init" [shape=box];
     "项目分析" [shape=box];
     "添加强制规则" [shape=box];
@@ -95,7 +51,6 @@ digraph cadencing {
     "配置 .gitignore" [shape=box];
     "初始化完成" [shape=doublecircle];
 
-    "前置条件检查" -> "调用 /init";
     "调用 /init" -> "项目分析";
     "项目分析" -> "添加强制规则";
     "添加强制规则" -> "检测项目类型";
@@ -118,34 +73,7 @@ digraph cadencing {
 
 ## 处理流程
 
-### 前置条件处理
-
-**检查 npx：**
-```bash
-# 检查命令
-npx --version
-
-# 预期输出：版本号，如 10.2.3
-```
-
-**检查 uvx：**
-```bash
-# 检查命令
-uvx --version
-
-# 预期输出：版本号，如 0.4.20
-```
-
-**获取 Serena 路径：**
-```
-询问用户："请提供 Serena 仓库的本地路径"
-示例：
-- macOS: /Users/username/Documents/serena
-- Linux: /home/username/projects/serena
-- Windows: C:\Users\username\Documents\serena
-```
-
-### 项目分析（步骤 2.5）
+### 项目分析
 
 **分析流程**：
 
@@ -646,7 +574,6 @@ git status
 
 ## 核心原则
 
-- **前置条件检查** — 必须先验证 npx、uvx、serena 路径
 - **需要用户确认** — 技术栈和项目类型检测必须经过确认
 - **跨平台兼容** — 适配 macOS/Linux/Windows 的路径和命令
 - **幂等性** — 重复执行应该是安全的，不会重复配置
@@ -672,7 +599,6 @@ git status
 | 参数 | 类型 | 说明 |
 |-----------|------|-------------|
 | `--skip-init` | flag | 跳过 `/init` 命令调用 |
-| `--skip-checks` | flag | 跳过前置条件检查 |
 | `--skip-tech-stack` | flag | 跳过技术栈检测和配置 |
 | `--skip-mcp` | flag | 跳过 MCP 配置 |
 | `--chinese` | flag | 强制 CLAUDE.md 中文本地化 |

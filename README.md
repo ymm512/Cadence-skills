@@ -69,6 +69,42 @@ git pull origin main
 
 在你选择的平台中开始一个新会话，请求一些应该触发 Skill 的内容（例如，"帮我规划这个功能"或"让我们调试这个问题"）。助手应该自动调用相关的 Cadence Skills。
 
+## 项目初始化
+
+> **重要**：安装完成后，强烈建议执行以下初始化步骤，确保项目环境正确配置。
+
+### 步骤 1：前置条件检查
+
+执行 `/cadence:pre-check` 命令，自动检查和配置必要的工具：
+
+```bash
+/cadence:pre-check
+```
+
+该命令会：
+- ✅ 检查 npx 是否安装（Node.js 包执行器）
+- ✅ 检查 uvx 是否安装（Python 包执行器）
+- ✅ 检查 serena 项目是否配置（用于代码分析）
+- ✅ 自动安装缺失的工具
+- ✅ 引导您完成 serena 项目配置
+
+### 步骤 2：项目环境配置
+
+执行 `/cadence:cadencing` 命令，自动初始化项目环境：
+
+```bash
+/cadence:cadencing
+```
+
+该命令会：
+- ✅ 检测项目类型和技术栈
+- ✅ 创建 `.claude/` 目录结构
+- ✅ 配置项目规则和模板
+- ✅ 创建 MCP 配置文件（`.mcp.json`）
+- ✅ 设置文档存储规范
+
+**完成后**，您的项目就准备好使用 Cadence 的完整工作流程了！
+
 ## 基本工作流程
 
 Cadence 提供 3 种流程模式，适应不同的开发场景：
@@ -182,7 +218,7 @@ Cadence 提供 3 种流程模式，适应不同的开发场景：
 
 ## Commands 库
 
-> **注**：Cadence 包含 14 个核心 Commands（下文列出）和 5 个从 [superpowers](https://github.com/obra/superpowers) 继承的 Commands（/tdd, /verify, /request-review, /receive-review, /finish）。
+> **注**：Cadence 包含 15 个核心 Commands（下文列出）和 5 个从 [superpowers](https://github.com/obra/superpowers) 继承的 Commands（/tdd, /verify, /request-review, /receive-review, /finish）。
 
 ### 节点 Commands（7个）
 
@@ -207,8 +243,9 @@ Cadence 提供 3 种流程模式，适应不同的开发场景：
 
 **📖 [查看所有 Commands 详细指南](readmes/skills/README.md)**
 
-### 元 Commands（1个）
+### 元 Commands（2个）
 
+- `/pre-check` - 前置条件检查，确保环境正确配置
 - `/cad-load` - 加载项目上下文（支持 quick/standard/full 三种模式）
 
 **📖 [查看所有 Commands 详细指南](readmes/commands/README.md)**
@@ -316,22 +353,22 @@ Skills 直接存储在这个仓库中。要贡献：
 **已完成功能**：
 - ✅ 8 个核心节点 Skills
 - ✅ 3 个流程 Skills
-- ✅ 3 个元 Skills（using-cadence, cadencing, cad-load）
-- ✅ 14 个 Commands
+- ✅ 4 个元 Skills（using-cadence, cadencing, cad-load, prerequisite-check）
+- ✅ 15 个 Commands
 - ✅ 3 个 Subagent Prompts
 - ✅ 智能进度追踪系统
 - ✅ 两阶段审查机制
 
 **统计数据**：
-- 19 个 Skills（14 个 Cadence 核心 + 5 个 superpowers 继承）
-- 19 个 Commands（14 个 Cadence 核心 + 5 个 superpowers 继承）
+- 20 个 Skills（15 个 Cadence 核心 + 5 个 superpowers 继承）
+- 20 个 Commands（15 个 Cadence 核心 + 5 个 superpowers 继承）
 - 3 个 Subagent Prompts
 - 约 50 个文件，约 150KB 代码
 
-**Cadence 核心 Skills（14个）**：
+**Cadence 核心 Skills（15个）**：
 - 8 个核心节点：brainstorming, analyze, requirement, design, design-review, plan, using-git-worktrees, subagent-development
 - 3 个流程：full-flow, quick-flow, exploration-flow
-- 3 个元 Skills：using-cadence, cadencing, cad-load
+- 4 个元 Skills：using-cadence, cadencing, cad-load, prerequisite-check
 
 **从 superpowers 继承（5个）**：
 - test-driven-development, verification-before-completion, requesting-code-review, receiving-code-review, finishing-a-development-branch
