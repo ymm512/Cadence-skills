@@ -353,7 +353,7 @@ Skills 直接存储在这个仓库中。要贡献：
 **已完成功能**：
 - ✅ 8 个核心节点 Skills
 - ✅ 3 个流程 Skills
-- ✅ 4 个元 Skills（using-cadence, cadencing, cad-load, prerequisite-check）
+- ✅ 4 个元 Skills（using-cadence, cadencing, cad-load, pre-check）
 - ✅ 15 个 Commands
 - ✅ 3 个 Subagent Prompts
 - ✅ 智能进度追踪系统
@@ -368,7 +368,7 @@ Skills 直接存储在这个仓库中。要贡献：
 **Cadence 核心 Skills（15个）**：
 - 8 个核心节点：brainstorming, analyze, requirement, design, design-review, plan, using-git-worktrees, subagent-development
 - 3 个流程：full-flow, quick-flow, exploration-flow
-- 4 个元 Skills：using-cadence, cadencing, cad-load, prerequisite-check
+- 4 个元 Skills：using-cadence, cadencing, cad-load, pre-check
 
 **从 superpowers 继承（5个）**：
 - test-driven-development, verification-before-completion, requesting-code-review, receiving-code-review, finishing-a-development-branch
