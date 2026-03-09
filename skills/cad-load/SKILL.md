@@ -1,6 +1,7 @@
 ---
 name: cad-load
 description: "Cadence 项目上下文加载 - 激活项目工作区，加载项目记忆和进度追踪，支持跨会话持久化。触发条件：会话开始、需要加载项目上下文、恢复进度、查看项目状态。"
+disable-model-invocation: true
 ---
 
 # Cad-Load - 项目上下文加载

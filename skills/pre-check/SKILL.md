@@ -1,6 +1,7 @@
 ---
-name: prerequisite-check
-description: Use when setting up development environments, checking tool availability, or configuring project dependencies. IMPORTANT - All user interactions MUST be in Chinese (中文) - triggers when tools like npx/uvx need verification or project locations need validation
+name: pre-check
+description: Use when setting up development environments, checking tool availability, or configuring project dependencies. IMPORTANT - All user interactions MUST be in Chinese (中文) - triggers when tools like npx/uvx need verification or project locations need validation.
+disable-model-invocation: true
 ---
 
 # 前置条件检查

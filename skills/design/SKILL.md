@@ -1,6 +1,7 @@
 ---
 name: design
 description: "技术设计 - 基于需求文档和存量分析，设计完整的技术方案（系统架构、数据模型、API、技术选型）。触发条件：用户说'技术设计'、'技术方案'、'架构设计'，或已有需求文档准备进入设计阶段。支持带着审查报告重新设计（Design Review 后返回修改）。可选依赖：requirement（需求文档）、analyze（存量分析）。"
+disable-model-invocation: true
 ---
 
 # Design - 技术设计

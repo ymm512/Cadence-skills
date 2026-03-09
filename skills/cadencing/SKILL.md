@@ -1,6 +1,7 @@
 ---
 name: cadencing
 description: "初始化现有项目为 Cadence 管理项目，自动配置环境、规则、文档结构和技术栈"
+disable-model-invocation: true
 ---
 
 # 项目初始化

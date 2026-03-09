@@ -1,6 +1,7 @@
 ---
 name: plan
 description: "实现计划 - 基于技术方案，制定详细的任务分解、依赖关系、并行任务识别、时间估计和验收标准。触发条件：用户说'实现计划'、'任务分解'、'开发计划'，或已有技术方案准备进入开发阶段。支持读取CLAUDE.md技术栈配置。为Subagent Development提供任务分配支持。必须依赖：design（技术方案）。可选依赖：design-review（完整流程需要，快速流程可跳过）。"
+disable-model-invocation: true
 ---
 
 # Plan - 实现计划

@@ -1,6 +1,7 @@
 ---
 name: git-review
-description: Use when reviewing git commits on demand - call /git-review command or manually apply 5-step workflow to check code quality, security, performance, and standards compliance
+description: Use when reviewing git commits on demand - call /git-review command or manually apply 5-step workflow to check code quality, security, performance, and standards compliance.
+disable-model-invocation: true
 ---
 
 # Git Review Skill

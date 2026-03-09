@@ -1,6 +1,7 @@
 ---
 name: subagent-development
 description: "代码实现+单元测试 - 使用Subagent开发代码，强制遵循TDD流程（RED-GREEN-BLUE），两阶段审查（Spec Reviewer + Code Quality Reviewer），支持并行执行。触发条件：用户说'开始实现'、'执行计划'、'开发代码'，或已有实现计划准备进入开发阶段。必须依赖：plan（任务清单和验收标准）。强烈建议：using-git-worktrees（隔离环境）。可选依赖：design（技术约束）。"
+disable-model-invocation: true
 ---
 
 # Subagent Development - 代码实现+单元测试

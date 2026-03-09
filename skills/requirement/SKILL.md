@@ -1,6 +1,7 @@
 ---
 name: requirement
 description: "需求分析 - 基于 PRD 和存量分析，生成详细需求文档"
+disable-model-invocation: true
 ---
 
 # Requirement - Requirement Analysis

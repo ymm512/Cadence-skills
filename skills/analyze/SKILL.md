@@ -1,6 +1,7 @@
 ---
 name: analyze
 description: "存量分析 - 分析现有代码和架构，理解依赖关系"
+disable-model-invocation: true
 ---
 
 # Analyze - Legacy Code Analysis
