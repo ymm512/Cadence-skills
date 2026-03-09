@@ -238,7 +238,95 @@ serena analyze .git/
 serena read .git/objects/...
 ```
 
-### 6. 项目个性化规则
+### 6. MCP Server 使用规则
+
+> **🔴 MCP 工具使用规范**
+
+#### Time MCP
+
+**用途**：获取当前时间和时区转换
+
+**触发场景**：
+- 需要获取当前日期时间
+- 需要进行时区转换
+- 用户询问"现在几点"、"今天日期"等
+
+**使用方式**：
+```json
+{
+  "tool": "mcp__time__get_current_time",
+  "timezone": "Asia/Shanghai"
+}
+```
+
+#### Context7 MCP
+
+**用途**：获取官方技术文档和代码示例
+
+**触发场景**：
+- 遇到 import/require 语句
+- 使用框架特定功能（React、Vue、Next.js 等）
+- 需要官方 API 文档而非通用解决方案
+- 版本特定实现要求
+
+**使用方式**：
+1. 先调用 `mcp__context7__resolve-library-id` 解析库 ID
+2. 再调用 `mcp__context7__get-library-docs` 获取文档
+
+**示例**：
+```json
+// 步骤1：解析库
+{"libraryName": "react"}
+// 返回："/react/react"
+
+// 步骤2：获取文档
+{"context7CompatibleLibraryID": "/react/react", "topic": "hooks"}
+```
+
+#### Sequential Thinking MCP
+
+**用途**：复杂问题的多步骤推理
+
+**触发场景**：
+- 复杂调试场景（多层级）
+- 架构分析和系统设计
+- 使用 `--think`、`--think-hard`、`--ultrathink` 标志
+- 需要假设测试和验证的问题
+- 多组件故障调查
+
+**使用方式**：
+```json
+{
+  "tool": "mcp__sequential-thinking__sequentialthinking",
+  "thought": "当前思考内容",
+  "thoughtNumber": 1,
+  "totalThoughts": 5,
+  "nextThoughtNeeded": true
+}
+```
+
+#### Serena MCP
+
+**用途**：语义代码理解和项目内存
+
+**触发场景**：
+- 符号操作：重命名、提取、移动函数/类
+- 项目级代码导航和探索
+- 多语言项目
+- 会话生命周期管理（`/cad-load`、`/cad-save`）
+- 大型代码库分析（>50 文件）
+
+**常用命令**：
+- `mcp__serena__activate_project` - 激活项目
+- `mcp__serena__list_memories` - 列出记忆
+- `mcp__serena__find_symbol` - 查找符号
+- `mcp__serena__get_symbols_overview` - 获取符号概览
+
+**重要规则**：
+- 禁止分析 `.git/` 目录（详见"### 5. Serena 使用规则"）
+- 使用 Git 命令获取版本信息
+
+### 7. 项目个性化规则
 
 > **🔴 定制化能力**
 
