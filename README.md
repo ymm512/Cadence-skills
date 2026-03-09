@@ -115,10 +115,10 @@ git pull origin main
 
 ### 步骤 4：Claude Code 规则配置
 
-执行 `/claude-code-rules` 命令，配置 Claude Code 规则：
+执行 `/rule-config` 命令，配置项目规则：
 
 ```bash
-/claude-code-rules
+/rule-config
 ```
 
 该命令会：

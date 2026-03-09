@@ -68,7 +68,7 @@
 /pre-check                # 前置条件检查
 /init                    # 项目初始化
 /project-analysis      # 项目分析
-/claude-code-rules      # Claude Code 规则配置
+/rule-config           # 项目规则配置
 /mcp-configuration     # MCP 配置
 /project-rules-examples  # 项目个性化规则（可选）
 

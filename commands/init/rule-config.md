@@ -1,5 +1,5 @@
 ---
-name: claude-code-rules
+name: rule-config
 description: "配置 Claude Code 规则：语言规则、文档规则、命名规则和目录结构"
 ---
 

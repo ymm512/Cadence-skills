@@ -73,12 +73,13 @@
 1. /pre-check          # 前置条件检查
 2. /init               # 项目初始化
 3. /project-analysis   # 项目分析
-4. /claude-code-rules  # Claude Code 规则配置
+4. /rule-config        # 项目规则配置
 5. /mcp-configuration  # MCP 配置
 6. /project-rules-examples  # 项目个性化规则（可选）
-7. /full-flow          # 使用完整流程
-8. 依次完成 8 个节点
-9. /status             # 查看进度
+7. /cad-load               # 加载项目上下文
+8. /full-flow          # 使用完整流程
+9. 依次完成 8 个节点
+10. /status             # 查看进度
 ```
 
 ### 场景 2：快速 Bug 修复
