@@ -70,10 +70,15 @@
 ### 场景 1：新项目开发
 
 ```
-1. /cadencing          # 初始化项目（检查前置条件、配置 MCP、创建目录）
-2. /full-flow          # 使用完整流程
-3. 依次完成 8 个节点
-4. /status             # 查看进度
+1. /pre-check          # 前置条件检查
+2. /init               # 项目初始化
+3. /project-analysis   # 项目分析
+4. /claude-code-rules  # Claude Code 规则配置
+5. /mcp-configuration  # MCP 配置
+6. /project-rules-examples  # 项目个性化规则（可选）
+7. /full-flow          # 使用完整流程
+8. 依次完成 8 个节点
+9. /status             # 查看进度
 ```
 
 ### 场景 2：快速 Bug 修复

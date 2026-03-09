@@ -64,8 +64,16 @@
 ### 组合 1：新项目开始
 
 ```bash
+# 项目初始化（首次使用时）
+/pre-check                # 前置条件检查
+/init                    # 项目初始化
+/project-analysis      # 项目分析
+/claude-code-rules      # Claude Code 规则配置
+/mcp-configuration     # MCP 配置
+/project-rules-examples  # 项目个性化规则（可选）
+
+# 开始开发
 /cad-load           # 加载项目上下文
-/cadencing          # 初始化项目（如果需要）
 /full-flow          # 开始完整流程
 ```
 

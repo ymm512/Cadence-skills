@@ -75,10 +75,10 @@ git pull origin main
 
 ### 步骤 1：前置条件检查
 
-执行 `/cadence:pre-check` 命令，自动检查和配置必要的工具：
+执行 `/pre-check` 命令，自动检查和配置必要的工具：
 
 ```bash
-/cadence:pre-check
+/pre-check
 ```
 
 该命令会：
@@ -88,20 +88,70 @@ git pull origin main
 - ✅ 自动安装缺失的工具
 - ✅ 引导您完成 serena 项目配置
 
-### 步骤 2：项目环境配置
+### 步骤 2：项目初始化
 
-执行 `/cadence:cadencing` 命令，自动初始化项目环境：
+执行 `/init` 命令，初始化项目环境：
 
 ```bash
-/cadence:cadencing
+/init
 ```
 
 该命令会：
 - ✅ 检测项目类型和技术栈
 - ✅ 创建 `.claude/` 目录结构
 - ✅ 配置项目规则和模板
-- ✅ 创建 MCP 配置文件（`.mcp.json`）
-- ✅ 设置文档存储规范
+
+### 步骤 3：项目分析
+
+执行 `/project-analysis` 命令，分析项目结构：
+
+```bash
+/project-analysis
+```
+
+该命令会：
+- ✅ 分析项目技术栈和依赖
+- ✅ 生成项目初始化分析摘要文档
+
+### 步骤 4：Claude Code 规则配置
+
+执行 `/claude-code-rules` 命令，配置 Claude Code 规则：
+
+```bash
+/claude-code-rules
+```
+
+该命令会：
+- ✅ 配置语言规则
+- ✅ 配置文档规则
+- ✅ 配置命名规则
+- ✅ 配置目录结构
+
+### 步骤 5：MCP 配置
+
+执行 `/mcp-configuration` 命令，配置 MCP：
+
+```bash
+/mcp-configuration
+```
+
+该命令会：
+- ✅ 创建 `.mcp.json` 配置文件
+- ✅ 配置 MCP 使用规则
+
+### 步骤 6（可选）：项目个性化规则
+
+执行 `/project-rules-examples` 命令，创建项目个性化规则：
+
+```bash
+/project-rules-examples
+```
+
+该命令会：
+- ✅ 创建需求文档模板
+- ✅ 创建设计文档模板
+- ✅ 创建代码开发规范
+- ✅ 创建测试规范
 
 **完成后**，您的项目就准备好使用 Cadence 的完整工作流程了！
 
