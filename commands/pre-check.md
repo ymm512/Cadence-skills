@@ -26,6 +26,9 @@
      - 指定下载目录
      - 使用已有的 serena 项目
 
+## serena github地址
+- https://github.com/oraios/serena.git
+
 ## 检查流程
 
 ```dot
