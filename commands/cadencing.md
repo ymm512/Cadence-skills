@@ -8,6 +8,65 @@
 - 现有项目需要接入 Cadence 管理体系
 - 配置项目环境、规则、文档结构和技术栈
 
+### MCP 配置文件
+
+**在项目根目录创建 `.mcp.json`：**
+
+```json
+{
+  "mcpServers": {
+    "time": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-time",
+        "--local-timezone=Asia/Shanghai"
+      ]
+    },
+    "context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ],
+      "env": {}
+    },
+    "sequential-thinking": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "env": {}
+    },
+    "serena": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "{{SERENA_PATH}}",
+        "serena",
+        "start-mcp-server",
+        "--context",
+        "ide-assistant",
+        "--enable-web-dashboard",
+        "false",
+        "--enable-gui-log-window",
+        "false"
+      ],
+      "env": {}
+    }
+  }
+}
+```
+
+**说明**：
+- `{{SERENA_PATH}}` 需要替换为用户提供的 Serena 本地路径
+- Windows 路径需要处理反斜杠（使用 `\\` 或转换为正斜杠 `/`）
+- 配置mcp.json文件，必须直接复制并使用，不要思考
+
+
 ## 功能
 
 自动执行以下初始化步骤：

@@ -280,7 +280,6 @@ git log --oneline --since="30 days ago" | wc -l
 - `mcp__serena__list_memories` - 列出记忆
 - `mcp__serena__find_symbol` - 查找符号
 - `mcp__serena__get_symbols_overview` - 获取符号概览
-```
 
 ### MCP 配置文件创建
 
