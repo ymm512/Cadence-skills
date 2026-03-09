@@ -1,6 +1,6 @@
 # /pre-check - 前置条件检查
 
-调用 `prerequisite-check` skill 自动检查和配置项目所需的工具和依赖项。
+调用 `pre-check` skill 自动检查和配置项目所需的工具和依赖项。
 
 ## 使用场景
 
