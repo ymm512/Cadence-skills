@@ -18,7 +18,7 @@ disable-model-invocation: true
 
 你必须为以下每个项目创建任务并按顺序完成：
 
-1. **Claude Code 初始化** — 调用 `/init` 命令，验证 CLAUDE.md 已创建
+1. **Claude Code 初始化** — 使用 Claude Code 标准 init 方式，初始化
 2. **项目分析** — 分析项目结构、依赖、Git 历史，生成摘要文档
 3. **添加语言规则** — 配置强制中文响应
 4. **添加文档规则** — 配置 `.claude` 目录结构和命名规范
@@ -37,7 +37,7 @@ disable-model-invocation: true
 
 ```dot
 digraph cadencing {
-    "调用 /init" [shape=box];
+    "Claude Code 初始化" [shape=box];
     "项目分析" [shape=box];
     "添加强制规则" [shape=box];
     "检测项目类型" [shape=box];
@@ -52,7 +52,7 @@ digraph cadencing {
     "配置 .gitignore" [shape=box];
     "初始化完成" [shape=doublecircle];
 
-    "调用 /init" -> "项目分析";
+    "Claude Code 初始化" -> "项目分析";
     "项目分析" -> "添加强制规则";
     "添加强制规则" -> "检测项目类型";
     "检测项目类型" -> "用户确认类型？";
