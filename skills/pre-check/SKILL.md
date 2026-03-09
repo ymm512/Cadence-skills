@@ -141,9 +141,9 @@ uvx --version
 
 使用 AskUserQuestion 工具（**必须使用中文**）：
 
-**选项 1：自动下载到默认目录**
+**选项 1：自动下载到默认目录（~/.cadence/serena/）**
 - 检查父目录 `.cadence` 是否存在，不存在则自动创建
-- 在默认目录执行：`git clone https://github.com/oraios/serena.git`
+- 在默认目录（~/.cadence/serena/）执行：`git clone https://github.com/oraios/serena.git`
 - 验证：检查目录和 `pyproject.toml` 是否存在
 - 成功：报告 "✓ serena 项目已成功下载"，进入步骤 3.2
 - 失败：报告错误，**返回步骤 3.1 重新选择**
