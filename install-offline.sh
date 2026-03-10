@@ -147,7 +147,8 @@ else
                 # 如果没有逗号，需要添加
                 # 移除最后一行并添加逗号
                 TEMP_FILE2=$(mktemp)
-                head -n -1 "$TEMP_FILE" > "$TEMP_FILE2"
+                # 使用 sed 删除最后一行（兼容 macOS 和 Linux）
+                sed '$d' "$TEMP_FILE" > "$TEMP_FILE2"
                 LAST_ENTRY=$(tail -1 "$TEMP_FILE")
                 echo "$LAST_ENTRY," >> "$TEMP_FILE2"
                 mv "$TEMP_FILE2" "$TEMP_FILE"
