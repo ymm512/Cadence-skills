@@ -52,7 +52,7 @@ Cadence 从你启动编码助手的那一刻开始工作。当它发现你正在
 ### Claude Code 安装方式
 
 #### 方式 1：官网安装（海外用户推荐）
-访问 Claude Code 官网：https://claude.com/download
+访问 Claude Code 官网：https://claude.com/product/claude-code
 
 #### 方式 2：国内镜像安装（国内用户推荐）
 
