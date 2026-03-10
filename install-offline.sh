@@ -80,6 +80,103 @@ echo ""
 echo -e "  ${GREEN}✅ 复制完成${NC}"
 echo ""
 
+# 步骤 4: 配置 known_marketplaces.json
+echo -e "${YELLOW}🔨 步骤 4:${NC} 配置 known_marketplaces.json"
+
+PLUGINS_DIR="$HOME/.claude/plugins"
+MARKETPLACES_FILE="$PLUGINS_DIR/known_marketplaces.json"
+
+# 创建 plugins 目录（如果不存在）
+if [ ! -d "$PLUGINS_DIR" ]; then
+    mkdir -p "$PLUGINS_DIR"
+    echo -e "  ${GREEN}✅ 已创建:${NC} $PLUGINS_DIR"
+fi
+
+# 获取当前时间戳
+CURRENT_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
+
+# 检查文件是否存在
+if [ ! -f "$MARKETPLACES_FILE" ]; then
+    # 文件不存在，创建新文件
+    echo -e "  ${BLUE}ℹ️  文件不存在，创建新文件${NC}"
+
+    cat > "$MARKETPLACES_FILE" << 'EOF'
+{
+  "cadence-skills-local": {
+    "source": {
+      "source": "github",
+      "repo": "cadence/cadence-skills-local"
+    },
+    "installLocation": "INSTALL_LOCATION_PLACEHOLDER",
+    "lastUpdated": "TIMESTAMP_PLACEHOLDER"
+  }
+}
+EOF
+
+    # 替换占位符
+    sed -i.bak "s|INSTALL_LOCATION_PLACEHOLDER|$TARGET_DIR|g" "$MARKETPLACES_FILE"
+    sed -i.bak "s|TIMESTAMP_PLACEHOLDER|$CURRENT_TIMESTAMP|g" "$MARKETPLACES_FILE"
+    rm -f "${MARKETPLACES_FILE}.bak"
+
+    echo -e "  ${GREEN}✅ 已创建配置文件${NC}"
+else
+    # 文件存在，追加或更新 superpowers-marketplace 配置
+    echo -e "  ${BLUE}ℹ️  文件已存在，检查配置${NC}"
+
+    # 检查是否已存在 superpowers-marketplace
+    if grep -q '"superpowers-marketplace"' "$MARKETPLACES_FILE"; then
+        echo -e "  ${BLUE}ℹ️  superpowers-marketplace 配置已存在${NC}"
+    else
+        # 追加 superpowers-marketplace 配置
+        echo -e "  ${BLUE}ℹ️  添加 superpowers-marketplace 配置${NC}"
+
+        # 使用临时文件来安全地修改 JSON
+        TEMP_FILE=$(mktemp)
+
+        # 读取文件内容，在最后一个 } 之前插入新配置
+        # 先找到最后一个 } 的位置
+        LAST_BRACE_LINE=$(grep -n '^}$' "$MARKETPLACES_FILE" | tail -1 | cut -d: -f1)
+
+        if [ -n "$LAST_BRACE_LINE" ]; then
+            # 在最后一个 } 之前插入配置
+            head -n $((LAST_BRACE_LINE - 1)) "$MARKETPLACES_FILE" > "$TEMP_FILE"
+
+            # 检查倒数第二行是否已有逗号
+            SECOND_TO_LAST_LINE=$(head -n $((LAST_BRACE_LINE - 1)) "$MARKETPLACES_FILE" | tail -1)
+            if [[ ! "$SECOND_TO_LAST_LINE" =~ ,$ ]]; then
+                # 如果没有逗号，需要添加
+                # 移除最后一行并添加逗号
+                TEMP_FILE2=$(mktemp)
+                head -n -1 "$TEMP_FILE" > "$TEMP_FILE2"
+                LAST_ENTRY=$(tail -1 "$TEMP_FILE")
+                echo "$LAST_ENTRY," >> "$TEMP_FILE2"
+                mv "$TEMP_FILE2" "$TEMP_FILE"
+            fi
+
+            # 添加新配置
+            cat >> "$TEMP_FILE" << EOF
+  "superpowers-marketplace": {
+    "source": {
+      "source": "github",
+      "repo": "obra/superpowers-marketplace"
+    },
+    "installLocation": "$HOME/.claude/plugins/marketplaces/superpowers-marketplace",
+    "lastUpdated": "$CURRENT_TIMESTAMP"
+  }
+}
+EOF
+
+            mv "$TEMP_FILE" "$MARKETPLACES_FILE"
+            echo -e "  ${GREEN}✅ 已添加 superpowers-marketplace 配置${NC}"
+        else
+            echo -e "  ${RED}❌ JSON 格式错误，无法找到结尾${NC}"
+            rm -f "$TEMP_FILE"
+        fi
+    fi
+fi
+
+echo ""
+
 # 安装完成
 echo "============================================================"
 echo -e "  ${GREEN}✅ 安装成功！${NC}"
