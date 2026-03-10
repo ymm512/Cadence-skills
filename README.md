@@ -34,6 +34,8 @@ Cadence 从你启动编码助手的那一刻开始工作。当它发现你正在
 
 如果你想直接从源代码安装，或者需要自定义修改，可以使用以下方式：
 
+#### 选项 A: 在线安装（需要 Git）
+
 1. **克隆仓库到本地**：
 
 ```bash
@@ -64,6 +66,67 @@ git pull origin main
 ```
 
 然后重启 Claude Code 即可生效。
+
+#### 选项 B: 离线安装（无需 Git）
+
+如果你在没有网络连接的环境下，或者不想使用 Git，可以使用离线安装脚本：
+
+1. **下载项目压缩包**：
+   - 从 GitHub 下载 ZIP 压缩包：`https://github.com/michaelChe956/Cadence-skills/archive/refs/heads/main.zip`
+   - 或者从其他来源获取项目文件
+
+2. **解压到任意目录**：
+
+```bash
+# Linux/macOS
+unzip Cadence-skills-main.zip -d /path/to/
+
+# Windows（使用解压工具或命令行）
+# 解压到任意目录
+```
+
+3. **运行离线安装脚本**：
+
+项目提供了两个跨平台安装脚本：
+
+**Linux/macOS**：
+```bash
+# 进入项目目录
+cd /path/to/Cadence-skills
+
+# 添加执行权限
+chmod +x install-offline.sh
+
+# 运行安装脚本
+./install-offline.sh
+```
+
+**Windows**：
+```cmd
+# 进入项目目录
+cd C:\path\to\Cadence-skills
+
+# 双击运行或在命令行中执行
+install-offline.bat
+```
+
+安装脚本会自动：
+- ✅ 创建 `~/.claude/plugins/marketplaces/cadence-skills-local/` 目录
+- ✅ 复制所有项目文件到目标目录
+- ✅ 跳过 `.git` 目录（无需版本控制）
+
+4. **验证安装**：
+
+重启 Claude Code，然后执行：
+
+```bash
+# 查看已安装的 skills
+/plugin list
+```
+
+5. **离线更新**：
+
+当需要更新时，重新下载最新版本的项目文件，然后再次运行安装脚本即可覆盖更新。
 
 ### 验证安装
 
