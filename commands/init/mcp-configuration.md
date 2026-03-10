@@ -112,7 +112,8 @@ description: "配置 MCP：创建 .mcp.json 配置文件和 MCP 使用规则"
 
 ### 2. MCP 配置文件创建
 **说明**：
-- `{{SERENA_PATH}}` 需要替换为用户提供的 Serena 本地路径。必须是全路径，例如：`/Users/michaelche/.cadence/serena`。不可以是`~/.cadence/serena`等
+- `{{SERENA_PATH}}` 需要替换为用户提供的 Serena 本地路径。必须是全路径，默认路径为：`/Users/username/.cadence/serena`。**不可以使用`~/.cadence/serena`等相对路径**
+- windows和linux的默认路径分别为：`C:\Users\username\.cadence\serena`和`/home/username/.cadence/serena`
 - Windows 路径需要处理反斜杠（使用 `\\` 或转换为正斜杠 `/`）
 
 **在项目根目录创建 `.mcp.json`**：
