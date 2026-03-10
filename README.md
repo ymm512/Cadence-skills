@@ -30,103 +30,71 @@ Cadence 从你启动编码助手的那一刻开始工作。当它发现你正在
 /plugin install cadence@cadence-skills-marketplace
 ```
 
-### 方式 2: 通过 Git 代码直接安装
+### 方式 2: 从源码安装
 
-如果你想直接从源代码安装，或者需要自定义修改，可以使用以下方式：
+如果你想从源代码安装，可以使用以下步骤：
 
-#### 选项 A: 在线安装（需要 Git）
+#### 步骤 1: 获取项目代码
 
-1. **克隆仓库到本地**：
+你可以通过以下任意方式获取项目代码：
 
+**方式 A: 使用 Git 克隆（推荐）**
 ```bash
-# 克隆到任意目录（推荐）
-git clone https://github.com/michaelChe956/Cadence-skills.git /path/to/Cadence-skills
-
-# 或者克隆到 Claude Code 的 skills 目录
-git clone https://github.com/michaelChe956/Cadence-skills.git ~/.claude/skills/Cadence-skills
+git clone https://github.com/michaelChe956/Cadence-skills.git
+cd Cadence-skills
 ```
 
-2. **在 Claude Code 中安装**：
+**方式 B: 下载压缩包**
+- 从 GitHub 下载：`https://github.com/michaelChe956/Cadence-skills/archive/refs/heads/main.zip`
+- 解压到本地目录
+- 进入项目目录
 
-```bash
-# 使用本地路径安装
-/plugin install /path/to/Cadence-skills
+#### 步骤 2: 运行安装脚本
 
-# 或者如果克隆到 skills 目录
-/plugin install ~/.claude/skills/Cadence-skills
-```
-
-3. **更新方式**：
-
-当你需要更新时，只需在克隆的目录中拉取最新代码：
-
-```bash
-cd /path/to/Cadence-skills
-git pull origin main
-```
-
-然后重启 Claude Code 即可生效。
-
-#### 选项 B: 离线安装（无需 Git）
-
-如果你在没有网络连接的环境下，或者不想使用 Git，可以使用离线安装脚本：
-
-1. **下载项目压缩包**：
-   - 从 GitHub 下载 ZIP 压缩包：`https://github.com/michaelChe956/Cadence-skills/archive/refs/heads/main.zip`
-   - 或者从其他来源获取项目文件
-
-2. **解压到任意目录**：
-
-```bash
-# Linux/macOS
-unzip Cadence-skills-main.zip -d /path/to/
-
-# Windows（使用解压工具或命令行）
-# 解压到任意目录
-```
-
-3. **运行离线安装脚本**：
-
-项目提供了两个跨平台安装脚本：
+项目提供了跨平台安装脚本：
 
 **Linux/macOS**：
 ```bash
-# 进入项目目录
-cd /path/to/Cadence-skills
-
-# 添加执行权限
 chmod +x install-offline.sh
-
-# 运行安装脚本
 ./install-offline.sh
 ```
 
 **Windows**：
 ```cmd
-# 进入项目目录
-cd C:\path\to\Cadence-skills
-
 # 双击运行或在命令行中执行
 install-offline.bat
 ```
 
-安装脚本会自动：
-- ✅ 创建 `~/.claude/plugins/marketplaces/cadence-skills-local/` 目录
-- ✅ 复制所有项目文件到目标目录
-- ✅ 跳过 `.git` 目录（无需版本控制）
+安装脚本会自动将项目安装到 `~/.claude/plugins/marketplaces/cadence-skills-local/` 目录。
 
-4. **验证安装**：
+#### 步骤 3: 配置项目启用插件
 
-重启 Claude Code，然后执行：
+在需要使用 Cadence 插件的项目目录中，执行以下操作：
 
+1. **创建 `.claude/` 目录**：
 ```bash
-# 查看已安装的 skills
-/plugin list
+mkdir -p .claude
 ```
 
-5. **离线更新**：
+2. **创建 `settings.json` 文件**：
+```bash
+# Linux/macOS
+touch .claude/settings.json
 
-当需要更新时，重新下载最新版本的项目文件，然后再次运行安装脚本即可覆盖更新。
+# Windows
+type nul > .claude\settings.json
+```
+
+3. **复制以下内容到 `settings.json` 文件**：
+```json
+{
+  "enabledPlugins": {
+    "cadence@cadence-skills-marketplace": true
+  }
+}
+```
+
+完成以上步骤后，重启 Claude Code 即可在该项目中使用 Cadence 插件。
 
 ### 验证安装
 
