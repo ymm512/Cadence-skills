@@ -16,6 +16,10 @@ Cadence 从你启动编码助手的那一刻开始工作。当它发现你正在
 
 ## 写在安装之前
 
+**模型使用说明**：本项目默认会使用 MiniMax 做测试，尽可能保证 MiniMax-M2.5-highspeed 模型可以基本使用。
+
+**推荐优先级**：Claude Opus > GLM-5（速度较慢）> MiniMax-M2.5-highspeed
+
 ### 模型推荐
 
 #### 国内模型（推荐）
