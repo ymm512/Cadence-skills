@@ -14,6 +14,101 @@ Cadence 从你启动编码助手的那一刻开始工作。当它发现你正在
 
 还有更多功能，但这是系统的核心。而且因为 Skills 会自动触发，你不需要做任何特别的事情。你的编码助手就拥有了节奏（Cadence）。
 
+## 写在安装之前
+
+### 模型推荐
+
+#### 国内模型（推荐）
+
+**1. GLM-5（智谱 AI）**
+- ✨ **开源 SOTA 表现**：Coding 和 Agent 能力达到开源模型顶尖水平
+- 🚀 **逼近 Opus 性能**：真实编程场景使用体感逼近 Claude Opus 4.5
+- 🎯 **擅长复杂工程**：专为复杂系统工程与长程 Agent 任务设计
+- 💰 **高性价比**：744B MoE 架构，每次推理仅激活约 10B 参数，成本更低
+- 🇨🇳 **国产芯片适配**：对国产芯片适配良好，摆脱海外算力依赖
+
+**2. MiniMax M2.5**
+- ⚡ **极速推理**：100 TPS 输出速度，是主流模型的 2 倍
+- 💎 **顶尖编程能力**：核心编码能力与海外顶尖闭源模型持平
+- 💸 **超高性价比**：价格仅为主流旗舰模型的十分之一，支持本地部署
+- 🔧 **Agent 原生设计**：专为 Agent 场景和工程效率优化
+- 🌍 **多语言优势**：在多语言编码、推理速度、使用成本上具备显著优势
+
+#### 海外模型（可选）
+
+**1. Claude Opus 4.6**
+- 👑 **最强编程能力**：终端编码、代理搜索、抽象推理等极端复杂场景的王者
+- 📚 **100 万 Token 上下文**：处理超大规模代码库和文档集（Beta）
+- 🎯 **长时程 Agent**：为长时程自主任务设计，可工作数小时
+- 🔍 **深度推理**：扩展思考模式，适合需要深度逻辑推理的任务
+
+**2. Claude Sonnet 4.6**
+- ⚖️ **最佳性价比**：性能接近 Opus 4.6，价格仅五分之一
+- 🎨 **多模态能力强**：在多模态识别与办公任务中表现优异
+- 💻 **编程能力出色**：代码修改更精准，支持 100 万 Token 上下文（Beta）
+- 🚀 **全面升级**：编码、计算机使用、长上下文推理、代理规划全面增强
+
+
+### Claude Code 安装方式
+
+#### 方式 1：官网安装（海外用户推荐）
+访问 Claude Code 官网：https://claude.com/download
+
+#### 方式 2：国内镜像安装（国内用户推荐）
+
+**国内镜像站**
+- Claude-CN：https://www.claude-cn.org/
+- 提供详细的国内镜像使用指南
+
+#### 方式 3：npm 安装
+```bash
+# 安装 Node.js（需要 18.0 以上版本）
+# 然后全局安装 Claude Code
+npm install -g @anthropic-ai/claude-code
+```
+
+#### 方式 4：macOS Homebrew 安装
+```bash
+brew install claude-code
+```
+
+#### 方式 5：Linux APT 安装
+```bash
+# 添加 Anthropic 仓库
+curl -fsSL https://packages.anthropic.com/public/gpg.key | sudo apt-key add -
+echo "deb https://packages.anthropic.com/public stable main" | sudo tee /etc/apt/sources.list.d/anthropic.list
+
+# 安装 Claude Code
+sudo apt update
+sudo apt install claude-code
+```
+
+### 推荐模型代理工具
+
+**1. CC-Switch（推荐）**
+- 🎨 **图形化界面**：操作简单，无需手动编辑配置文件
+- 🔄 **一键切换**：支持 GLM、Qwen、DeepSeek 等主流国产大模型
+- 🛠️ **多工具支持**：支持 Claude Code、Codex、Gemini CLI 等主流 AI 编程工具
+- 📦 **跨平台**：支持 macOS、Linux、Windows
+- 🔗 **GitHub**：https://github.com/XiaYeAI/cc-model-switcher
+
+**2. Claude Code Router（ccr）**
+- 🚦 **智能路由**：根据任务类型自动选择最适合的 AI 模型
+- 🎯 **灵活策略**：支持自定义默认路由模型、背景模型和思考链模型
+- 💰 **成本优化**：使用高性价比模型，降低使用成本
+- 🔓 **无需官方账号**：支持第三方模型服务商
+- 🔗 **GitHub**：https://github.com/conor mannion/claude-code-router
+
+### 推荐 IDE
+
+**Trae（字节跳动）**
+- 🇨🇳 **国产 AI IDE**：字节跳动推出的 AI 原生集成开发环境
+- 🎯 **中文优化**：深度适配中文开发者，技术术语精准解析
+- 🔧 **Builder 模式**：支持端到端项目构建，设计稿直转前端代码
+- 💡 **SOLO 模式**：2025 年 8 月新增，实现全流程自动化开发
+- 🆓 **完全免费**：现阶段完全免费使用
+- 🌐 **官网**：https://www.trae.ai/
+
 ## 安装
 
 ### 方式 1: 通过插件市场安装（推荐）
