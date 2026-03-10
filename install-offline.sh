@@ -120,15 +120,15 @@ EOF
 
     echo -e "  ${GREEN}✅ 已创建配置文件${NC}"
 else
-    # 文件存在，追加或更新 superpowers-marketplace 配置
+    # 文件存在，追加或更新 cadence-skills-local 配置
     echo -e "  ${BLUE}ℹ️  文件已存在，检查配置${NC}"
 
-    # 检查是否已存在 superpowers-marketplace
-    if grep -q '"superpowers-marketplace"' "$MARKETPLACES_FILE"; then
-        echo -e "  ${BLUE}ℹ️  superpowers-marketplace 配置已存在${NC}"
+    # 检查是否已存在 cadence-skills-local
+    if grep -q '"cadence-skills-local"' "$MARKETPLACES_FILE"; then
+        echo -e "  ${BLUE}ℹ️  cadence-skills-local 配置已存在${NC}"
     else
-        # 追加 superpowers-marketplace 配置
-        echo -e "  ${BLUE}ℹ️  添加 superpowers-marketplace 配置${NC}"
+        # 追加 cadence-skills-local 配置
+        echo -e "  ${BLUE}ℹ️  添加 cadence-skills-local 配置${NC}"
 
         # 使用临时文件来安全地修改 JSON
         TEMP_FILE=$(mktemp)
@@ -155,19 +155,19 @@ else
 
             # 添加新配置
             cat >> "$TEMP_FILE" << EOF
-  "superpowers-marketplace": {
+  "cadence-skills-local": {
     "source": {
       "source": "github",
-      "repo": "obra/superpowers-marketplace"
+      "repo": "cadence/cadence-skills-local"
     },
-    "installLocation": "$HOME/.claude/plugins/marketplaces/superpowers-marketplace",
+    "installLocation": "$TARGET_DIR",
     "lastUpdated": "$CURRENT_TIMESTAMP"
   }
 }
 EOF
 
             mv "$TEMP_FILE" "$MARKETPLACES_FILE"
-            echo -e "  ${GREEN}✅ 已添加 superpowers-marketplace 配置${NC}"
+            echo -e "  ${GREEN}✅ 已添加 cadence-skills-local 配置${NC}"
         else
             echo -e "  ${RED}❌ JSON 格式错误，无法找到结尾${NC}"
             rm -f "$TEMP_FILE"

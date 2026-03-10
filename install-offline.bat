@@ -119,7 +119,7 @@ if not exist "%MARKETPLACES_FILE%" (
 
     echo   ✅ 已创建配置文件
 ) else (
-    REM 文件存在，追加或更新 superpowers-marketplace 配置
+    REM 文件存在，追加或更新 cadence-skills-local 配置
     echo   ℹ️  文件已存在，检查配置
 
     REM 使用 PowerShell 检查和更新 JSON
@@ -127,22 +127,22 @@ if not exist "%MARKETPLACES_FILE%" (
         "$file = '%MARKETPLACES_FILE%'; ^
          $json = Get-Content $file -Raw | ConvertFrom-Json; ^
          ^
-         if ($json.PSObject.Properties.Match('superpowers-marketplace')) { ^
-             Write-Host '  ℹ️  superpowers-marketplace 配置已存在'; ^
+         if ($json.PSObject.Properties.Match('cadence-skills-local')) { ^
+             Write-Host '  ℹ️  cadence-skills-local 配置已存在'; ^
          } else { ^
-             Write-Host '  ℹ️  添加 superpowers-marketplace 配置'; ^
+             Write-Host '  ℹ️  添加 cadence-skills-local 配置'; ^
              $
-             Add-Member -InputObject $json -MemberType NoteProperty -Name 'superpowers-marketplace' -Value @{ ^
+             Add-Member -InputObject $json -MemberType NoteProperty -Name 'cadence-skills-local' -Value @{ ^
                  source = @{ ^
                      source = 'github'; ^
-                     repo = 'obra/superpowers-marketplace' ^
+                     repo = 'cadence/cadence-skills-local' ^
                  }; ^
-                 installLocation = '%USERPROFILE:\=\\%\.claude\plugins\marketplaces\superpowers-marketplace'; ^
+                 installLocation = '%TARGET_DIR:\=\\%'; ^
                  lastUpdated = '%CURRENT_TIMESTAMP%' ^
              }; ^
              $
              $json | ConvertTo-Json -Depth 10 | Out-File -FilePath $file -Encoding UTF8; ^
-             Write-Host '  ✅ 已添加 superpowers-marketplace 配置'; ^
+             Write-Host '  ✅ 已添加 cadence-skills-local 配置'; ^
          }"
 )
 
