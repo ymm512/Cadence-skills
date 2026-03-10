@@ -111,6 +111,9 @@ description: "配置 MCP：创建 .mcp.json 配置文件和 MCP 使用规则"
 ```
 
 ### 2. MCP 配置文件创建
+**说明**：
+- `{{SERENA_PATH}}` 需要替换为用户提供的 Serena 本地路径。必须是全路径，例如：`/Users/michaelche/.cadence/serena`。不可以是`~/.cadence/serena`等
+- Windows 路径需要处理反斜杠（使用 `\\` 或转换为正斜杠 `/`）
 
 **在项目根目录创建 `.mcp.json`**：
 
@@ -163,9 +166,7 @@ description: "配置 MCP：创建 .mcp.json 配置文件和 MCP 使用规则"
 }
 ```
 
-**说明**：
-- `{{SERENA_PATH}}` 需要替换为用户提供的 Serena 本地路径
-- Windows 路径需要处理反斜杠（使用 `\\` 或转换为正斜杠 `/`）
+
 
 ### 3. 配置 .gitignore
 
