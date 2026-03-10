@@ -90,14 +90,14 @@ sudo apt install claude-code
 - 🔄 **一键切换**：支持 GLM、Qwen、DeepSeek 等主流国产大模型
 - 🛠️ **多工具支持**：支持 Claude Code、Codex、Gemini CLI 等主流 AI 编程工具
 - 📦 **跨平台**：支持 macOS、Linux、Windows
-- 🔗 **GitHub**：https://github.com/XiaYeAI/cc-model-switcher
+- 🔗 **GitHub**：https://github.com/farion1231/cc-switch
 
 **2. Claude Code Router（ccr）**
 - 🚦 **智能路由**：根据任务类型自动选择最适合的 AI 模型
 - 🎯 **灵活策略**：支持自定义默认路由模型、背景模型和思考链模型
 - 💰 **成本优化**：使用高性价比模型，降低使用成本
 - 🔓 **无需官方账号**：支持第三方模型服务商
-- 🔗 **GitHub**：https://github.com/conor mannion/claude-code-router
+- 🔗 **GitHub**：https://github.com/musistudio/claude-code-router
 
 ### 推荐 IDE
 
