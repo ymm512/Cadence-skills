@@ -1,5 +1,7 @@
 # /develop - 代码实现+单元测试
 
+调用 `subagent-development` skill 进行技术设计。
+
 ## 使用场景
 
 使用 Subagent 实现代码，强制遵循 TDD 流程，同时编写单元测试，并进行两阶段审查。
