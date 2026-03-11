@@ -1,7 +1,6 @@
 ---
 name: using-git-worktrees
 description: "创建隔离的开发环境 - 使用 git worktree 创建独立工作空间，支持智能目录选择、安全验证、自动初始化和测试基线验证。触发条件：用户说'创建隔离环境'、'git worktree'、'开发分支'，或需要并行开发、避免污染主分支。可选依赖：plan（提供任务信息）。"
-disable-model-invocation: true
 ---
 
 # Using Git Worktrees - 隔离开发环境
