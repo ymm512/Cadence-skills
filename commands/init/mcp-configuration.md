@@ -15,7 +15,7 @@ description: "配置 MCP：创建 .mcp.json 配置文件和 MCP 使用规则"
 
 1. **添加 MCP 使用规则** — 添加各 MCP server 的使用规则到 CLAUDE.md
 2. **创建 MCP 配置文件** — 在项目根目录创建 `.mcp.json` 配置
-3. **配置 .gitignore** — 添加 `.serena/` 和 `.worktrees/` 到 .gitignore
+3. **配置 .gitignore** — 添加 `.serena/`、`.worktrees/` 和 `.mcp.json` 到 .gitignore
 
 **下一步**：将配置结果传递给 @project-rules-examples skill 创建个性化规则示例
 
@@ -189,6 +189,7 @@ ls -la .gitignore
 # Cadence 工作目录
 .serena/
 .worktrees/
+.mcp.json
 ```
 
 如果 `.gitignore` 不存在，创建文件并添加内容：
@@ -198,6 +199,7 @@ cat > .gitignore << 'EOF'
 # Cadence 工作目录
 .serena/
 .worktrees/
+.mcp.json
 EOF
 ```
 
@@ -207,6 +209,7 @@ EOF
 |----------|------|---------|
 | `.serena/` | Serena MCP 本地记忆和会话数据 | 包含用户本地的会话记录和项目记忆，不应共享 |
 | `.worktrees/` | Git worktrees 隔离开发环境 | 包含临时的隔离开发环境，不应提交 |
+| `.mcp.json` | MCP 配置文件 | 包含本地 MCP 路径配置，不应提交到版本控制 |
 
 **验证**：
 
