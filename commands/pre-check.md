@@ -45,15 +45,21 @@
 
 ## 下一步
 
-环境检查完成后，可以执行：
+环境检查完成后，可以执行项目初始化命令：
 
 ```bash
-/cadence:cadencing  # 项目环境配置
+/init # 初始化项目
+/cadence:init:project-analysis  # 分析项目结构
+/cadence:init:project-rules     # 配置项目规则
+/cadence:init:mcp-configuration # 配置 MCP
 ```
 
 ## 相关命令
 
-- `/cadencing` - 项目初始化配置
+- `/init` - 初始化项目
+- `/cadence:init:project-analysis` - 分析项目结构、技术栈和依赖
+- `/cadence:init:project-rules` - 创建项目个性化规则模板
+- `/cadence:init:mcp-configuration` - 配置 MCP
 - `/cad-load` - 加载项目上下文
 
 ## 强制规则
