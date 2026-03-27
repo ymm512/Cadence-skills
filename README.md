@@ -392,10 +392,11 @@ Cadence 提供 3 种流程模式，适应不同的开发场景：
 
 **📖 [查看所有 Skills 详细指南](readmes/skills/README.md)**
 
-### 元 Skills（2个）
+### 元 Skills（3个）
 
 - **using-cadence** - Cadence Skills 系统使用指南 [📖 详细指南](readmes/skills/using-cadence.md)
 - **cad-load** - 项目上下文加载 [📖 详细指南](readmes/skills/cad-load.md)
+- **skill-creator** - 创建、校验、打包并优化 Claude Code skills [📖 详细指南](readmes/skills/skill-creator.md)
 
 **📖 [查看所有 Skills 详细指南](readmes/skills/README.md)**
 
@@ -426,10 +427,11 @@ Cadence 提供 3 种流程模式，适应不同的开发场景：
 
 **📖 [查看所有 Commands 详细指南](readmes/skills/README.md)**
 
-### 元 Commands（2个）
+### 元 Commands（3个）
 
 - `/pre-check` - 前置条件检查，确保环境正确配置
 - `/cad-load` - 加载项目上下文（支持 quick/standard/full 三种模式）
+- `/skill-create` - 创建和优化 Skills（创建模板、打包、触发率优化）
 
 **📖 [查看所有 Commands 详细指南](readmes/commands/README.md)**
 
@@ -504,13 +506,72 @@ Cadence 提供 3 种流程模式，适应不同的开发场景：
 - **降低复杂度** - 简单性是首要目标
 - **证据优于声明** - 在声明成功前验证
 
+## Skill Creator（生成可直接调用的 Skills）
+
+仓库内置了最小可用的 Skill Creator 工具链，可直接生成 Claude Code 可调用的技能目录，并打包为 `.skill` 文件分发。
+
+```bash
+# 1) 创建技能骨架（默认写入 skills/）
+python scripts/skill_creator/init_skill.py my-new-skill
+
+# 2) 校验技能结构与 frontmatter
+python scripts/skill_creator/quick_validate.py skills/my-new-skill
+
+# 3) 打包为可分发的 .skill 文件
+python scripts/skill_creator/package_skill.py skills/my-new-skill dist
+```
+
+Description 自动优化闭环（触发率优化）：
+
+```bash
+# 4) 准备评测集（query + should_trigger）
+cp scripts/skill_creator/examples/eval_set.sample.json /tmp/eval_set.json
+
+# 5) 单次评测当前 description
+python scripts/skill_creator/run_eval.py \
+  --eval-set /tmp/eval_set.json \
+  --skill-path skills/my-new-skill \
+  --runs-per-query 3
+
+# 6) 运行迭代优化（可选 --apply 自动写回 SKILL.md）
+python scripts/skill_creator/run_loop.py \
+  --eval-set /tmp/eval_set.json \
+  --skill-path skills/my-new-skill \
+  --max-iterations 5 \
+  --runs-per-query 3 \
+  --apply
+
+# 7) 一键执行 baseline + loop（推荐）
+python scripts/skill_creator/optimize_description.py \
+  --eval-set /tmp/eval_set.json \
+  --skill-path skills/my-new-skill \
+  --max-iterations 5 \
+  --runs-per-query 3 \
+  --apply
+
+# 8) 端到端一键流程（创建+校验+打包+可选优化）
+python scripts/skill_creator/skill_create_workflow.py \
+  --skill-name my-new-skill \
+  --package \
+  --optimize \
+  --eval-set scripts/skill_creator/examples/eval_set.skill-creator.20.json \
+  --max-iterations 5 \
+  --runs-per-query 3 \
+  --apply
+
+# 9) 交互式向导（不记参数时最方便）
+python scripts/skill_creator/skill_create_workflow.py --interactive
+```
+
+另外，仓库提供了元技能：`skills/skill-creator/SKILL.md`，用于在本仓库中持续创建和维护 Skills。
+
 ## 贡献
 
 Skills 直接存储在这个仓库中。要贡献：
 
 1. Fork 仓库
 2. 为你的 Skill 创建分支
-3. 遵循 `skills/writing-skills/SKILL.md` 创建和测试新 Skills
+3. 遵循 `skills/skill-creator/SKILL.md` 创建和测试新 Skills
 4. 提交 PR
 
 ## 更新

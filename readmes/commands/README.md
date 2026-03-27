@@ -28,9 +28,10 @@
 - [report](report.md) - 生成进度报告
 - [monitor](monitor.md) - 实时监控进度
 
-### 元 Commands（1个）
+### 元 Commands（2个）
 
 - [cad-load](cad-load.md) - 加载项目上下文
+- [skill-create](skill-create.md) - 创建和优化 skills
 
 ## 快速导航
 
@@ -133,6 +134,7 @@
 | `/report` | full-flow/quick-flow/exploration-flow | 生成报告 |
 | `/monitor` | full-flow/quick-flow/exploration-flow | 实时监控 |
 | `/cad-load` | cad-load | 加载上下文 |
+| `/skill-create` | skill-creator | 创建与优化 skills |
 
 ## 快速参考
 
