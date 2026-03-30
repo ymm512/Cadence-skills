@@ -30,42 +30,42 @@ Use this skill when the user asks to:
 
 0. One-shot workflow (recommended in most cases):
 ```bash
-python scripts/skill_creator/skill_create_workflow.py --skill-name <skill-name> --package --optimize --apply
+python skills/skill-creator/scripts/skill_create_workflow.py --skill-name <skill-name> --package --optimize --apply
 ```
 
 0b. One-shot workflow for Claude Code GLOBAL skill (preferred for direct usage):
 ```bash
-python scripts/skill_creator/skill_create_workflow.py --skill-name <skill-name> --target global
+python skills/skill-creator/scripts/skill_create_workflow.py --skill-name <skill-name> --target global
 ```
 
 1. Scaffold a new skill:
 ```bash
-python scripts/skill_creator/init_skill.py <skill-name>
+python skills/skill-creator/scripts/init_skill.py <skill-name>
 ```
 
 2. Validate structure:
 ```bash
-python scripts/skill_creator/quick_validate.py skills/<skill-name>
+python skills/skill-creator/scripts/quick_validate.py skills/<skill-name>
 ```
 
 3. Package distributable file:
 ```bash
-python scripts/skill_creator/package_skill.py skills/<skill-name> dist
+python skills/skill-creator/scripts/package_skill.py skills/<skill-name> dist
 ```
 
 4. Evaluate current description trigger quality:
 ```bash
-python scripts/skill_creator/run_eval.py --eval-set <eval-set.json> --skill-path skills/<skill-name>
+python skills/skill-creator/scripts/run_eval.py --eval-set <eval-set.json> --skill-path skills/<skill-name>
 ```
 
 5. Optimize description in loop:
 ```bash
-python scripts/skill_creator/run_loop.py --eval-set <eval-set.json> --skill-path skills/<skill-name> --max-iterations 5 --apply
+python skills/skill-creator/scripts/run_loop.py --eval-set <eval-set.json> --skill-path skills/<skill-name> --max-iterations 5 --apply
 ```
 
 6. One-shot optimization (recommended):
 ```bash
-python scripts/skill_creator/optimize_description.py --eval-set <eval-set.json> --skill-path skills/<skill-name> --max-iterations 5 --apply
+python skills/skill-creator/scripts/optimize_description.py --eval-set <eval-set.json> --skill-path skills/<skill-name> --max-iterations 5 --apply
 ```
 
 ## Output Requirements

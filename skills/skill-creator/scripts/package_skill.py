@@ -50,7 +50,7 @@ def package_skill(skill_dir: Path, output_dir: Path | None = None) -> Path:
 
 def main() -> int:
     if len(sys.argv) < 2:
-        print("Usage: python scripts/skill_creator/package_skill.py <skill-directory> [output-directory]")
+        print("Usage: python skills/skill-creator/scripts/package_skill.py <skill-directory> [output-directory]")
         return 1
 
     skill_dir = Path(sys.argv[1]).resolve()

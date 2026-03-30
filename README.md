@@ -512,29 +512,29 @@ Cadence 提供 3 种流程模式，适应不同的开发场景：
 
 ```bash
 # 1) 创建技能骨架（默认写入 skills/）
-python scripts/skill_creator/init_skill.py my-new-skill
+python skills/skill-creator/scripts/init_skill.py my-new-skill
 
 # 2) 校验技能结构与 frontmatter
-python scripts/skill_creator/quick_validate.py skills/my-new-skill
+python skills/skill-creator/scripts/quick_validate.py skills/my-new-skill
 
 # 3) 打包为可分发的 .skill 文件
-python scripts/skill_creator/package_skill.py skills/my-new-skill dist
+python skills/skill-creator/scripts/package_skill.py skills/my-new-skill dist
 ```
 
 Description 自动优化闭环（触发率优化）：
 
 ```bash
 # 4) 准备评测集（query + should_trigger）
-cp scripts/skill_creator/examples/eval_set.sample.json /tmp/eval_set.json
+cp skills/skill-creator/scripts/examples/eval_set.sample.json /tmp/eval_set.json
 
 # 5) 单次评测当前 description
-python scripts/skill_creator/run_eval.py \
+python skills/skill-creator/scripts/run_eval.py \
   --eval-set /tmp/eval_set.json \
   --skill-path skills/my-new-skill \
   --runs-per-query 3
 
 # 6) 运行迭代优化（可选 --apply 自动写回 SKILL.md）
-python scripts/skill_creator/run_loop.py \
+python skills/skill-creator/scripts/run_loop.py \
   --eval-set /tmp/eval_set.json \
   --skill-path skills/my-new-skill \
   --max-iterations 5 \
@@ -542,7 +542,7 @@ python scripts/skill_creator/run_loop.py \
   --apply
 
 # 7) 一键执行 baseline + loop（推荐）
-python scripts/skill_creator/optimize_description.py \
+python skills/skill-creator/scripts/optimize_description.py \
   --eval-set /tmp/eval_set.json \
   --skill-path skills/my-new-skill \
   --max-iterations 5 \
@@ -550,17 +550,17 @@ python scripts/skill_creator/optimize_description.py \
   --apply
 
 # 8) 端到端一键流程（创建+校验+打包+可选优化）
-python scripts/skill_creator/skill_create_workflow.py \
+python skills/skill-creator/scripts/skill_create_workflow.py \
   --skill-name my-new-skill \
   --package \
   --optimize \
-  --eval-set scripts/skill_creator/examples/eval_set.skill-creator.20.json \
+  --eval-set skills/skill-creator/scripts/examples/eval_set.skill-creator.20.json \
   --max-iterations 5 \
   --runs-per-query 3 \
   --apply
 
 # 9) 交互式向导（不记参数时最方便）
-python scripts/skill_creator/skill_create_workflow.py --interactive
+python skills/skill-creator/scripts/skill_create_workflow.py --interactive
 ```
 
 另外，仓库提供了元技能：`skills/skill-creator/SKILL.md`，用于在本仓库中持续创建和维护 Skills。

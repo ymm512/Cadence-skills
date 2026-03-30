@@ -43,7 +43,9 @@ def collect_interactive_args(args: argparse.Namespace, repo_root: Path) -> argpa
         args.optimize = ask_bool("Run description optimization?", default=False)
 
     if args.optimize and not args.eval_set:
-        default_eval = repo_root / "scripts" / "skill_creator" / "examples" / "eval_set.sample.json"
+        default_eval = (
+            repo_root / "skills" / "skill-creator" / "scripts" / "examples" / "eval_set.sample.json"
+        )
         use_default = ask_bool(f"Use default eval set: {default_eval} ?", default=True)
         args.eval_set = str(default_eval) if use_default else input("Eval set path: ").strip()
 
@@ -153,13 +155,13 @@ def main() -> int:
 
     if args.optimize:
         eval_set = args.eval_set or str(
-            repo_root / "scripts" / "skill_creator" / "examples" / "eval_set.sample.json"
+            repo_root / "skills" / "skill-creator" / "scripts" / "examples" / "eval_set.sample.json"
         )
         opt_output = args.opt_output or str(Path("/tmp") / f"{args.skill_name}-optimize.json")
 
         cmd = [
             sys.executable,
-            str(repo_root / "scripts" / "skill_creator" / "optimize_description.py"),
+            str(repo_root / "skills" / "skill-creator" / "scripts" / "optimize_description.py"),
             "--eval-set",
             eval_set,
             "--skill-path",

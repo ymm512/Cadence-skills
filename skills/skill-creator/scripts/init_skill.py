@@ -107,7 +107,7 @@ def init_skill(skill_name: str, skills_root: Path) -> Path:
 
 def main() -> int:
     if len(sys.argv) < 2:
-        print("Usage: python scripts/skill_creator/init_skill.py <skill-name> [skills-root]")
+        print("Usage: python skills/skill-creator/scripts/init_skill.py <skill-name> [skills-root]")
         return 1
 
     skill_name = sys.argv[1].strip()

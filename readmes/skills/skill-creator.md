@@ -8,42 +8,42 @@
 
 ```bash
 # 交互式向导（推荐）
-python scripts/skill_creator/skill_create_workflow.py --interactive
+python skills/skill-creator/scripts/skill_create_workflow.py --interactive
 
 # 创建 Claude Code 全局 Skill（推荐）
-python scripts/skill_creator/skill_create_workflow.py \
+python skills/skill-creator/scripts/skill_create_workflow.py \
   --skill-name my-new-skill \
   --target global
 
 # 导入已有 markdown 为全局 Skill
-python scripts/skill_creator/skill_create_workflow.py \
+python skills/skill-creator/scripts/skill_create_workflow.py \
   --skill-name pdd-question \
   --target global \
   --source-md .claude/pdd-question.md
 
 # 一键流程（推荐）
-python scripts/skill_creator/skill_create_workflow.py \
+python skills/skill-creator/scripts/skill_create_workflow.py \
   --skill-name my-new-skill \
   --target global \
   --package \
   --optimize \
-  --eval-set scripts/skill_creator/examples/eval_set.skill-creator.20.json \
+  --eval-set skills/skill-creator/scripts/examples/eval_set.skill-creator.20.json \
   --max-iterations 5 \
   --runs-per-query 3 \
   --apply
 
 # 1) 创建
-python scripts/skill_creator/init_skill.py my-new-skill
+python skills/skill-creator/scripts/init_skill.py my-new-skill
 
 # 2) 校验
-python scripts/skill_creator/quick_validate.py skills/my-new-skill
+python skills/skill-creator/scripts/quick_validate.py skills/my-new-skill
 
 # 3) 打包
-python scripts/skill_creator/package_skill.py skills/my-new-skill dist
+python skills/skill-creator/scripts/package_skill.py skills/my-new-skill dist
 
 # 4) 一键优化 description（可选）
-python scripts/skill_creator/optimize_description.py \
-  --eval-set scripts/skill_creator/examples/eval_set.sample.json \
+python skills/skill-creator/scripts/optimize_description.py \
+  --eval-set skills/skill-creator/scripts/examples/eval_set.sample.json \
   --skill-path skills/my-new-skill \
   --max-iterations 5 \
   --runs-per-query 3 \

@@ -65,7 +65,7 @@ def validate_skill(skill_dir: Path) -> tuple[bool, str]:
 
 def main() -> int:
     if len(sys.argv) != 2:
-        print("Usage: python scripts/skill_creator/quick_validate.py <skill-directory>")
+        print("Usage: python skills/skill-creator/scripts/quick_validate.py <skill-directory>")
         return 1
 
     valid, msg = validate_skill(Path(sys.argv[1]).resolve())
