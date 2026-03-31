@@ -10,10 +10,21 @@
 # 交互式向导（推荐）
 python skills/skill-creator/scripts/skill_create_workflow.py --interactive
 
-# 创建 Claude Code 全局 Skill（推荐）
+# 创建当前项目可用的 Claude Code Skill（推荐）
+python skills/skill-creator/scripts/skill_create_workflow.py \
+  --skill-name my-new-skill \
+  --target project
+
+# 创建 Claude Code 全局 Skill
 python skills/skill-creator/scripts/skill_create_workflow.py \
   --skill-name my-new-skill \
   --target global
+
+# 导入已有 markdown 为项目级 Skill
+python skills/skill-creator/scripts/skill_create_workflow.py \
+  --skill-name pdd-question \
+  --target project \
+  --source-md .claude/pdd-question.md
 
 # 导入已有 markdown 为全局 Skill
 python skills/skill-creator/scripts/skill_create_workflow.py \
@@ -24,7 +35,7 @@ python skills/skill-creator/scripts/skill_create_workflow.py \
 # 一键流程（推荐）
 python skills/skill-creator/scripts/skill_create_workflow.py \
   --skill-name my-new-skill \
-  --target global \
+  --target project \
   --package \
   --optimize \
   --eval-set skills/skill-creator/scripts/examples/eval_set.skill-creator.20.json \
@@ -55,6 +66,9 @@ python skills/skill-creator/scripts/optimize_description.py \
 - 技能目录：`skills/my-new-skill/`
 - 分发包：`dist/my-new-skill.skill`
 - 优化结果（可选）：`--output` 指定的 JSON 文件
+
+当 `--target project` 时，技能目录会变为：`.claude/skills/my-new-skill/`。  
+通常可立即作为当前项目 Skill 使用。
 
 当 `--target global` 时，技能目录会变为：`~/.claude/skills/my-new-skill/`。  
 通常可立即使用全局 Skill。

@@ -24,7 +24,8 @@ Use this skill when the user asks to:
 - Every skill must contain `SKILL.md`
 - `name` in frontmatter must equal directory name
 - Optional directories: `scripts/`, `references/`, `assets/`
-- For Claude Code GLOBAL usage, prefer `~/.claude/skills/<skill-name>/SKILL.md`
+- For project-local Claude Code usage, prefer `.claude/skills/<skill-name>/SKILL.md`
+- Use `~/.claude/skills/<skill-name>/SKILL.md` only when the skill should be shared across projects
 
 ## Execution Workflow
 
@@ -33,7 +34,12 @@ Use this skill when the user asks to:
 python skills/skill-creator/scripts/skill_create_workflow.py --skill-name <skill-name> --package --optimize --apply
 ```
 
-0b. One-shot workflow for Claude Code GLOBAL skill (preferred for direct usage):
+0b. One-shot workflow for project-local Claude Code skill (preferred for direct usage in the current project):
+```bash
+python skills/skill-creator/scripts/skill_create_workflow.py --skill-name <skill-name> --target project
+```
+
+0c. One-shot workflow for Claude Code GLOBAL skill:
 ```bash
 python skills/skill-creator/scripts/skill_create_workflow.py --skill-name <skill-name> --target global
 ```

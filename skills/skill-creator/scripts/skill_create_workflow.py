@@ -35,8 +35,12 @@ def collect_interactive_args(args: argparse.Namespace, repo_root: Path) -> argpa
         raise ValueError("skill-name is required")
 
     if not args.target:
-        use_global = ask_bool("Install as Claude Code GLOBAL skill (~/.claude/skills)?", default=True)
-        args.target = "global" if use_global else "repo"
+        use_project = ask_bool("Install as PROJECT skill (.claude/skills in current project)?", default=True)
+        if use_project:
+            args.target = "project"
+        else:
+            use_global = ask_bool("Install as Claude Code GLOBAL skill (~/.claude/skills)?", default=False)
+            args.target = "global" if use_global else "repo"
 
     if not args.package and not args.optimize:
         args.package = ask_bool("Package .skill file?", default=True)
@@ -73,9 +77,9 @@ def main() -> int:
     parser.add_argument("--skill-name", required=False, help="Skill directory/name, e.g. api-doc-audit")
     parser.add_argument(
         "--target",
-        choices=["repo", "global"],
+        choices=["repo", "project", "global"],
         default=None,
-        help="Install target. repo=./skills, global=~/.claude/skills",
+        help="Install target. repo=./skills, project=./.claude/skills, global=~/.claude/skills",
     )
     parser.add_argument("--skills-root", default=None, help="Skills root directory (default: repo/skills)")
     parser.add_argument(
@@ -108,11 +112,17 @@ def main() -> int:
         args.target = "repo"
 
     default_repo_root = repo_root / "skills"
+    default_project_root = repo_root / ".claude" / "skills"
     default_global_root = Path.home() / ".claude" / "skills"
     if args.skills_root:
         skills_root = Path(args.skills_root).expanduser().resolve()
     else:
-        skills_root = default_global_root if args.target == "global" else default_repo_root
+        if args.target == "global":
+            skills_root = default_global_root
+        elif args.target == "project":
+            skills_root = default_project_root
+        else:
+            skills_root = default_repo_root
     skill_dir = skills_root / args.skill_name
 
     result: dict[str, object] = {

@@ -508,62 +508,22 @@ Cadence 提供 3 种流程模式，适应不同的开发场景：
 
 ## Skill Creator（生成可直接调用的 Skills）
 
-仓库内置了最小可用的 Skill Creator 工具链，可直接生成 Claude Code 可调用的技能目录，并打包为 `.skill` 文件分发。
+仓库提供了元技能 [`skills/skill-creator/SKILL.md`](skills/skill-creator/SKILL.md)，用于在本仓库中持续创建和维护可直接调用的 Skills。
 
-```bash
-# 1) 创建技能骨架（默认写入 skills/）
-python skills/skill-creator/scripts/init_skill.py my-new-skill
+使用方式很简单：
 
-# 2) 校验技能结构与 frontmatter
-python skills/skill-creator/scripts/quick_validate.py skills/my-new-skill
+1. 在 Claude Code / Codex 中明确提出你要创建或更新一个 Skill。
+2. 说明 Skill 的目标、适用场景、触发方式，以及希望生成到哪个目录。
+3. 让助手调用 `skill-creator`，它会按仓库约定补齐技能目录结构、`SKILL.md` 内容以及必要元数据。
+4. 生成后，再让助手帮你检查描述是否清晰、触发条件是否准确，以及是否需要补充示例。
 
-# 3) 打包为可分发的 .skill 文件
-python skills/skill-creator/scripts/package_skill.py skills/my-new-skill dist
-```
+适合的指令示例：
 
-Description 自动优化闭环（触发率优化）：
+- “帮我创建一个用于生成需求文档的 Skill”
+- “基于现有模板，新建一个前端评审 Skill”
+- “优化这个 Skill 的说明，让它更容易被正确触发”
 
-```bash
-# 4) 准备评测集（query + should_trigger）
-cp skills/skill-creator/scripts/examples/eval_set.sample.json /tmp/eval_set.json
-
-# 5) 单次评测当前 description
-python skills/skill-creator/scripts/run_eval.py \
-  --eval-set /tmp/eval_set.json \
-  --skill-path skills/my-new-skill \
-  --runs-per-query 3
-
-# 6) 运行迭代优化（可选 --apply 自动写回 SKILL.md）
-python skills/skill-creator/scripts/run_loop.py \
-  --eval-set /tmp/eval_set.json \
-  --skill-path skills/my-new-skill \
-  --max-iterations 5 \
-  --runs-per-query 3 \
-  --apply
-
-# 7) 一键执行 baseline + loop（推荐）
-python skills/skill-creator/scripts/optimize_description.py \
-  --eval-set /tmp/eval_set.json \
-  --skill-path skills/my-new-skill \
-  --max-iterations 5 \
-  --runs-per-query 3 \
-  --apply
-
-# 8) 端到端一键流程（创建+校验+打包+可选优化）
-python skills/skill-creator/scripts/skill_create_workflow.py \
-  --skill-name my-new-skill \
-  --package \
-  --optimize \
-  --eval-set skills/skill-creator/scripts/examples/eval_set.skill-creator.20.json \
-  --max-iterations 5 \
-  --runs-per-query 3 \
-  --apply
-
-# 9) 交互式向导（不记参数时最方便）
-python skills/skill-creator/scripts/skill_create_workflow.py --interactive
-```
-
-另外，仓库提供了元技能：`skills/skill-creator/SKILL.md`，用于在本仓库中持续创建和维护 Skills。
+如果你只是想快速开始，直接告诉助手“使用 `skill-creator` 帮我创建一个新 Skill”，再补充名称和用途即可。
 
 ## 贡献
 

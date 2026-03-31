@@ -26,12 +26,23 @@ skill: skill-creator
 # 交互式向导（推荐新手）
 python skills/skill-creator/scripts/skill_create_workflow.py --interactive
 
-# 直接创建 Claude Code 全局 Skill（核心诉求）
+# 直接创建当前项目可用的 Claude Code Skill（推荐）
+python skills/skill-creator/scripts/skill_create_workflow.py \
+  --skill-name my-new-skill \
+  --target project
+
+# 直接创建 Claude Code 全局 Skill
 python skills/skill-creator/scripts/skill_create_workflow.py \
   --skill-name my-new-skill \
   --target global
 
-# 把现有 markdown 一步导入为全局 Skill（你当前场景）
+# 把现有 markdown 一步导入为项目级 Skill
+python skills/skill-creator/scripts/skill_create_workflow.py \
+  --skill-name pdd-question \
+  --target project \
+  --source-md .claude/pdd-question.md
+
+# 把现有 markdown 一步导入为全局 Skill
 python skills/skill-creator/scripts/skill_create_workflow.py \
   --skill-name pdd-question \
   --target global \
@@ -50,7 +61,7 @@ python skills/skill-creator/scripts/skill_create_workflow.py \
 # 创建 + 打包 + 触发率优化（并写回 description）
 python skills/skill-creator/scripts/skill_create_workflow.py \
   --skill-name my-new-skill \
-  --target global \
+  --target project \
   --package \
   --optimize \
   --eval-set skills/skill-creator/scripts/examples/eval_set.skill-creator.20.json \
@@ -59,10 +70,11 @@ python skills/skill-creator/scripts/skill_create_workflow.py \
   --apply
 ```
 
-## 全局 Skill 生效说明
+## Skill 生效说明
 
-当使用 `--target global` 时，Skill 会写入 `~/.claude/skills/<skill-name>/SKILL.md`。  
-通常可立即使用该 Skill。
+- 当使用 `--target project` 时，Skill 会写入 `.claude/skills/<skill-name>/SKILL.md`
+- 当使用 `--target global` 时，Skill 会写入 `~/.claude/skills/<skill-name>/SKILL.md`
+- 未显式指定时，非交互模式默认仍为仓库内 `skills/<skill-name>/`
 
 ## 详细文档
 
