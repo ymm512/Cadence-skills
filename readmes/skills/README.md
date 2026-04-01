@@ -26,11 +26,12 @@
 - [quick-flow](quick-flow.md) - 快速流程（4 个节点）
 - [exploration-flow](exploration-flow.md) - 探索流程（4 个节点 + 迭代）
 
-### 元 Skills（3个）
+### 元 Skills（4个）
 
 - [using-cadence](using-cadence.md) - Cadence Skills 系统使用指南
 - [cadencing](cadencing.md) - 项目初始化，配置环境、规则、文档结构和技术栈
 - [cad-load](cad-load.md) - 项目上下文加载
+- [skill-creator](skill-creator.md) - 创建、校验、打包并优化 Claude Code skills
 
 ## 快速导航
 
@@ -45,6 +46,7 @@
 - **复杂功能**（>2小时）→ [full-flow](full-flow.md)
 - **简单功能**（<2小时）→ [quick-flow](quick-flow.md)
 - **技术调研** → [exploration-flow](exploration-flow.md)
+- **创建/维护技能** → [skill-creator](skill-creator.md)
 
 ### 我要单独使用某个节点
 

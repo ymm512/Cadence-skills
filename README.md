@@ -392,10 +392,11 @@ Cadence 提供 3 种流程模式，适应不同的开发场景：
 
 **📖 [查看所有 Skills 详细指南](readmes/skills/README.md)**
 
-### 元 Skills（2个）
+### 元 Skills（3个）
 
 - **using-cadence** - Cadence Skills 系统使用指南 [📖 详细指南](readmes/skills/using-cadence.md)
 - **cad-load** - 项目上下文加载 [📖 详细指南](readmes/skills/cad-load.md)
+- **skill-creator** - 创建、校验、打包并优化 Claude Code skills [📖 详细指南](readmes/skills/skill-creator.md)
 
 **📖 [查看所有 Skills 详细指南](readmes/skills/README.md)**
 
@@ -426,10 +427,11 @@ Cadence 提供 3 种流程模式，适应不同的开发场景：
 
 **📖 [查看所有 Commands 详细指南](readmes/skills/README.md)**
 
-### 元 Commands（2个）
+### 元 Commands（3个）
 
 - `/pre-check` - 前置条件检查，确保环境正确配置
 - `/cad-load` - 加载项目上下文（支持 quick/standard/full 三种模式）
+- `/skill-create` - 创建和优化 Skills（创建模板、打包、触发率优化）
 
 **📖 [查看所有 Commands 详细指南](readmes/commands/README.md)**
 
@@ -504,13 +506,32 @@ Cadence 提供 3 种流程模式，适应不同的开发场景：
 - **降低复杂度** - 简单性是首要目标
 - **证据优于声明** - 在声明成功前验证
 
+## Skill Creator（生成可直接调用的 Skills）
+
+仓库提供了元技能 [`skills/skill-creator/SKILL.md`](skills/skill-creator/SKILL.md)，用于在本仓库中持续创建和维护可直接调用的 Skills。
+
+使用方式很简单：
+
+1. 在 Claude Code / Codex 中明确提出你要创建或更新一个 Skill。
+2. 说明 Skill 的目标、适用场景、触发方式，以及希望生成到哪个目录。
+3. 让助手调用 `skill-creator`，它会按仓库约定补齐技能目录结构、`SKILL.md` 内容以及必要元数据。
+4. 生成后，再让助手帮你检查描述是否清晰、触发条件是否准确，以及是否需要补充示例。
+
+适合的指令示例：
+
+- “帮我创建一个用于生成需求文档的 Skill”
+- “基于现有模板，新建一个前端评审 Skill”
+- “优化这个 Skill 的说明，让它更容易被正确触发”
+
+如果你只是想快速开始，直接告诉助手“使用 `skill-creator` 帮我创建一个新 Skill”，再补充名称和用途即可。
+
 ## 贡献
 
 Skills 直接存储在这个仓库中。要贡献：
 
 1. Fork 仓库
 2. 为你的 Skill 创建分支
-3. 遵循 `skills/writing-skills/SKILL.md` 创建和测试新 Skills
+3. 遵循 `skills/skill-creator/SKILL.md` 创建和测试新 Skills
 4. 提交 PR
 
 ## 更新
