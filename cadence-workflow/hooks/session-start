@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# SessionStart hook for Cadence-skills plugin
+# SessionStart hook for cadence-workflow plugin
+# Injects using-cadence skill content as additional context
 
 set -euo pipefail
 
