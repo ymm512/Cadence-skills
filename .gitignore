@@ -1,4 +1,5 @@
 # Cadence 工作目录
+.serena/
 .worktrees/
 .claude/commands/
 .mcp.json
