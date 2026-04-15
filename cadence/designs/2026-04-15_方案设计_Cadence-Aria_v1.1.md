@@ -170,6 +170,42 @@
 3. 提供推荐版本范围，但不内嵌固定版本
 4. 不兼容时必须明确报错能力缺失点
 
+## 前置依赖与检查机制
+
+`Cadence-Aria` 启动时必须先完成前置依赖检查，再允许进入正式流或 `fast-lane`。
+
+### 前置依赖
+
+1. `OpenSpec plugin`
+2. `superpowers plugin`
+3. `Codex` 可执行入口
+4. Git worktree 能力
+
+### 检查项
+
+| 检查项 | 检查方式 | 失败处理 |
+|------|---------|---------|
+| `OpenSpec` 可用 | 探测命令入口与核心产物能力 | 阻断正式流，提示安装或修复 |
+| `superpowers` 可用 | 探测关键 skill 是否存在 | 阻断对应角色流转 |
+| `Codex` 可用 | 探测 `codex` 执行入口与最小调用能力 | 阻断 `aria:run` 与 `aria:fast` |
+| Git worktree 可用 | 探测 Git 仓库状态与 worktree 能力 | 阻断并行执行，允许退化为串行 |
+
+### 兼容声明
+
+`Aria` 只声明“推荐版本范围”，不锁死具体版本。兼容性文档中至少要包含：
+
+1. 推荐的 `OpenSpec` 版本范围
+2. 推荐的 `superpowers` 版本范围
+3. 当前测试通过的 `Codex` 版本范围
+4. 当能力探测失败时的可解释错误信息
+
+### 降级策略
+
+1. `OpenSpec` 缺失：正式流阻断，`fast-lane` 仅允许低风险原生任务
+2. `superpowers` 缺失：阻断对应角色；不允许伪造“兼容实现”
+3. `Codex` 缺失：阻断 `exec / patch`
+4. Git worktree 缺失：允许单任务串行模式，不允许并行模式
+
 ## 角色模型
 
 一期采用 `8+1` 角色模型：
@@ -199,6 +235,37 @@
 
 `orchestrator` 不是普通业务角色，而是 `Aria` 的控制面，负责状态流转、角色编排、结果汇总与外部同步。
 
+### orchestrator 细化定义
+
+`orchestrator` 应被实现为 `Aria runtime` 的核心调度逻辑，而不是单独暴露给用户的命令或业务角色。
+
+它负责：
+
+1. 驱动状态转换
+2. 在状态节点调用相应角色
+3. 维护任务上下文与运行时状态
+4. 汇总 `review + test`
+5. 生成 `dispatch contract` 与 `patch contract`
+6. 处理超时、取消、失败与恢复
+7. 同步 `Vibe Kanban` 与 Aria 内部状态
+
+### orchestrator 调用关系
+
+```text
+user command
+  -> orchestrator
+    -> intake
+    -> spec
+    -> plan
+    -> dispatch
+    -> exec
+    -> review + test
+    -> patch
+    -> closure
+```
+
+`orchestrator` 自身是有状态的。状态以任务为单位持久化，而不是全局单例内存态。
+
 ## 角色职责矩阵
 
 | 角色 | 所属端 | 主要输入 | 主要输出 | 应使用的能力 | 不允许做的事 |
@@ -214,6 +281,60 @@
 | `fast-lane` | 特殊入口 | 小修小补请求、低风险判定 | 轻量执行记录、完成摘要，或升级到正式流 | 轻量 planning + verification；必要时转正式 OpenSpec 流 | 处理高风险任务；长期绕过正式流 |
 
 ## 状态机与任务流转
+
+### 状态持久化方案
+
+一期建议采用“文件级运行时状态”方案，而不是仅依赖内存态。
+
+状态存储位置建议为：
+
+```text
+cadence/cache/aria/
+  tasks/
+    <task-id>/
+      state.yaml
+      intake-card.md
+      plan-brief.md
+      dispatch-contract.yaml
+      review-report.md
+      test-report.md
+      patch-contract.yaml
+      verification-summary.md
+      closure-summary.md
+```
+
+### 持久化原则
+
+1. 一个任务一个目录
+2. 一个状态文件 `state.yaml`
+3. 运行时工件按轮次写入任务目录
+4. 多任务之间完全隔离
+5. 关闭 Claude Code 后可根据 `task-id` 恢复
+
+### `state.yaml` 最小字段
+
+```yaml
+task_id: aria-20260415-001
+source: vk | native
+flow_type: formal | fast-lane
+status: planned
+current_round: 1
+active_exec_units: []
+review_status: pending
+test_status: pending
+patch_round: 0
+created_at: "2026-04-15T10:00:00+08:00"
+updated_at: "2026-04-15T10:30:00+08:00"
+workspace_ref: ""
+worktree_ref: ""
+```
+
+### 恢复机制
+
+1. `aria:status` 可列出活跃任务与最后状态
+2. `aria:run` 支持基于 `task-id` 继续执行
+3. 当存在未完成任务时，`orchestrator` 优先提示恢复而不是重建
+4. 若运行时工件与状态不一致，以状态文件为主，并报告损坏
 
 ### 正式任务通道
 
@@ -251,6 +372,311 @@
 3. 需要并行拆分
 4. 出现多轮 `patch`
 5. 需要长期保留正式边界
+
+## Codex 触发与执行机制
+
+`Claude Code 驱动 Codex` 在一期中采用“`orchestrator` 生成执行协议，Claude 侧调用 Codex CLI 执行”的模式。
+
+### 触发机制
+
+1. `dispatch` 生成 `dispatch contract`
+2. `orchestrator` 为每个执行单元创建独立工作目录上下文
+3. `orchestrator` 调用 `Codex CLI`
+4. `Codex` 读取对应 contract 后执行 `exec` 或 `patch`
+5. 执行结果写回任务目录，再由 `orchestrator` 汇总
+
+### 一期执行模型
+
+1. 一个执行单元对应一个 `Codex` 运行实例
+2. 并行执行通过多个独立 `Codex` 实例实现
+3. `review` 与 `test` 在 Claude 侧并行进行
+
+### 生命周期管理
+
+`orchestrator` 负责：
+
+1. 创建执行单元
+2. 启动 Codex 进程
+3. 监控退出状态
+4. 记录 stdout/stderr 摘要
+5. 处理超时与取消
+6. 标记成功、失败、超时、取消状态
+
+### 超时与失败
+
+| 场景 | 处理方式 |
+|------|---------|
+| Codex 启动失败 | 标记执行单元失败，阻断依赖单元 |
+| Codex 超时 | 标记超时，允许用户重试或取消 |
+| Codex 异常退出 | 记录错误摘要，生成失败报告 |
+| 执行结果缺失 | 视为失败，不进入 review/test |
+
+### 不采纳的机制
+
+一期不设计：
+
+1. Codex 内部多任务并行
+2. 基于远程 API 的执行编排
+3. 由 Codex 自主管理其他 Codex 实例
+
+## 并行模型与资源隔离
+
+### 并行粒度
+
+一期采用混合粒度：
+
+1. 默认按 `OpenSpec tasks` 并行
+2. 单个 task 过大时，再拆为模块 ownership 并行
+
+### 隔离策略
+
+1. 每个执行单元独占一个 worktree
+2. 每个执行单元只写自己的 ownership 范围
+3. 禁止多个执行单元同时修改同一文件
+4. review/test 总是在汇总结果后执行，不与同一单元的 patch 并发
+
+### 并行上限
+
+一期建议默认上限：
+
+1. `exec` 并行数默认 `2`
+2. 可配置上限 `4`
+3. 超出上限的单元进入等待队列
+
+### 背压策略
+
+1. 当 worktree 资源不足时，自动退回串行
+2. 当同层任务存在文件 ownership 冲突时，强制串行
+3. 当上游依赖失败时，阻断其下游执行
+
+## fast-lane 准入标准
+
+只有满足以下条件的任务，才允许进入 `fast-lane`：
+
+1. 单文件或单一明确 ownership 范围
+2. 不引入新设计决策
+3. 不需要 OpenSpec 正式变更边界
+4. 不需要并行拆分
+5. 预计一轮 `exec + review/testing-lite` 可闭环
+6. 不涉及跨模块接口修改
+7. 不涉及状态迁移、数据迁移或发布策略
+
+### 典型适用场景
+
+1. 文档小改
+2. 规则文案修正
+3. 单点配置修补
+4. 小范围脚本参数修复
+
+### 禁止场景
+
+1. 新增功能
+2. 跨模块重构
+3. 多文件联动改动
+4. 需要多轮 patch 的复杂 bug
+5. 需要正式设计评审的任务
+
+### 执行主体
+
+`fast-lane` 仍由 `orchestrator` 驱动，执行主体默认仍是 `Codex exec`，不是 Claude 直接代替执行。
+
+## 运行时工件格式
+
+一期建议采用“Markdown 承载说明 + YAML 承载结构字段”的混合格式。
+
+### 格式选择
+
+| 工件 | 格式 | 理由 |
+|------|------|------|
+| `task intake card` | Markdown + YAML front matter | 兼顾可读性与结构化 |
+| `plan brief` | Markdown + YAML front matter | 需要人读，也需要解析 |
+| `dispatch contract` | YAML | 面向执行契约，结构优先 |
+| `review report` | Markdown + YAML front matter | 便于人读审查问题 |
+| `test report` | Markdown + YAML front matter | 需要记录证据与结论 |
+| `patch contract` | YAML | 面向修补契约，结构优先 |
+| `verification summary` | Markdown | 面向汇总展示 |
+| `closure summary` | Markdown | 面向最终闭环展示 |
+
+### 工件引用关系
+
+```text
+task intake card
+  -> plan brief
+    -> dispatch contract
+      -> exec result
+        -> review report
+        -> test report
+          -> patch contract
+            -> verification summary
+              -> closure summary
+```
+
+### `dispatch contract` 最小字段
+
+```yaml
+task_id: aria-20260415-001
+exec_unit_id: exec-01
+parent_task: task-a
+scope:
+  files_allowed:
+    - path/to/file.md
+  files_blocked:
+    - path/to/other.md
+goal: ""
+acceptance:
+  - ""
+dependencies: []
+worktree_ref: ""
+timeout_minutes: 30
+retry_allowed: true
+```
+
+### `patch contract` 最小字段
+
+```yaml
+task_id: aria-20260415-001
+patch_unit_id: patch-01
+source_exec_unit: exec-01
+based_on_dispatch_contract: dispatch-contract.yaml
+must_fix:
+  - review-issue-1
+  - test-failure-1
+must_not_change:
+  - scope boundary
+  - unrelated files
+acceptance:
+  - review issues resolved
+  - tests pass
+timeout_minutes: 20
+```
+
+### `dispatch contract` 与 `patch contract` 的关系
+
+1. `patch contract` 继承原 `dispatch contract` 的边界
+2. `patch contract` 只追加修补要求，不重写原任务目标
+3. 若 patch 需要扩大边界，必须退回 `plan` 或升级正式流
+
+## 质量门定义
+
+质量门由 `plan` 角色定义，`orchestrator` 负责执行与校验。
+
+### 质量门分层
+
+1. 全局默认质量门
+2. 任务类型质量门
+3. 单任务覆盖性质量门
+
+### 默认质量门
+
+| 任务类型 | 质量门 |
+|--------|-------|
+| 文档/规则/配置 | 格式正确、引用有效、结构一致、必要 dry-run 通过 |
+| 脚本/自动化 | 命令可运行、关键路径验证通过 |
+| 代码类 | 变更符合边界、验证命令通过、必要测试通过 |
+
+### 质量门归属
+
+1. `plan` 定义任务级质量门
+2. `review` 校验实现质量
+3. `test` 校验验证质量
+4. `orchestrator` 汇总是否满足“通过”条件
+
+## 错误处理策略
+
+### 错误分类
+
+1. 前置依赖错误
+2. OpenSpec 工件错误
+3. Codex 执行错误
+4. review/test 失败
+5. 状态损坏错误
+6. 用户取消
+
+### 处理规则
+
+| 错误类型 | 处理方式 |
+|---------|---------|
+| 前置依赖错误 | 阻断流转，给出明确缺失项 |
+| OpenSpec 创建失败 | 回退到 `spec-required`，等待修复 |
+| Codex 执行失败 | 标记执行单元失败，可重试 |
+| review/test 失败 | 进入 `patching` |
+| 状态损坏 | 停止继续执行，要求人工恢复或重建 |
+| 用户取消 | 标记为 `cancelled`，保留当前工件 |
+
+### patch 循环上限
+
+为避免无限修补循环，一期建议：
+
+1. 默认最多 `2` 轮 patch
+2. 超过上限后必须退回 `plan`
+3. 若边界已失效，则退回 `spec`
+
+## 多任务上下文与命令行为
+
+### 任务标识
+
+每个任务必须有唯一 `task-id`。所有 `status`、`result`、恢复、取消操作都以 `task-id` 为主键。
+
+### `aria:start`
+
+`aria:start` 的结束状态固定为 `planned`。用户确认计划后，由 `aria:run --task-id <id>` 进入 `dispatched`。
+
+### `aria:run`
+
+`aria:run` 的第一步就是 `planned -> dispatched` 的转换，因此不单独暴露“确认计划”命令。
+
+### `aria:status`
+
+默认行为：
+
+1. 若只有一个活跃任务，显示该任务
+2. 若有多个活跃任务，先列出任务摘要
+3. 可通过 `task-id` 精确查询
+
+### `aria:result`
+
+1. 默认显示最近完成的任务
+2. 多任务场景必须支持 `task-id`
+3. 未完成任务只能返回当前摘要，不能返回最终结果
+
+## 验证与验收策略
+
+### 一期最简验收场景
+
+至少要验证以下 3 类场景：
+
+1. `native intake -> formal flow -> done`
+2. `vk intake -> formal flow -> patch -> verified`
+3. `fast-lane -> done` 与 `fast-lane -> upgrade`
+
+### 端到端验证目标
+
+1. 状态能跨会话恢复
+2. `dispatch contract` 与 `patch contract` 可被正确消费
+3. review/test 报告能驱动 patch
+4. 多任务状态不会串扰
+5. 失败与取消可正确落盘
+
+## 与现有目录规则的关系
+
+`cadence-aria/` 作为插件源码目录，不属于 `cadence/` 文档产物目录。
+
+### 边界
+
+1. `cadence-aria/`：插件源码、命令、skill、runtime 模板
+2. `cadence/`：设计文档、计划文档、评审文档、运行阶段输出文档
+
+### 运行时状态目录
+
+一期建议将运行时状态落在：
+
+`cadence/cache/aria/`
+
+原因：
+
+1. 符合当前项目对 Cadence 产物的集中存储约束
+2. 避免将运行时状态散落在插件源码目录
+3. 便于后续清理、恢复与调试
 
 ## OpenSpec 与 superpowers 的结合方式
 
